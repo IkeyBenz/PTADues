@@ -1,0 +1,72 @@
+<div class="center">
+    <div class="top">
+        <button class="circle">Add</button>
+        <button class="circle">Remove</button>
+        <button class="circle">Edit</button>
+    </div>
+    <div class="bottom">
+        <label>Type: <select id="teacherType">
+            <option value="misc">Miscelaneous</option>
+            <option value="preK">Nursary School</option>
+            <option value="elementary">Elementary School</option>
+            <option value="middle">Middle School</option>
+            <option value="assistant">Assistant</option>
+        </select></label>
+
+        <div id="misc" class="form" style="display: block;">
+            <h3>Add Miscelaneous Member</h3>
+            <table>
+                <tr><td>Name:</td><td><input id="name-misc" type="text" placeholder="Name"></td></tr>
+                <tr><td>Group:</td><td><input id="group-misc" type="text" placeholder="Ex: Principal"></td></tr>
+            </table>
+            <div class="buttonContainer">
+                <button onclick="addMiscMember()">Add</button>
+            </div>
+        </div>
+        <div id="preK" class="form">
+            <h3>Add Nursary Teacher</h3>
+            <table>
+                <tr><td>Name:</td><td><input id="name-preK" type="text" placeholder="Name"></td></tr>
+                <tr><td>Class:</td><td><input id="class-preK" type="text" placeholder="Ex: PPG1"></td></tr>
+            </table>
+            <div class="buttonContainer">
+                <button onclick="addNursaryTeacher()">Add</button>
+            </div>
+        </div>
+        <div id="elementary" class="form">
+            <h3>Add Elementary Teacher</h3>
+            <table>
+                <tr><td>Name:</td><td><input id="name-elementary" type="text" placeholder="Name"></td></tr>
+                <tr><td>Class:</td><td><input id="class-elementary" type="text" placeholder="Ex: 1A-am"></td></tr>
+                <tr><td>Room:</td><td><input id="room-elementary" type="text" placeholder="Ex: 205"></td></tr>
+                <tr><td>Assistants:</td><td><input id="assistants-elementary" type="text" placeholder="Ex: Principal"></td></tr>
+            </table>
+            <div class="buttonContainer">
+                <button onclick="addElementaryTeacher()">Add</button>
+            </div>
+        </div>
+        <div id="middle" class="form">
+            <table>
+                <tr><td>Name: </td><td><input id="name-middle" type="text"></td></tr>
+                <tr><td>Grade: </td><td><input id="grade-middle" type="text"></td></tr>
+            </table>
+            <div class="buttonContainer">
+                <button onclick="addMiddleTeacher()">Add</button>
+            </div>
+        </div>
+        <div id="assistant" class="form">
+            <table>
+                <tr><td>Name: </td><td><input id="name-assistant" type="text"></td></tr>
+            </table>
+            <div class="buttonContainer">
+                <button onclick="addAssistant()">Add Assistant</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="right"></div>
+
+<script src="../js/firebase.js"></script>
+<script src="../js/editTeachers.js"></script>
+<script src="../js/groups.js"></script>
+<script src="../js/faculty.js"></script>

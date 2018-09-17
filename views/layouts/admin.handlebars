@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MDY PTA Dues | Admin</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../css/admin.css">
+        <link rel="stylesheet" href="../css/colors.css">
+        <link rel="stylesheet" href="../css/global.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+        <script src="../js/checkLogin.js"></script>
+    </head>
+    <body>
+        <header>
+
+        </header>
+        <section id="leftPanel">
+            <a href="/admin/?p=editTeachers"><div class="clickable" style="background-color: #888">Edit Teachers</div></a>
+            <a href="/admin/?p=orginizeTeachers"><div class="clickable" style="background-color: #777">Orginize Groups</div></a>
+            <a href="/admin/?p=donationHistory"><div class="clickable" style="background-color: #888">Donation History</div></a>
+            <a href="/admin/?p=facultyStats"><div class="clickable" style="background-color: #777">Faculty Stats</div></a>
+        </section>
+        <main id="mainContent">
+            {{{body}}}
+        </main>
+    </body>
+</html>
