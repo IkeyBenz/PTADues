@@ -1,3 +1,14 @@
+{{#if errorMessage}}
+<div class="alert alert-danger" role="alert">
+  {{errorMessage}}
+</div>
+{{/if}}
+{{#if successMessage}}
+<div class="alert alert-success" role="alert">
+    Successfully added {{successMessage}}.
+</div>
+{{/if}}
+
 <div class="center">
     <div class="top">
         <button class="circle">Add</button>
@@ -6,14 +17,14 @@
     </div>
     <div class="bottom">
         <label>Type: <select id="teacherType">
-            <option value="misc">Miscelaneous</option>
-            <option value="preK">Nursary School</option>
-            <option value="elementary">Elementary School</option>
-            <option value="middle">Middle School</option>
-            <option value="assistant">Assistant</option>
+            <option value="Miscelaneous">Miscelaneous</option>
+            <option value="PreK">Nursary School</option>
+            <option value="Elementary">Elementary School</option>
+            <option value="Middle">Middle School</option>
+            <option value="Assistants">Assistant</option>
         </select></label>
 
-        <form class="form" action="/faculty/create">
+        <form class="form" action="/faculty/create" method="POST">
             <h3 id="form-title">Add Miscelaneous Member</h3>
             <table id="query-table">
                 
@@ -23,10 +34,9 @@
                 <button type="submit">Add</button>
             </div>
         </form>
-        
     </div>
 </div>
 <div class="right"></div>
 
 <script src="../js/editTeachers.js"></script>
-
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">

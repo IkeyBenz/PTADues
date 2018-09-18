@@ -1,11 +1,7 @@
+const Groups = require('./groups');
+const firebase = require('firebase');
+
 module.exports = (function() {
-    function getAllFaculty() {
-        return new Promise(function(resolve, reject) {
-            db.ref('FacultyMembers').once('value').then(snapshot => {
-                resolve(snapshot.val());
-            });
-        });
-    }
     function addFacultyMember(member, group) {
         let memberId = db.ref('FacultyMembers').push(member).key;
 
@@ -24,29 +20,21 @@ module.exports = (function() {
     }
     
     async function addMisc(name, group) {
-        let key = db.ref('FacultyMembers').push({ Name: name }).key;
+        let key = firebase.database().ref('FacultyMembers').push({ Name: name }).key;
         Groups.insertMiscInto(key, group);
     }
-    function addPreK(name, classNumber) {
-
-    }
-    function addElementary(name, classNumber, room, assistants) {
-
-    }
-    function addMiddle(name, grade) {
-
-    }
-    function addAssistant(name) {
-
-    }
     return {
-        getAll: () => getAllFaculty(),
-        addMiscMember: (name, group) => addMisc(name, group),
-        addPreKTeacher: (name, classNumber) => addPreK(name, classNumber),
-        addElementaryTeacher: (name, classNumber, room, assistants) => addElementary(name, classNumber, room, assistants),
-        addMiddleTeacher: (name, grade) => addMiddle(name, grade),
-        addMember: (member) => addFacultyMember(member, group),
-        addAssistant: (name) => addAssistant(name),
-        removeMember: (memberID) => removeFacultyMember(memberID)
+        create: (member) => {
+            return new Promise(function(resolve, reject) {
+                let memberID = firebase.database().ref('Faculty').push(member).key;
+                if (member.Type == "Miscelaneous") {
+                    Groups.insertMiscInto(memberID, member.Group)
+                    .then(resolve).catch(reject);
+                } else {
+                    Groups.insertMemberInto(member.Type, memberID)
+                    .then(resolve).catch(reject)
+                }
+            });
+        }
     }
 })()

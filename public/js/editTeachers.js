@@ -2,16 +2,18 @@ $(document).ready(function() {
     $('#teacherType').on('change', setQuestionair);
 });
 function setQuestionair(e) {
+    $('#form-title').text(`Add ${$('#teacherType option:selected').text()} Teacher`);
     let options = {
-        'misc': ['Name', 'Group'],
-        'preK': ['Name', 'Class'],
-        'elementary': ['Name', 'Class', 'Room', 'Assistants'],
-        'middle': ['Name', 'Grade'],
-        'assistant': ['Name']
+        'Miscelaneous': ['Name', 'Group'],
+        'PreK': ['Name', 'Class'],
+        'Elementary': ['Name', 'Class', 'Room', 'Assistants'],
+        'Middle': ['Name', 'Grade'],
+        'Assistants': ['Name']
     }
     let key = $('#teacherType').val();
     let html = getFormHTMLWithQueries(options[key]);
     $('#query-table').html(html);
+    $('#type-input').val(key);
 }
 function getFormHTMLWithQueries(queries) {
     let html = '';

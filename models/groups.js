@@ -1,7 +1,9 @@
-const Groups = (function() {
+const firebase = require('firebase');
+
+module.exports = (function() {
     function getMemberPaths(memberID) {
         return new Promise(function(resolve, reject) {
-            db.ref('CategorizedFaculty').once('value').then(snapshot => {
+            firebase.database().ref('CategorizedFaculty').once('value').then(snapshot => {
                 let grouped = snapshot.val();
                 let pathsToMember = _findPathsToMember(memberID, grouped, 'CategorizedFaculty');
                 resolve(pathsToMember);
@@ -33,41 +35,51 @@ const Groups = (function() {
         return [path, elem]
     }
     function removeFromDbArray(pathToArray, elem) {
-        db.ref(pathToArray).once('value').then(snapshot => {
+        firebase.database().ref(pathToArray).once('value').then(snapshot => {
             let array = snapshot.val();
             let indexOfElem = array.indexOf(elem)
             array.splice(indexOfElem, 1);
-            db.ref(pathToArray).set(array);
+            firebase.database().ref(pathToArray).set(array);
         });
     }
     function getLastIndexOf(category) {
         return new Promise(function(resolve, reject) {
-            db.ref('CategorizedFaculty/' + category).once('value').then(snapshot => {
+            firebase.database().ref('CategorizedFaculty/' + category).once('value').then(snapshot => {
                 let obj = snapshot.val();
                 resolve(obj.length);
             });
         });
     }
     function insertMiscIntoGroup(memberKey, groupTitle) {
-        db.ref('CategorizedFaculty/Miscelaneous').once('value').then(snapshot => {
-            let groups = snapshot.val();
-            for (let index in Object.keys(groups)) {
-                if (groups[index].Title == groupTitle) {
-                    groups[index].Members.push(memberKey);
-                    db.ref(`CategorizedFaculty/Miscelaneous/${index}/Members`).set(groups[index].Members);
-                    return
+        return new Promise(function(resolve, reject) {
+            firebase.database().ref('CategorizedFaculty/Miscelaneous').once('value').then(snapshot => {
+                let groups = snapshot.val();
+                for (let index in Object.keys(groups)) {
+                    if (groups[index].Title == groupTitle) {
+                        groups[index].Members.push(memberKey);
+                        firebase.database().ref(`CategorizedFaculty/Miscelaneous/${index}/Members`).set(groups[index].Members);
+                        resolve();
+                    }
                 }
-            }
-            getLastIndexOf('Miscelaneous').then(index => {
-                db.ref('CategorizedFaculty/Miscelaneous/' + index).set({
-                    Members: [memberKey],
-                    Title: groupTitle
+                getLastIndexOf('Miscelaneous').then(index => {
+                    firebase.database().ref('CategorizedFaculty/Miscelaneous/' + index).set({
+                        Members: [memberKey],
+                        Title: groupTitle
+                    });
+                    resolve();
                 });
             });
         });
     }
     return {
         removeMember: (memberID) => removeMemberAt(memberID),
-        insertMiscInto: (memberID, groupTitle) => insertMiscIntoGroup(memberID, groupTitle)
+        insertMiscInto: (memberID, groupTitle) => insertMiscIntoGroup(memberID, groupTitle),
+        insertMemberInto: (category, memberID) => {
+            return new Promise(async function(resolve, reject) {
+                let index = await getLastIndexOf(category);
+                firebase.database().ref(`CategorizedFaculty/${category}/${index}`).set(memberID);
+                resolve();
+            });
+        }
     }
 })()
