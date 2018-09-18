@@ -13,4 +13,6 @@ app.use(bodyParser.json())
 
 pageController(app);
 
-app.listen(port, console.log("Running PTA Dues on " + port));
+app.listen(port, () => {
+    console.log("Running PTA Dues on " + port);
+});

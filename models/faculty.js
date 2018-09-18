@@ -1,4 +1,4 @@
-const Faculty = (function() {
+module.exports = (function() {
     function getAllFaculty() {
         return new Promise(function(resolve, reject) {
             db.ref('FacultyMembers').once('value').then(snapshot => {
