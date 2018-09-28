@@ -8,14 +8,10 @@
     Successfully added {{successMessage}}.
 </div>
 {{/if}}
-
 <div class="center">
-    <div class="top">
-        <button class="circle">Add</button>
-        <button class="circle">Remove</button>
-        <button class="circle">Edit</button>
-    </div>
-    <div class="bottom">
+    {{#if isBeingUpdated}}
+        <form action="/faculty/{{memberId}}/update" method="POST">
+    {{else}}
         <label>Type: <select id="teacherType">
             <option value="Miscelaneous">Miscelaneous</option>
             <option value="PreK">Nursary School</option>
@@ -23,20 +19,13 @@
             <option value="Middle">Middle School</option>
             <option value="Assistants">Assistant</option>
         </select></label>
-
-        <form class="form" action="/faculty/create" method="POST">
-            <h3 id="form-title">Add Miscelaneous Member</h3>
-            <table id="query-table">
-                
-            </table>
-            <input type="hidden" name="Type" id="type-input" value="Miscelaneous">
-            <div class="buttonContainer">
-                <button type="submit">Add</button>
-            </div>
+        <form action="/faculty/create" method="POST">
+    {{/if}}
+        {{> facultyMemberForm}}
         </form>
-    </div>
 </div>
 <div class="right"></div>
 
 <script src="../js/editTeachers.js"></script>
+
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">

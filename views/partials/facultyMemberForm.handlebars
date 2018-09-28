@@ -1,0 +1,10 @@
+<table id="query-table">
+    {{#each memberParams}}
+        <tr>
+            <td>{{this.key}}:</td>
+            <td><input type="text" name="{{this.key}}" value="{{this.val}}"></td>
+        </tr>
+    {{/each}}
+    <input type="hidden" name="Type" id="type-input" value="{{facultyType}}">
+</table>
+<button type="submit">{{#if isBeingUpdated}}Update{{else}}Add{{/if}}</button>

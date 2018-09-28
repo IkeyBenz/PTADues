@@ -43,7 +43,7 @@ module.exports = (function() {
     }
     function getFacultyMember(memberID) {
         return new Promise(function(resolve, reject) {
-            db.ref('FacultyMembers').once('value')
+            db.ref('FacultyMembers/' + memberID).once('value')
             .then(snapshot => {
                 if (snapshot.val()) {
                     resolve(snapshot.val());
