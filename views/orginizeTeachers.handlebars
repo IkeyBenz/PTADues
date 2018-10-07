@@ -1,1 +1,13 @@
-<h1>Orginize Teachers</h1>
+<h1>Miscelaneous:</h1>
+<ul>
+{{#each miscelaneous}}
+    <li>
+        <strong>{{this.title}}</strong>
+        <ul>
+            {{#each this.members}}
+                <li><a href="/faculty/{{this.key}}/edit/">{{this.name}}</a></li>
+            {{/each}}
+        </ul>
+    </li>
+{{/each}}
+

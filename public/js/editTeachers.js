@@ -30,5 +30,4 @@ function showTab(tabName) {
     for (let tab of tabs) {
         $(`#${tab}`).hide();
     }
-    console.log(tabName);
 }

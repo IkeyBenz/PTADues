@@ -5,12 +5,18 @@ const db = firebase.database();
 module.exports = (function() {
     function addFacultyMember(member) {
         return new Promise(function(resolve, reject) {
-            let memberID = db.ref('FacultyMembers').push(member).key;
-            if (member.Type == "Miscelaneous") {
+            let memberType = member.Type;
+            delete member.Type;
+            let editedMember = {
+                DisplayableCredentials: member,
+                InternalCredentials: { Type: memberType }
+            }
+            let memberID = db.ref('NewFaculty').push(editedMember).key;
+            if (memberType == "Miscelaneous") {
                 Groups.insertMiscInto(memberID, member.Group)
                 .then(resolve).catch(reject);
             } else {
-                Groups.insertMemberInto(member.Type, memberID)
+                Groups.insertMemberInto(memberType, memberID)
                 .then(resolve).catch(reject)
             }
         });

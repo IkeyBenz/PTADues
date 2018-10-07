@@ -27,7 +27,7 @@ module.exports = function(app) {
                 memberId: memberId,
                 isBeingEdited: true
             }
-            res.render('editTeachers', {  });
+            res.render('editTeachers', data);
         }).catch(error => {
             res.render('editTeachers', { layout: 'admin', errorMessage: error.message });
         })
