@@ -1,13 +1,5 @@
-{{#if errorMessage}}
-<div class="alert alert-danger" role="alert">
-  {{errorMessage}}
-</div>
-{{/if}}
-{{#if successMessage}}
-<div class="alert alert-success" role="alert">
-    Successfully added {{successMessage}}.
-</div>
-{{/if}}
+{{#if errorMessage}}<div class="alert alert-danger" role="alert">{{errorMessage}}</div>{{/if}}
+{{#if successMessage}}<div class="alert alert-success" role="alert">{{successMessage}}</div>{{/if}}
 <div class="center">
     {{#if isBeingUpdated}}
         <form action="/faculty/{{memberId}}/update" method="POST">
@@ -26,6 +18,5 @@
 </div>
 <div class="right"></div>
 
-<script src="../js/editTeachers.js"></script>
-
+<script src="/js/editTeachers.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">

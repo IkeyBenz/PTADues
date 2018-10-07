@@ -123,31 +123,58 @@ module.exports = (function() {
             });
         });
     }
-    function getMiscelaneous() {
-        return new Promise(function(resolve, reject) {
-            Promise.all([
-            firebase.database().ref('RestrcutredCategories/Miscelaneous/').once('value'),
-            firebase.database().ref('NewFaculty').once('value')])
-            .then(values => {
-                let misc = values[0].val();
-                let members = values[1].val();
-                let formatted = [];
-                for (let group of misc) {
-                    if (group) {
-                        let _group = {title: group.Title, members: []}
-                        for (let memberKey of group.Members) {
-                            _group.members.push({
-                                name: members[memberKey].DisplayableCredentials.Name,
-                                key: memberKey
-                            });
-                        }
-                        formatted.push(_group);
-                    }
+    function downloadFaculty() {
+        return Promise.all([
+            firebase.database().ref('RestrcutredCategories/').once('value'),
+            firebase.database().ref('NewFaculty').once('value')
+        ]);
+    }
+    function getMiscelaneousFrom(values) {
+        let categories = values[0].val(), members = values[1].val();
+        let misc = [];
+        for (let group of categories.Miscelaneous) {
+            if (group) {
+                let _group = {title: group.Title, members: []}
+                for (let memberKey of group.Members) {
+                    _group.members.push({
+                        name: members[memberKey].DisplayableCredentials.Name,
+                        key: memberKey
+                    });
                 }
-                resolve(formatted);
+                misc.push(_group);
+            }
+        }
+        return misc;
+    }
+    function getOtherFacultyFrom(values) {
+        let categories = values[0].val(), members = values[1].val();
+        let faculty = [];
+        for (let category in categories) {
+            if (category != 'Miscelaneous') {
+                let cat = { title: category, members: [] }
+                for (let memberKey of categories[category]) {
+                    let _member = { key: memberKey, properties: [] }
+                    let creds = members[memberKey].DisplayableCredentials
+                    for (let property in creds) {
+                        _member.properties.push(creds[property]);
+                    }
+                    cat.members.push(_member);
+                }
+                faculty.push(cat);
+            }
+        }
+        return faculty;
+    }
+    function getFaculty() {
+        return new Promise(function(resolve, reject) {
+            downloadFaculty().then(values => {
+                let misc = getMiscelaneousFrom(values);
+                let otherFaculty = getOtherFacultyFrom(values);
+                resolve({ misc: misc, other: otherFaculty });
             }).catch(error => reject(error));
         });
     }
+
     return {
         removeMember: (memberID) => removeMemberAt(memberID),
         insertMiscInto: (memberID, groupTitle) => insertMiscIntoGroup(memberID, groupTitle),
@@ -158,6 +185,6 @@ module.exports = (function() {
                 resolve();
             });
         },
-        getMisc: () => getMiscelaneous()
+        getAllFaculty: () => getFaculty()
     }
 })()

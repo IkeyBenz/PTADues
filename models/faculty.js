@@ -2,6 +2,8 @@ const Groups = require('./groups');
 const firebase = require('firebase');
 const db = firebase.database();
 
+const facultyPath = 'NewFaculty';
+
 module.exports = (function() {
     function addFacultyMember(member) {
         return new Promise(function(resolve, reject) {
@@ -11,7 +13,7 @@ module.exports = (function() {
                 DisplayableCredentials: member,
                 InternalCredentials: { Type: memberType }
             }
-            let memberID = db.ref('NewFaculty').push(editedMember).key;
+            let memberID = db.ref(facultyPath).push(editedMember).key;
             if (memberType == "Miscelaneous") {
                 Groups.insertMiscInto(memberID, member.Group)
                 .then(resolve).catch(reject);
@@ -23,7 +25,7 @@ module.exports = (function() {
     }
     function removeFacultyMember(memberID) {
         return new Promise(function(resolve, reject) {
-            db.ref(`FacultyMembers/${memberID}`).remove()
+            db.ref(`${facultyPath}/${memberID}`).remove()
             .then(() => {
                 Groups.removeMember(memberID);
             }).then(() => {
@@ -35,7 +37,7 @@ module.exports = (function() {
     }
     function updateFacultyMember(memberID, newMember) {
         return new Promise(function(resolve, reject) {
-            db.ref('FacultyMembers/' + memberID).once('value')
+            db.ref(`${facultyPath}/${memberID}`).once('value')
             .then(snapshot => {
                 let member = snapshot.val();
                 if (member) {
@@ -49,10 +51,10 @@ module.exports = (function() {
     }
     function getFacultyMember(memberID) {
         return new Promise(function(resolve, reject) {
-            db.ref('FacultyMembers/' + memberID).once('value')
+            db.ref(`${facultyPath}/${memberID}`).once('value')
             .then(snapshot => {
                 if (snapshot.val()) {
-                    resolve(snapshot.val());
+                    resolve({ key: snapshot.key, ...snapshot.val() });
                 } else {
                     reject("Member does not exist.");
                 }

@@ -10,4 +10,18 @@
         </ul>
     </li>
 {{/each}}
+</ul>
+
+{{#each otherCategories}}
+    <h1>{{this.title}}</h1>
+    <ul>
+        {{#each this.members}}
+            <li><a href="/faculty/{{this.key}}/edit/"><table><tr>
+            {{#each this.properties}}
+                <td>{{this}}</td>
+            {{/each}}
+            </tr></table></a></li>
+        {{/each}}
+    </ul>
+{{/each}}
 

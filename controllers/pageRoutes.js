@@ -11,8 +11,9 @@ module.exports = function(app) {
         let pageName = req.query.p || 'editTeachers';
         
         if (pageName == 'orginizeTeachers') {
-            Groups.getMisc().then(misc => {
-                res.render(pageName, { layout: 'admin', miscelaneous: misc });
+            Groups.getAllFaculty().then(fac => {
+                let data = { layout: 'admin', miscelaneous: fac.misc, otherCategories: fac.other }
+                res.render(pageName, data);
             });
         } else {
             let data = getCorrectDataForPageName(pageName, req.query);
@@ -21,8 +22,7 @@ module.exports = function(app) {
         
     });
 }
-
-async function getCorrectDataForPageName(pageName, query) {
+function getCorrectDataForPageName(pageName, query) {
     let data = { layout: 'admin' }
     if (query.errorMsg) {
         data['errorMessage'] = query.errorMsg;
