@@ -71,45 +71,7 @@ module.exports = (function() {
             });
         });
     }
-    function getAllFaculty() {
-        return new Promise(function(resolve, reject) {
-            Promise.all([
-                firebase.database().ref('CategorizedFaculty').once('value'),
-                firebase.database().ref('FacultyMembers').once('value')
-            ])
-            .then(res => {
-                let categories = []
-                let ordered = res[0], faculty = res[1];
-                for (let category in ordered) {
-                    if (category == 'Miscelaneous') {
-                        let parameters = ['Group', 'Name'];
-                        let members = [];
-                        for (let group of ordered[category]) {
-                            for (let index in group.Members) {
-                                let member = {}
-                                let memberKey = group.Members[index];
-                                for (let param of parameters) {
-                                    member[param] = faculty[memberKey][param];
-                                }
-                                members.push(member);
-                            }
-                        }
-                        categories.push({
-                            title: 'Miscelaneous',
-                            params: parameters,
-                            members: members
-                        });
-                    } else {
-                        getParametersForCategory(category)
-                        .then(parameters => {
-
-                        })
-                    }
-                }
-            });
-            
-        });
-    }
+    
     function getParametersForCategory(category) {
         return new Promise(function(resolve, reject) {
             firebase.database().ref(`RestrcutredCategories/${category}/0`).once('value')
@@ -174,6 +136,13 @@ module.exports = (function() {
             }).catch(error => reject(error));
         });
     }
+    function getFacultyWithoutMisc() {
+        return new Promise(function(resolve, reject) {
+            downloadFaculty().then(values => {
+                resolve(getOtherFacultyFrom(values));
+            }).catch(error => reject(error));
+        });
+    }
 
     return {
         removeMember: (memberID) => removeMemberAt(memberID),
@@ -185,6 +154,7 @@ module.exports = (function() {
                 resolve();
             });
         },
-        getAllFaculty: () => getFaculty()
+        getAllFaculty: () => getFaculty(),
+        getFacultyWithoutMisc: () => getFacultyWithoutMisc()
     }
 })()

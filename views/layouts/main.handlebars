@@ -4,9 +4,23 @@
         <title>MDY PTA Dues {{#if subtitle}}| {{subtitle}}{{/if}}</title>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="css/public.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://checkout.stripe.com/checkout.js"></script>
     </head>
     <body>
-        {{{body}}}
+        <header class="header">
+            <ul class="nav">
+                <li class="nav-item"><a href="/hanukkah/" class="nav-link{{#if hannukah}} disabled{{/if}}">Hanukkah</a></li>
+                <li class="nav-item"><a href="/purim/" class="nav-link{{#if purim}} disabled{{/if}}">Purim</a></li>
+                <li class="nav-item"><a href="/dues/" class="nav-link{{#if dues}} disabled{{/if}}">Dues</a></li>
+            </ul>
+        </header>
+        <main class="container-fluid">
+            {{{body}}}
+        </main>
+        <footer>
+
+        </footer>
     </body>
 </html>

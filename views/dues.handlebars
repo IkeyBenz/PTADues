@@ -1,0 +1,52 @@
+<div class="grid">
+    <div class="row">
+        <div class="col-sm">
+            <div class="container-inner">
+                <p>Dear Parents,<br><br>
+            Every school year, the Magen David Yeshivah PTA works diligently to better our children's learning experience. PTA Dues and the money we fundraise throughout the year go directly to the students. These funds support initiatives such as introducing new technology in the classrooms and restocking classroom libraries to enhance our students' curriculum. Please continue your support by promptly completing this form and sending in your donations. We appreciate your generosity and dedication to our children's education.</p>
+            </div>
+        </div>
+        <div class="col-sm">
+            <form action="#" id="duesForm" class="container-inner">
+               
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+<script src="/js/stripe.js"></script>
+<script>
+    $('#duesForm').submit(function(e) {
+        e.preventDefault();
+        StripeHandler.open({
+            name: 'PTA Dues',
+            description: 'Camper Payment',
+            amount: 2000
+        });
+    });
+</script>
+<style>
+    .center {
+        text-align: center;
+    }
+    .container-inner {
+        padding-top: 40px;
+        width: 90%;
+        height: 100%;
+        margin: 0 auto;
+    }
+</style>

@@ -2,8 +2,20 @@ let Groups = require('../models/groups');
 
 module.exports = function(app) {
 
-    app.get('/', (req, res) => {
-        res.render('index', { subtitle: 'Hanuka' });
+    app.get(['/', '/hanukkah/'], (req, res) => {
+        Groups.getFacultyWithoutMisc().then(faculty => {
+            res.render('hanukkah', { faculty: faculty, hannukah: true });
+        }).catch(console.error);
+    });
+
+    app.get('/purim/', (req, res) => {
+        Groups.getAllFaculty().then(faculty => {
+            res.render('purim', { faculty: faculty, purim: true });
+        }).catch(console.error);
+    });
+
+    app.get('/dues/', (req, res) => {
+        res.render('dues', { dues: true });
     });
     
 
