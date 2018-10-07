@@ -2,7 +2,7 @@ const Groups = require('./groups');
 const firebase = require('firebase');
 const db = firebase.database();
 
-const facultyPath = 'NewFaculty';
+const ref = firebase.database().ref('NewFaculty');
 
 module.exports = (function() {
     function addFacultyMember(member) {
@@ -13,7 +13,7 @@ module.exports = (function() {
                 DisplayableCredentials: member,
                 InternalCredentials: { Type: memberType }
             }
-            let memberID = db.ref(facultyPath).push(editedMember).key;
+            let memberID = ref.push(editedMember).key;
             if (memberType == "Miscelaneous") {
                 Groups.insertMiscInto(memberID, member.Group)
                 .then(resolve).catch(reject);
@@ -25,7 +25,7 @@ module.exports = (function() {
     }
     function removeFacultyMember(memberID) {
         return new Promise(function(resolve, reject) {
-            db.ref(`${facultyPath}/${memberID}`).remove()
+            ref.child(memberID).remove()
             .then(() => {
                 Groups.removeMember(memberID);
             }).then(() => {
@@ -37,11 +37,12 @@ module.exports = (function() {
     }
     function updateFacultyMember(memberID, newMember) {
         return new Promise(function(resolve, reject) {
-            db.ref(`${facultyPath}/${memberID}`).once('value')
+            ref.child(memberID).once('value')
             .then(snapshot => {
                 let member = snapshot.val();
                 if (member) {
-                    db.ref('FacultyMembers/' + memberID).set(newMember)
+                    console.log(newMember);
+                    ref.child(memberID).child('DisplayableCredentials').set(newMember);
                     resolve();
                 } else {
                     reject("Member does not exist.");
@@ -51,7 +52,7 @@ module.exports = (function() {
     }
     function getFacultyMember(memberID) {
         return new Promise(function(resolve, reject) {
-            db.ref(`${facultyPath}/${memberID}`).once('value')
+            ref.child(memberID).once('value')
             .then(snapshot => {
                 if (snapshot.val()) {
                     resolve({ key: snapshot.key, ...snapshot.val() });

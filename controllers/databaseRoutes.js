@@ -12,7 +12,8 @@ module.exports = function(app) {
     });
 
     app.post('/faculty/:memberId/update', (req, res) => {
-        Faculty.update(req.params.memberId, req.query).then(() => {
+        delete req.body.Type;
+        Faculty.update(req.params.memberId, req.body).then(() => {
             res.redirect('/admin/?p=editTeachers&successMsg=Update%20Successful.');
         }).catch(error => {
             res.redirect(`/admin/?p=editTeachers&errorMsg=${error}`);

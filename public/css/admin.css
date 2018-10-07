@@ -23,6 +23,8 @@ header {
     width: 80vw;
     height: calc(100vh - 60px);
     float: right;
+    display: flex;
+    align-content: center;
 }
 .center {
     margin: 0px 15px 15px 15px;
@@ -79,7 +81,6 @@ input[type="text"] {
     padding: 10px;
     font-size: 16px;
     border-radius: 5px;
-    border: none;
 }
 .buttonContainer {
     width: 100%;
