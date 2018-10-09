@@ -7,7 +7,7 @@ let methodOverride = require('method-override');
 const app = express();
 const port = process.env.PORT || 5000;
 console.log(process.env.FIREBASE_CONFIG);
-firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
+firebase.initializeApp(process.env.FIREBASE_CONFIG);
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars')
