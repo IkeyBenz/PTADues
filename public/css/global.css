@@ -1,3 +1,36 @@
 body {
     margin: 0;
+    background-color: #AFDEFB;
+}
+header {
+    padding-top: 10px;
+    background-color: #002261;
+}
+.logo {
+    margin-top: -8px;
+    height: 50px;
+    width: auto;
+}
+.nav-link {
+    color: white;
+}
+.nav-link.active, .nav-link.active:hover {
+    color: #01389D !important;
+}
+.nav-link:hover {
+    color: lightgray !important;
+}
+.jumbotron {
+    margin-top: 20px;
+}
+.btn-primary {
+    background-color: #01389D;
+    border-color: #01389D;
+}
+.container-fluid {
+    margin-top: 30px;
+}
+.nav-pills > li > a.active {
+    background-color: #AFDEFB !important;
+    color: #01389D;
 }
