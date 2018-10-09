@@ -9,7 +9,7 @@ module.exports = function (app) {
         let ct = new Date();
         let dateString = `${ct.getMonth() + 1}/${ct.getDate()}/${ct.getFullYear()}`;
 
-        Orders.create({ timestamp: ct, ...req.body }).then(orderId => {
+        Orders.create({ timestamp: ct.toString(), ...req.body }).then(orderId => {
             Emailer.sendConfirmationEmail({ date: dateString, orderId: orderId, ...req.body });
             res.render('thankYou', { name: req.body.name, email: req.body.email });
         });

@@ -7,7 +7,8 @@ const favicon = require('serve-favicon');
 
 const app = express();
 const port = process.env.PORT || 5000;
-firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
+const firebaseConfig = require('./keys').FIREBASE_CONFIG || process.env.FIREBASE_CONFIG;
+firebase.initializeApp(JSON.parse(firebaseConfig));
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars')

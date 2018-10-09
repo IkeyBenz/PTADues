@@ -5,7 +5,7 @@
 
 <form action="/orders/new/" id="duesForm" method="POST" class="container-fluid">
     <div class="row">
-        <div class="col-md">
+        <div class="col-md" style="padding-top: 9px;">
             <div class="form-group">
                 <label for="parents"><small>*</small>Parents' Names:</label>
                 <input type="text" class="form-control" id="parents" name="name" placeholder="Name & Name Last Name">
@@ -16,69 +16,44 @@
             </div>
             <div class="form-group">
                 <label for="phone"><small>*</small>Phone:</label>
-                <input type="tel" class="form-control" id="phone" name="phone" placeholder="(917) 123-456">
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="(917) 123-4567">
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
                 <strong>List all children attending MDY and their grade</strong>
             </div>
-            <div class="row">
-                <div class="col-9 form-group">
-                    <label for="childName1">Name:</label>
-                    <input type="text" class="form-control" name="child1Name" id="childName1">
+            {{#each children}}
+            <div class="input-group form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Name &amp; Grade:</span>
                 </div>
-                <div class="col">
-                    <label for="childGrade1">Grade:</label>
-                    <input type="text" class="form-control" name="child1Grade" id="childGrade1">
-                </div>
+                <input type="text" class="form-control" name="child{{this}}Name" style="width: calc(calc(calc(100% - 137px) / 10) * 7);">
+                <select name="child{{this}}Grade" class="form-control" style="width: calc(calc(calc(100% - 137px) / 10) * 3);">
+                    <option value="PPG">PPG</option>
+                    <option value="Playgroup">Playgroup</option>
+                    <option value="Lower Nursary">Lower Nursary</option>
+                    <option value="Pre K">Pre K</option>
+                    <option value="Kindergarten">Kindergarten</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
             </div>
-            <div class="row">
-                <div class="col-9 form-group">
-                    <label for="childName2">Name:</label>
-                    <input type="text" class="form-control" name="child2Name" id="childName2">
-                </div>
-                <div class="col">
-                    <label for="childGrade2">Grade:</label>
-                    <input type="text" class="form-control" name="child2Grade" id="childGrade2">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-9 form-group">
-                    <label for="childName3">Name:</label>
-                    <input type="text" class="form-control" name="child3Name" id="childName3">
-                </div>
-                <div class="col">
-                    <label for="childGrade3">Grade:</label>
-                    <input type="text" class="form-control" name="child3Grade" id="childGrade3">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-9 form-group">
-                    <label for="childName4">Name:</label>
-                    <input type="text" class="form-control" name="child4Name" id="childName4">
-                </div>
-                <div class="col">
-                    <label for="childGrade4">Grade:</label>
-                    <input type="text" class="form-control" name="child4Grade" id="childGrade4">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-9 form-group">
-                    <label for="childName5">Name:</label>
-                    <input type="text" class="form-control" name="child5Name" id="childName5">
-                </div>
-                <div class="col">
-                    <label for="childGrade5">Grade:</label>
-                    <input type="text" class="form-control" name="child5Grade" id="childGrade5">
-                </div>
-            </div>
+            {{/each}}
         </div>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" style="text-align: center; margin-top: 15px;">
         <button type="button" id="continueBtn" class="btn btn-primary">Continue</button>
     </div>
+    
     <input type="hidden" id="paymentAmount" name="amount" value="2000">
     <input type="hidden" id="emailAddress" name="email">
 </form>

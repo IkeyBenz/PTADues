@@ -3,7 +3,8 @@ let Groups = require('../models/groups');
 module.exports = function(app) {
 
     app.get(['/', '/dues/'], (req, res) => {
-        res.render('dues', { dues: true });
+        const c = ['1','2','3','4','5'];
+        res.render('dues', { children: c, dues: true  });
     });
 
     app.get('/hanukkah/', (req, res) => {
