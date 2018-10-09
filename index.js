@@ -1,8 +1,9 @@
-let express = require('express');
-let exphbs = require('express-handlebars');
-let bodyParser = require('body-parser');
-let firebase = require('firebase');
-let methodOverride = require('method-override');
+const express = require('express');
+const exphbs = require('express-handlebars');
+const bodyParser = require('body-parser');
+const firebase = require('firebase');
+const methodOverride = require('method-override');
+const favicon = require('serve-favicon');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,6 +15,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
+app.use(favicon(__dirname + 'public/images/favicon.ico'));
 
 require('./controllers/main')(app);
 
