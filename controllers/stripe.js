@@ -1,4 +1,4 @@
-const stripe = require('stripe')(require('../private/stripeKey'));
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE);
 
 module.exports = function (app) {
 

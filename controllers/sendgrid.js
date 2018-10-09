@@ -1,6 +1,6 @@
 const Sendgrid = require('@sendgrid/mail');
 const hb = require('express-handlebars').create();
-Sendgrid.setApiKey(require('../private/sendgridKey'));
+Sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = (function() {
 
