@@ -1,6 +1,5 @@
 const Groups = require('./groups');
 const firebase = require('firebase');
-const db = firebase.database();
 
 const ref = firebase.database().ref('NewFaculty');
 
@@ -23,6 +22,7 @@ module.exports = (function() {
             }
         });
     }
+    
     function removeFacultyMember(memberID) {
         return new Promise(function(resolve, reject) {
             ref.child(memberID).remove()
