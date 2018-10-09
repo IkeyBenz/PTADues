@@ -1,6 +1,6 @@
 var StripeHandler = StripeCheckout.configure({
     key: 'pk_test_sPgdIFsNfyEgBxVx3omCpyLX',
-    image: '',
+    image: '/images/favicon.ico',
     locale: 'auto',
     token: function(tkn) {
         let amnt = $('#paymentAmount').val();
