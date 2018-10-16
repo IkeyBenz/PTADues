@@ -27,6 +27,7 @@ module.exports = function(app) {
     //     if (pageName == 'orginizeTeachers') {
     //         Groups.getAllFaculty().then(fac => {
     //             let data = { layout: 'admin', miscelaneous: fac.misc, otherCategories: fac.other }
+    //             data[pageName] = true;
     //             res.render(pageName, data);
     //         });
     //     } else {
@@ -38,6 +39,7 @@ module.exports = function(app) {
 }
 function getCorrectDataForPageName(pageName, query) {
     let data = { layout: 'admin' }
+    data[pageName] = true;
     if (query.errorMsg) {
         data['errorMessage'] = query.errorMsg;
     } 

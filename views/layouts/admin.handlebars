@@ -4,21 +4,37 @@
         <title>MDY PTA Dues | Admin</title>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/css/admin.css">
-        <link rel="stylesheet" href="/css/colors.css">
         <link rel="stylesheet" href="/css/global.css">
+        <link rel="stylesheet" href="/css/admin.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body>
-        <header>
-
+        <header class="header">
+            <ul class="nav-pills">
+                <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo" src="/images/WhiteLogo.png" alt=""></a></li>
+            </ul>
         </header>
         <section id="leftPanel">
-            <a href="/admin/?p=editTeachers"><div class="clickable" style="background-color: #888">Edit Teachers</div></a>
+            <ul class="nav nav-pills flex-column nav-justified">
+                <li class="nav-item">
+                    <a class="nav-link{{#if editTeachers}} active{{/if}}" href="/admin/?p=editTeachers">Edit Teachers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{#if orginizeTeachers}} active{{/if}}" href="/admin/?p=orginizeTeachers">Orginize Groups</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{#if donationHistory}} active{{/if}}" href="/admin/?p=donationHistory">Donation History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{#if facultyStats}} active{{/if}}" href="/admin/?p=facultyStats">Faculty Stats</a>
+                </li>
+            </ul>
+            {{!-- <a href="/admin/?p=editTeachers"><div class="clickable" style="background-color: #888">Edit Teachers</div></a>
             <a href="/admin/?p=orginizeTeachers"><div class="clickable" style="background-color: #777">Orginize Groups</div></a>
             <a href="/admin/?p=donationHistory"><div class="clickable" style="background-color: #888">Donation History</div></a>
-            <a href="/admin/?p=facultyStats"><div class="clickable" style="background-color: #777">Faculty Stats</div></a>
+            <a href="/admin/?p=facultyStats"><div class="clickable" style="background-color: #777">Faculty Stats</div></a> --}}
         </section>
         <main id="mainContent">
             {{{body}}}
