@@ -9,11 +9,13 @@ header {
 }
 .logo {
     margin-top: -10px;
-    height: 50px;
+    height: 40px;
+    margin-right: -13px;
     width: auto;
 }
 .nav-link {
     color: white;
+    padding: 5px 10px;
 }
 .nav-link.active, .nav-link.active:hover {
     color: #01389D !important;

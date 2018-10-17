@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const firebase = require('firebase');
 const methodOverride = require('method-override');
 const favicon = require('serve-favicon');
+const https = require('https');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,6 +23,9 @@ require('./controllers/main')(app);
 
 app.listen(port, () => {
     console.log("Running PTA Dues on " + port);
+    setTimeout(function() {
+        https.get('https://mdy-pta-dues.herokuapp.com')
+    }, 150000);
 });
 
 

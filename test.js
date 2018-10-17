@@ -17,4 +17,4 @@ function fixOrderId(oldId) {
     newNumber = '0'.repeat(numberString.length - newNumber.length) + newNumber;
     return 'PTA' + newNumber
 }
-getNewOrderId().then(console.log);
+
