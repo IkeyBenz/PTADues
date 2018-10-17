@@ -37,8 +37,32 @@ module.exports = (function() {
         newNumber = '0'.repeat(numberString.length - newNumber.length) + newNumber;
         return 'PTA' + newNumber
     }
+    function getAllOrders() {
+        return new Promise(function(resolve, reject) {
+            ref.once('value').then(snapshot => {
+                const orders = snapshot.val();
+                if (!orders) return reject('No Orders');
+                let formattedOrders = [];
+                for (let orderKey in orders) {
+                    let children = []
+                    for (index in [1,2,3,4,5]) {
+                        let childName = orders[orderKey][`child${index}Name`]
+                        if (childName != "") {
+                            children.push({
+                                name: childName,
+                                grade: orders[orderKey][`child${index}Grade`]
+                            });
+                        }
+                    } 
+                    formattedOrders.push({ ...orders[orderKey], orderId: orderKey, children: children });
+                }
+                resolve(formattedOrders);
+            });
+        });
+    }
 
     return {
-        create: (orderInfo) => create(orderInfo)
+        create: (orderInfo) => create(orderInfo),
+        getAll: getAllOrders
     }
 })();

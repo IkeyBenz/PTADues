@@ -1,4 +1,5 @@
 let Groups = require('../models/groups');
+let Orders = require('../models/orders');
 
 module.exports = function(app) {
 
@@ -34,6 +35,12 @@ module.exports = function(app) {
     //         let data = getCorrectDataForPageName(pageName, req.query);
     //         res.render(pageName, data);
     //     }
+        
+    // });
+    // app.get('/admin/', (req, res) => {
+    //     Orders.getAll().then(orders => {
+    //         res.render('donationHistory', { layout: 'admin', orders: orders });
+    //     })
         
     // });
 }

@@ -6,6 +6,7 @@ body {
 header {
     padding-top: 10px;
     background-color: #002261;
+    margin-bottom: -16px;
 }
 .logo {
     margin-top: -10px;
