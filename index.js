@@ -23,9 +23,9 @@ require('./controllers/main')(app);
 
 app.listen(port, () => {
     console.log("Running PTA Dues on " + port);
-    setTimeout(function() {
+    setInterval(function() {
         https.get('https://mdy-pta-dues.herokuapp.com')
-    }, 150000);
+    }, 1500000);
 });
 
 
