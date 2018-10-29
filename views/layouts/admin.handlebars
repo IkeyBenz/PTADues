@@ -18,7 +18,7 @@
                 <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo" src="/images/WhiteLogo.png" alt=""></a></li>
             </ul>
         </header>
-        <section id="leftPanel">
+        {{!-- <section id="leftPanel">
             <ul class="nav nav-pills flex-column nav-justified">
                 <li class="nav-item">
                     <a class="nav-link{{#if editTeachers}} active{{/if}}" href="/admin/?p=editTeachers">Edit Teachers</a>
@@ -33,12 +33,13 @@
                     <a class="nav-link{{#if facultyStats}} active{{/if}}" href="/admin/?p=facultyStats">Faculty Stats</a>
                 </li>
             </ul>
-            {{!-- <a href="/admin/?p=editTeachers"><div class="clickable" style="background-color: #888">Edit Teachers</div></a>
+            <a href="/admin/?p=editTeachers"><div class="clickable" style="background-color: #888">Edit Teachers</div></a>
             <a href="/admin/?p=orginizeTeachers"><div class="clickable" style="background-color: #777">Orginize Groups</div></a>
             <a href="/admin/?p=donationHistory"><div class="clickable" style="background-color: #888">Donation History</div></a>
-            <a href="/admin/?p=facultyStats"><div class="clickable" style="background-color: #777">Faculty Stats</div></a> --}}
-        </section>
+            <a href="/admin/?p=facultyStats"><div class="clickable" style="background-color: #777">Faculty Stats</div></a>
+        </section> --}}
         <main id="mainContent">
+            <h1 style="text-align: center;"></h1>
             {{{body}}}
         </main>
     </body>

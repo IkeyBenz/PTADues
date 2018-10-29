@@ -8,7 +8,7 @@ module.exports = (function() {
     function sendConfirmationEmail(orderInfo) {
         hb.render('views/email-template.handlebars', orderInfo).then(html => {
             Sendgrid.send({
-                to: orderInfo.email,
+                to: orderInfo.Email,
                 from: 'PTADues@gmail.com',
                 subject: 'Thank you for your contribution!',
                 html: html

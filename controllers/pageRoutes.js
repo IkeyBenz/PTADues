@@ -43,23 +43,30 @@ module.exports = function(app) {
     //     })
         
     // });
+
+    // Admin For Now - Just Order History
+    // app.get('/admin/', (req, res) => {
+    //     Check if request is authenticated
+    //     If not, render the login page
+    //     If so, render the order history page
+    // });
 }
-function getCorrectDataForPageName(pageName, query) {
-    let data = { layout: 'admin' }
-    data[pageName] = true;
-    if (query.errorMsg) {
-        data['errorMessage'] = query.errorMsg;
-    } 
-    if (query.successMsg) {
-        data['successMessage'] = query.successMsg;
-    }
-    if (pageName == 'editTeachers') {
-        data['isBeingUpdated'] = false,
-        data['facultyType'] = 'Miscelaneous',
-        data['memberParams'] = [
-            {'key': 'Name', 'val': ''},
-            {'key': 'Group', 'val': ''}
-        ];
-    }
-    return data
-}
+// function getCorrectDataForPageName(pageName, query) {
+//     let data = { layout: 'admin' }
+//     data[pageName] = true;
+//     if (query.errorMsg) {
+//         data['errorMessage'] = query.errorMsg;
+//     } 
+//     if (query.successMsg) {
+//         data['successMessage'] = query.successMsg;
+//     }
+//     if (pageName == 'editTeachers') {
+//         data['isBeingUpdated'] = false,
+//         data['facultyType'] = 'Miscelaneous',
+//         data['memberParams'] = [
+//             {'key': 'Name', 'val': ''},
+//             {'key': 'Group', 'val': ''}
+//         ];
+//     }
+//     return data
+// }
