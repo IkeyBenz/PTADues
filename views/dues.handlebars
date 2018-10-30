@@ -69,7 +69,7 @@
         }
     });
     function validate() {
-        for (let param of ['Parents', 'Address', 'Phone']) {
+        for (let param of ['parents', 'address', 'phone']) {
             if ($(`#${param}`).val() == '') {
                 $(`#${param}`).css('border-color', 'red');
                 return false;
