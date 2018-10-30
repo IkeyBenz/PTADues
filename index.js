@@ -5,6 +5,7 @@ const firebase = require('firebase');
 const methodOverride = require('method-override');
 const favicon = require('serve-favicon');
 const https = require('https');
+const expressAuth = require('express-basic-auth');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,6 +19,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
+
+app.use('/admin/', expressAuth({
+    users: JSON.parse(process.env.ADMINS || require('./keys').ADMINS),
+    challenge: true,
+}));
 
 require('./controllers/main')(app);
 
