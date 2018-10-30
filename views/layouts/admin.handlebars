@@ -5,7 +5,6 @@
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/css/global.css">
-        {{!-- <link rel="stylesheet" href="/css/admin.css"> --}}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -14,32 +13,15 @@
     </head>
     <body>
         <header class="header">
-            <ul class="nav-pills">
-                <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo" src="/images/WhiteLogo.png" alt=""></a></li>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo" src="/images/WhiteLogo.png"></a></li>
+                <li class="nav-item"><a href="/admin/orders/" class="nav-link{{#if history}} active{{/if}}">Order History</a></li>
+                <li class="nav-item"><a href="/admin/faculty/edit" class="nav-link{{#if edit}} active{{/if}}">Edit Faculty</a></li>
+                <li class="nav-item"><a href="/admin/faculty/orginize" class="nav-link{{#if orginize}} active{{/if}}">Orginize Faculty</a></li>
+                <li class="nav-item"><a href="/admin/faculty/stats" class="nav-link{{#if stats}} active{{/if}}">Faculty Stats</a></li>
             </ul>
         </header>
-        {{!-- <section id="leftPanel">
-            <ul class="nav nav-pills flex-column nav-justified">
-                <li class="nav-item">
-                    <a class="nav-link{{#if editTeachers}} active{{/if}}" href="/admin/?p=editTeachers">Edit Teachers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{#if orginizeTeachers}} active{{/if}}" href="/admin/?p=orginizeTeachers">Orginize Groups</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{#if donationHistory}} active{{/if}}" href="/admin/?p=donationHistory">Donation History</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link{{#if facultyStats}} active{{/if}}" href="/admin/?p=facultyStats">Faculty Stats</a>
-                </li>
-            </ul>
-            <a href="/admin/?p=editTeachers"><div class="clickable" style="background-color: #888">Edit Teachers</div></a>
-            <a href="/admin/?p=orginizeTeachers"><div class="clickable" style="background-color: #777">Orginize Groups</div></a>
-            <a href="/admin/?p=donationHistory"><div class="clickable" style="background-color: #888">Donation History</div></a>
-            <a href="/admin/?p=facultyStats"><div class="clickable" style="background-color: #777">Faculty Stats</div></a>
-        </section> --}}
-        <main id="mainContent">
-            <h1 style="text-align: center;"></h1>
+        <main class="container-fluid">
             {{{body}}}
         </main>
     </body>
