@@ -37,10 +37,22 @@ module.exports = function(app) {
     //     }
         
     // });
-    app.get('/admin/', (req, res) => {
+    app.get(['/admin/', '/admin/orders/'], (req, res) => {
         Orders.getAll().then(orders => {
-            res.render('donationHistory', { layout: 'admin', orders: orders });
+            res.render('donationHistory', { layout: 'admin', orders: orders, history: true });
         });
+    });
+
+    app.get('/admin/faculty/edit', (req, res) => {
+        res.render('adminComingSoon', { layout: 'admin', edit: true, pageName: 'edit faculty' });
+    });
+
+    app.get('/admin/faculty/orginize/', (req, res) => {
+        res.render('adminComingSoon', { layout: 'admin', orginize: true, pageName: 'orginize faculty' });
+    });
+
+    app.get('/admin/faculty/stats/', (req, res) => {
+        res.render('adminComingSoon', { layout: 'admin', stats: true, pageName: 'faculty stats' });
     });
 
     // Admin For Now - Just Order History
