@@ -17,6 +17,7 @@ header {
 .nav-link {
     color: white;
     padding: 5px 10px;
+    margin-bottom: 8px;
 }
 .nav-link.active, .nav-link.active:hover {
     color: #01389D !important;
