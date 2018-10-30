@@ -37,12 +37,11 @@ module.exports = function(app) {
     //     }
         
     // });
-    // app.get('/admin/', (req, res) => {
-    //     Orders.getAll().then(orders => {
-    //         res.render('donationHistory', { layout: 'admin', orders: orders });
-    //     })
-        
-    // });
+    app.get('/admin/', (req, res) => {
+        Orders.getAll().then(orders => {
+            res.render('donationHistory', { layout: 'admin', orders: orders });
+        });
+    });
 
     // Admin For Now - Just Order History
     // app.get('/admin/', (req, res) => {
