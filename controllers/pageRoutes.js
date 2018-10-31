@@ -22,21 +22,6 @@ module.exports = function(app) {
         res.render('comingSoon', { purim: true, pageName: 'Purim' });
     });
     
-    // app.get('/admin/', (req, res) => {
-    //     let pageName = req.query.p || 'editTeachers';
-        
-    //     if (pageName == 'orginizeTeachers') {
-    //         Groups.getAllFaculty().then(fac => {
-    //             let data = { layout: 'admin', miscelaneous: fac.misc, otherCategories: fac.other }
-    //             data[pageName] = true;
-    //             res.render(pageName, data);
-    //         });
-    //     } else {
-    //         let data = getCorrectDataForPageName(pageName, req.query);
-    //         res.render(pageName, data);
-    //     }
-        
-    // });
     app.get(['/admin/', '/admin/orders/'], (req, res) => {
         Orders.getAll().then(orders => {
             res.render('donationHistory', { layout: 'admin', orders: orders, history: true });
@@ -55,29 +40,4 @@ module.exports = function(app) {
         res.render('adminComingSoon', { layout: 'admin', stats: true, pageName: 'faculty stats' });
     });
 
-    // Admin For Now - Just Order History
-    // app.get('/admin/', (req, res) => {
-    //     Check if request is authenticated
-    //     If not, render the login page
-    //     If so, render the order history page
-    // });
 }
-// function getCorrectDataForPageName(pageName, query) {
-//     let data = { layout: 'admin' }
-//     data[pageName] = true;
-//     if (query.errorMsg) {
-//         data['errorMessage'] = query.errorMsg;
-//     } 
-//     if (query.successMsg) {
-//         data['successMessage'] = query.successMsg;
-//     }
-//     if (pageName == 'editTeachers') {
-//         data['isBeingUpdated'] = false,
-//         data['facultyType'] = 'Miscelaneous',
-//         data['memberParams'] = [
-//             {'key': 'Name', 'val': ''},
-//             {'key': 'Group', 'val': ''}
-//         ];
-//     }
-//     return data
-// }
