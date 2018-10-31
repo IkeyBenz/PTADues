@@ -1,10 +1,9 @@
 <table id="query-table">
     {{#each memberParams}}
-        <tr>
+        <tr class="form-group">
             <td>{{this.key}}:</td>
-            <td><input type="text" name="{{this.key}}" value="{{this.val}}"></td>
+            <td><input class="form-control" type="text" name="{{this.key}}" value="{{this.val}}"></td>
         </tr>
     {{/each}}
-    <input type="hidden" name="Type" id="type-input" value="{{facultyType}}">
 </table>
-<button type="submit">{{#if isBeingUpdated}}Update{{else}}Add{{/if}}</button>
+<button type="submit" class="btn btn-primary">{{#if isBeingUpdated}}Update{{else}}Add{{/if}}</button>
