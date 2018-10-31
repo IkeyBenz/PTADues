@@ -1,4 +1,5 @@
-let Faculty = require('../models/faculty');
+const Faculty = require('../models/faculty');
+const Groups = require('../models/groups');
 
 module.exports = function(app) {
 
@@ -40,4 +41,13 @@ module.exports = function(app) {
             res.render('editTeachers', { layout: 'admin', errorMessage: error });
         });
     });
+
+    app.post('/admin/faculty/reorder', (req, res) => {
+        const newOrder = req.body.groupOrder;
+        const path = req.body.groupPath;
+        Groups.reorderAtPath(path, newOrder)
+        .then(() => res.end)
+        .catch(res.error)
+    });
+
 }

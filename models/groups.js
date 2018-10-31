@@ -1,12 +1,12 @@
 const firebase = require('firebase');
-const ref = firebase.database().ref('RestructuredCategories');
+const ref = firebase.database().ref('RestrcutredCategories');
 
 module.exports = (function() {
     function getMemberPaths(memberID) {
         return new Promise(function(resolve, reject) {
             ref.once('value').then(snapshot => {
                 let grouped = snapshot.val();
-                let pathsToMember = _findPathsToMember(memberID, grouped, 'RestructuredCategories');
+                let pathsToMember = _findPathsToMember(memberID, grouped, 'RestrcutredCategories');
                 resolve(pathsToMember);
             });
         });
@@ -94,13 +94,15 @@ module.exports = (function() {
     function getMiscelaneousFrom(values) {
         let categories = values[0].val(), members = values[1].val();
         let misc = [];
-        for (let group of categories.Miscelaneous) {
+        for (let groupIndex in categories.Miscelaneous) {
+            const group = categories.Miscelaneous[groupIndex];
             if (group) {
-                let _group = {title: group.Title, members: []}
-                for (let memberKey of group.Members) {
+                let _group = { title: group.Title, index: groupIndex, members: [] }
+                for (let memberIndex in group.Members) {
                     _group.members.push({
-                        name: members[memberKey].DisplayableCredentials.Name,
-                        key: memberKey
+                        name: members[group.Members[memberIndex]].DisplayableCredentials.Name,
+                        key: group.Members[memberIndex],
+                        path: `/Miscelaneous/${groupIndex}/Members/${memberIndex}`
                     });
                 }
                 misc.push(_group);
@@ -148,12 +150,16 @@ module.exports = (function() {
             return ref.child(`${category}/${index}`).set(memberID);
         });
     }
+    function reorderAtPath(path, orderedArray) {
+        return ref.child(path).set(orderedArray);
+    }
 
     return {
         removeMember: removeMemberAt,
         insertMiscInto: insertMiscIntoGroup,
         insertMemberInto: insertMemberInto,
         getAllFaculty: getFaculty,
-        getFacultyWithoutMisc: getFacultyWithoutMisc
+        getFacultyWithoutMisc: getFacultyWithoutMisc,
+        reorderAtPath: reorderAtPath
     }
 })()

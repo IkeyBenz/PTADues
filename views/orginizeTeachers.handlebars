@@ -3,9 +3,10 @@
 {{#each misc}}
     <li>
         <strong>{{this.title}}</strong>
-        <ul>
+        <ul id="/Miscelaneous/{{this.index}}/Members" class="sortable">
             {{#each this.members}}
-                <li><a href="/faculty/{{this.key}}/edit/">{{this.name}}</a></li>
+                <li id="{{this.key}}">{{this.name}}</li>
+             {{!-- href="/faculty/{{this.key}}/edit/" --}}
             {{/each}}
         </ul>
     </li>
@@ -24,4 +25,8 @@
         {{/each}}
     </ul>
 {{/each}}
+
+<script src="/js/Sortable.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/sortFaculty.js"></script>
 
