@@ -4,6 +4,7 @@ const firebase = require('firebase');
 const ref = firebase.database().ref('NewFaculty');
 
 module.exports = (function() {
+    
     function addFacultyMember(member) {
         return new Promise(function(resolve, reject) {
             let memberType = member.Type;
@@ -24,48 +25,40 @@ module.exports = (function() {
     }
     
     function removeFacultyMember(memberID) {
-        return new Promise(function(resolve, reject) {
-            ref.child(memberID).remove()
-            .then(() => {
-                Groups.removeMember(memberID);
-            }).then(() => {
-                resolve();
-            }).catch(error => {
-                reject(error);
-            });
+        return ref.child(memberID).remove()
+        .then(Groups.removeMember(memberID))
+        .then(() => {
+            return Promise.resolve();
+        }).catch(error => {
+            return Promise.reject(error);
         });
     }
     function updateFacultyMember(memberID, newMember) {
-        return new Promise(function(resolve, reject) {
-            ref.child(memberID).once('value')
-            .then(snapshot => {
-                let member = snapshot.val();
-                if (member) {
-                    console.log(newMember);
-                    ref.child(memberID).child('DisplayableCredentials').set(newMember);
-                    resolve();
-                } else {
-                    reject("Member does not exist.");
-                }
-            });
+        return ref.child(memberID).once('value').then(snapshot => {
+            let member = snapshot.val();
+            if (member) {
+                ref.child(memberID).child('DisplayableCredentials').set(newMember);
+                return Promise.resolve();
+            } else {
+                return Promise.reject("Member does not exist.");
+            }
         });
     }
     function getFacultyMember(memberID) {
-        return new Promise(function(resolve, reject) {
-            ref.child(memberID).once('value')
-            .then(snapshot => {
-                if (snapshot.val()) {
-                    resolve({ key: snapshot.key, ...snapshot.val() });
-                } else {
-                    reject("Member does not exist.");
-                }
-            });
+        return ref.child(memberID).once('value').then(snapshot => {
+            if (snapshot.val()) {
+                return { key: snapshot.key, ...snapshot.val() }
+            } else {
+                return Promise.reject("Member does not exist.");
+            }
         });
     }
+
     return {
         create: (member) => addFacultyMember(member),
         read:   (memberID) => getFacultyMember(memberID),
         update: (memberID, newMember) => updateFacultyMember(memberID, newMember),
         delete: (memberID) => removeFacultyMember(memberID)
     }
-})()
+
+})();
