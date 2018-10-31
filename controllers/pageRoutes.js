@@ -29,11 +29,17 @@ module.exports = function(app) {
     });
 
     app.get('/admin/faculty/edit', (req, res) => {
-        res.render('adminComingSoon', { layout: 'admin', edit: true, pageName: 'edit faculty' });
+        const data = {
+            layout: 'admin', edit: true, pageName: 'edit faculty',
+            memberParams: [ { key: 'Name' }, { key: 'Group' } ]
+        }
+        res.render('editTeachers', data);
     });
 
     app.get('/admin/faculty/orginize/', (req, res) => {
-        res.render('adminComingSoon', { layout: 'admin', orginize: true, pageName: 'orginize faculty' });
+        Groups.getAllFaculty().then(data => {
+            res.render('orginizeTeachers', { layout: 'admin', orginize: true, ...data });
+        });
     });
 
     app.get('/admin/faculty/stats/', (req, res) => {
