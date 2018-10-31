@@ -1,11 +1,12 @@
 const firebase = require('firebase');
+const ref = firebase.database().ref('RestructuredCategories');
 
 module.exports = (function() {
     function getMemberPaths(memberID) {
         return new Promise(function(resolve, reject) {
-            firebase.database().ref('CategorizedFaculty').once('value').then(snapshot => {
+            ref.once('value').then(snapshot => {
                 let grouped = snapshot.val();
-                let pathsToMember = _findPathsToMember(memberID, grouped, 'CategorizedFaculty');
+                let pathsToMember = _findPathsToMember(memberID, grouped, 'RestructuredCategories');
                 resolve(pathsToMember);
             });
         });
@@ -52,17 +53,17 @@ module.exports = (function() {
     }
     function insertMiscIntoGroup(memberKey, groupTitle) {
         return new Promise(function(resolve, reject) {
-            firebase.database().ref('RestrcutredCategories/Miscelaneous').once('value').then(snapshot => {
+            ref.child('Miscelaneous').once('value').then(snapshot => {
                 let groups = snapshot.val();
                 for (let index in Object.keys(groups)) {
                     if (groups[index].Title == groupTitle) {
                         groups[index].Members.push(memberKey);
-                        firebase.database().ref(`RestrcutredCategories/Miscelaneous/${index}/Members`).set(groups[index].Members);
+                        ref.child(`Miscelaneous/${index}/Members`).set(groups[index].Members);
                         resolve();
                     }
                 }
                 getLastIndexOf('Miscelaneous').then(index => {
-                    firebase.database().ref('RestrcutredCategories/Miscelaneous/' + index).set({
+                    ref.child('Miscelaneous/' + index).set({
                         Members: [memberKey],
                         Title: groupTitle
                     });
@@ -74,8 +75,7 @@ module.exports = (function() {
     
     function getParametersForCategory(category) {
         return new Promise(function(resolve, reject) {
-            firebase.database().ref(`RestrcutredCategories/${category}/0`).once('value')
-            .then(snapshot => {
+            ref.child(`${category}/0`).once('value').then(snapshot => {
                 let memberKey = snapshot.val();
                 firebase.database().ref(`New/${memberKey}`).once('value')
             }).then(snapshot => {
@@ -87,7 +87,7 @@ module.exports = (function() {
     }
     function downloadFaculty() {
         return Promise.all([
-            firebase.database().ref('RestrcutredCategories/').once('value'),
+            ref.once('value'),
             firebase.database().ref('NewFaculty').once('value')
         ]);
     }
@@ -143,18 +143,17 @@ module.exports = (function() {
             }).catch(error => reject(error));
         });
     }
+    function insertMemberInto(category, memberID) {
+        return getLastIndexOf(category).then(index => {
+            return ref.child(`${category}/${index}`).set(memberID);
+        });
+    }
 
     return {
-        removeMember: (memberID) => removeMemberAt(memberID),
-        insertMiscInto: (memberID, groupTitle) => insertMiscIntoGroup(memberID, groupTitle),
-        insertMemberInto: (category, memberID) => {
-            return new Promise(async function(resolve, reject) {
-                let index = await getLastIndexOf(category);
-                firebase.database().ref(`CategorizedFaculty/${category}/${index}`).set(memberID);
-                resolve();
-            });
-        },
-        getAllFaculty: () => getFaculty(),
-        getFacultyWithoutMisc: () => getFacultyWithoutMisc()
+        removeMember: removeMemberAt,
+        insertMiscInto: insertMiscIntoGroup,
+        insertMemberInto: insertMemberInto,
+        getAllFaculty: getFaculty,
+        getFacultyWithoutMisc: getFacultyWithoutMisc
     }
 })()
