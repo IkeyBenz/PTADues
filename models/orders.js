@@ -1,5 +1,7 @@
 const firebase = require('firebase');
 const ref = firebase.database().ref('Orders');
+const promise = require('bluebird');
+const writeFile = promise.promisify(require('fs').writeFile);
 
 module.exports = (function() {
     function create(orderInfo) {
@@ -81,8 +83,34 @@ module.exports = (function() {
         });
     }
 
+    function getAllAsCSV() {
+        return ref.once('value').then(snapshot => {
+            const orders = snapshot.val();
+            let csvString = 'OrderID,Name,Email,Phone,Address,Amount\n'
+            for (let orderKey in orders) {
+                const name = orders[orderKey].orderInfo.Name;
+                const email = orders[orderKey].orderInfo.Email;
+                const phone = orders[orderKey].orderInfo.Phone;
+                const address = removeCommasFrom(orders[orderKey].orderInfo.Address);
+                const amount = orders[orderKey].orderInfo.Amount;
+                const str = `${orderKey},${name},${email},${phone},${address},${amount}\n`
+                csvString += str;
+            }
+            return writeFile(__dirname + '/../orders.csv', csvString);
+        });
+    }
+    function removeCommasFrom(string) {
+        let newString = '';
+        for (let i = 0; i < string.length; i++) {
+            if (string.charAt(i) != ',') {
+                newString += string.charAt(i);
+            }
+        }
+        return newString
+    }
     return {
-        create: (orderInfo) => create(orderInfo),
-        getAll: getOrdersForHandlebars
+        create: create,
+        getAll: getOrdersForHandlebars,
+        getAsCSV: getAllAsCSV
     }
 })();
