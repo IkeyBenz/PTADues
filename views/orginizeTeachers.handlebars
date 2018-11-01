@@ -1,12 +1,13 @@
-<link rel="stylesheet" href="/css/sortable.css">
 <h2>Miscelaneous:</h2>
-<ul id="/Miscelaneous" class="sortable">
+<ul id="/Miscelaneous" class="sortable list-group">
 {{#each misc}}
-    <li id="{{this.groupKey}}">
+    <li id="{{this.groupKey}}" class="list-group-item">
+        <span class="drag-handle">☰</span>
         <strong>{{this.title}}</strong>
-        <ul id="/MiscGroups/{{this.groupKey}}/Members" class="sortable">
+        <ul id="/MiscGroups/{{this.groupKey}}/Members" class="sortable list-group">
             {{#each this.members}}
-                <li id="{{this.key}}">
+                <li id="{{this.key}}" class="list-group-item">
+                    <span class="drag-handle">☰</span>
                     {{this.name}}
                     <a href="/faculty/{{this.key}}/edit/" class="btn btn-primary btn-sm">Edit</a>
                 </li>
@@ -18,17 +19,18 @@
 
 {{#each other}}
     <h1>{{this.title}}</h1>
-    <ul>
+    <ul class="sortable list-group" id="/{{this.title}}">
         {{#each this.members}}
-            <li><a href="/faculty/{{this.key}}/edit/"><table><tr>
-            {{#each this.properties}}
-                <td>{{this}}</td>
-            {{/each}}
-            </tr></table></a></li>
+            <li class="list-group-item" id="{{this.key}}">
+                <span class="drag-handle">☰</span>
+                {{#each this.properties}}{{this}} {{/each}}
+                <a href="/faculty/{{this.key}}/edit/" class="btn btn-primary btn-sm">Edit</a>
+            </li>
         {{/each}}
     </ul>
 {{/each}}
 
+<link rel="stylesheet" href="/css/sortable.css">
 <script src="/js/Sortable.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/sortFaculty.js"></script>

@@ -1,14 +1,7 @@
-.sortable {
-    list-style: none;
-    padding: 0;
+.drag-handle {
+    cursor: move;
+    cursor: -webkit-grabbing;
 }
-
-.sortable li {
-    background: #eee;
-    margin: 1px;
-    padding: 5px 10px;
-}
-
 .sortable-ghost {
     opacity: .6;
 }

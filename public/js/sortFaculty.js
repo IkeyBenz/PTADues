@@ -1,6 +1,9 @@
 $(document).ready(function() {
     for (let element of $('.sortable')) {
-        Sortable.create(element, { onEnd: reorderInDatabase });
+        Sortable.create(element, { 
+            handle: '.drag-handle',
+            onEnd: reorderInDatabase
+        });
     }
 });
 

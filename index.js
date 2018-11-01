@@ -40,5 +40,3 @@ app.listen(port, () => {
         https.get('https://mdy-pta-dues.herokuapp.com')
     }, 1500000);
 });
-
-
