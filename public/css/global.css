@@ -1,7 +1,7 @@
 body {
     margin: 0;
     margin-bottom: 100px;
-    background-color: #AFDEFB;
+    background-color: #AFDEFB !important;
 }
 header {
     padding-top: 10px;
@@ -29,8 +29,8 @@ header {
     margin-top: 20px;
 }
 .btn-primary {
-    background-color: #01389D;
-    border-color: #01389D;
+    background-color: #01389D !important;
+    border-color: #01389D !important;
 }
 .container-fluid {
     margin-top: 30px;

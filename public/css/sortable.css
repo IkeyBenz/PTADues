@@ -5,3 +5,20 @@
 .sortable-ghost {
     opacity: .6;
 }
+li .btn {
+    float: right;
+}
+.sortable {
+    background-color: rgba(0,0,0,0.02);
+}
+li {
+    background-color: rgba(0,0,0,0.02) !important;
+}
+.list-container {
+    background-color: white;
+    padding: 15px;
+    margin: 5px;
+    border-radius: 10px;
+    min-width: 420px;
+    float: left;
+}

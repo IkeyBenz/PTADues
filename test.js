@@ -2,17 +2,25 @@ const firebase = require('firebase');
 if (firebase.apps.length < 1) {
     firebase.initializeApp(JSON.parse(require('./keys').FIREBASE_CONFIG));
 }
+const ref = firebase.database().ref('NewFaculty');
 
-function makeElementaryTeacher() {
-    const key = firebase.database().ref('NewFaculty').push({
-        DisplayableCredentials: {
-            Name: 'Mrs. Sarah Kahn',
-            Class: '1A-am',
-            Room: 'Rm 205',
-            Assistants: ['-LQDFK-FwrtN-n691Gpx']
-        },
-        InternalCredentials: { Type: 'Elementary' }
-    }).key;
-    console.log(key);
+function restructureFaculty() {
+    ref.once('value').then(snapshot => {
+        const faculty = snapshot.val();
+        let newFaculty = {}
+        for (let key in faculty) {
+            const member = faculty[key];
+            newFaculty[key] = {
+                aliases: [member.DisplayableCredentials],
+                InternalCredentials: member.InternalCredentials
+            }
+        }
+        ref.set(newFaculty);
+    });
 }
-makeElementaryTeacher();
+function undo() {
+    firebase.database().ref('PreviousFaculty').once('value').then(snapshot => {
+        ref.set(snapshot.val());
+    });
+}
+undo();

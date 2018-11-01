@@ -82,12 +82,25 @@ module.exports = (function() {
             resolve(data);
         });
     }
+
+    function getAlphabetizedFacutly() {
+        return ref.once('value').then(snapshot => {
+            const faculty = snapshot.val();
+            let members = [];
+            for (let key in faculty) {
+                members.push({ key: key, name: faculty[key].DisplayableCredentials.Name });
+            }
+            members.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+            return members;
+        });
+    }
     return {
         create: addFacultyMember,
         read: getFacultyMember,
         update: updateFacultyMember,
         delete: removeFacultyMember,
-        getUpdatableCredentials: getUpdatableCredentials
+        getUpdatableCredentials: getUpdatableCredentials,
+        getFaculty: getAlphabetizedFacutly
     }
 
 })();

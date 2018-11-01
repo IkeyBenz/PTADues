@@ -1,8 +1,11 @@
 $(document).ready(function() {
-    $('#teacherType').on('change', setQuestionair);
+    if ($('#teacherType').length) {
+        setQuestionair();
+        $('#teacherType').on('change', setQuestionair);
+    }
 });
 function setQuestionair() {
-    $('#form-title').text(`Add ${$('#teacherType option:selected').text()} Teacher`);
+    $('#add-button').text(`Add ${$('#teacherType option:selected').text()} Member`);
     const options = {
         'Miscelaneous': ['Name', 'Group'],
         'PreK': ['Name', 'Class'],

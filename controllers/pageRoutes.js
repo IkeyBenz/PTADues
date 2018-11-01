@@ -1,5 +1,6 @@
-let Groups = require('../models/groups');
-let Orders = require('../models/orders');
+const Groups = require('../models/groups');
+const Orders = require('../models/orders');
+const Faculty = require('../models/faculty');
 
 module.exports = function(app) {
 
@@ -29,12 +30,16 @@ module.exports = function(app) {
     });
 
     app.get('/admin/faculty/edit/', (req, res) => {
-        const data = {
-            layout: 'admin', edit: true, pageName: 'edit faculty',
-            memberParams: [ { key: 'Name' }, { key: 'Group' } ],
-            ...req.query
-        }
-        res.render('editTeachers', data);
+        let data = {layout: 'admin', edit: true, pageName: 'edit faculty', ...req.query }
+        if (req.query.existing) {
+            Faculty.getFaculty().then(members => {
+                data['members'] = members;
+                delete data.existing;
+                res.render('editTeachers', data);
+            });
+        } else {
+            res.render('editTeachers', data);
+        }        
     });
 
     app.get('/admin/faculty/orginize/', (req, res) => {

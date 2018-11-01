@@ -43,6 +43,14 @@ module.exports = function(app) {
         .catch(res.error)
     });
 
+    app.post('/admin/faculty/addExisting', (req, res) => {
+        const path = req.body.path;
+        const memberID = req.body.member;
+        Groups.insertMemberInto(path, memberID).then(() => {
+            res.redirect('/admin/faculty/orginize/');
+        });
+    });
+
     app.get('/admin/groups/assistants', (req, res) => {
         Groups.getAssistants().then(assistants => {
             res.json(assistants);
