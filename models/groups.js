@@ -1,4 +1,5 @@
 const firebase = require('firebase');
+const db = firebase.database();
 const ref = firebase.database().ref('RestrcutredCategories');
 
 module.exports = (function() {
@@ -45,7 +46,7 @@ module.exports = (function() {
     }
     function getLastIndexOf(category) {
         return new Promise(function(resolve, reject) {
-            firebase.database().ref('CategorizedFaculty/' + category).once('value').then(snapshot => {
+            ref.child(category).once('value').then(snapshot => {
                 let obj = snapshot.val();
                 resolve(obj.length);
             });
@@ -118,12 +119,10 @@ module.exports = (function() {
             if (category != 'Miscelaneous' && category != 'MiscGroups') {
                 let cat = { title: category, members: [] }
                 for (let memberKey of categories[category]) {
-                    let _member = { key: memberKey, properties: [] }
-                    let creds = members[memberKey].DisplayableCredentials
-                    for (let property in creds) {
-                        _member.properties.push(creds[property]);
-                    }
-                    cat.members.push(_member);
+                    cat.members.push({ 
+                        key: memberKey, 
+                        props: members[memberKey].DisplayableCredentials
+                    });
                 }
                 faculty.push(cat);
             }
@@ -154,6 +153,19 @@ module.exports = (function() {
     function reorderAtPath(path, orderedArray) {
         return ref.child(path).set(orderedArray);
     }
+    function getAssistants() {
+        const facultyPromise = db.ref('NewFaculty').once('value');
+        const assistantsPromise = ref.child('Assistants').once('value');
+        return Promise.all([facultyPromise, assistantsPromise]).then(snapshots => {
+            let assistants = {}
+            const members = snapshots[0].val();
+            const assistantKeys = snapshots[1].val();
+            for (let key of assistantKeys) {
+                assistants[key] = members[key].DisplayableCredentials.Name;
+            }
+            return assistants
+        });
+    }
 
     return {
         removeMember: removeMemberAt,
@@ -161,6 +173,7 @@ module.exports = (function() {
         insertMemberInto: insertMemberInto,
         getAllFaculty: getFaculty,
         getFacultyWithoutMisc: getFacultyWithoutMisc,
-        reorderAtPath: reorderAtPath
+        reorderAtPath: reorderAtPath,
+        getAssistants: getAssistants
     }
 })()

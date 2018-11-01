@@ -22,8 +22,10 @@
     <ul class="sortable list-group" id="/{{this.title}}">
         {{#each this.members}}
             <li class="list-group-item" id="{{this.key}}">
-                <span class="drag-handle">☰</span>
-                {{#each this.properties}}{{this}} {{/each}}
+                <span class="drag-handle">☰ </span>
+                {{#if this.props.Class}}{{this.props.Class}} | {{/if}}
+                {{#if this.props.Room}}{{this.props.Room}} | {{/if}}
+                {{#if this.props.Name}}{{this.props.Name}} {{/if}}
                 <a href="/faculty/{{this.key}}/edit/" class="btn btn-primary btn-sm">Edit</a>
             </li>
         {{/each}}
@@ -32,6 +34,5 @@
 
 <link rel="stylesheet" href="/css/sortable.css">
 <script src="/js/Sortable.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/sortFaculty.js"></script>
 

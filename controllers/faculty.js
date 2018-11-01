@@ -6,39 +6,32 @@ module.exports = function(app) {
     app.post('/faculty/create', (req, res) => {
         Faculty.create(req.body)
         .then(() => {
-            res.redirect(`/admin/?p=editTeachers&successMsg=${req.body.Name}`);
+            const successMessage = `Successfully%20Added%20${req.body.Name}`;
+            res.redirect(`/admin/faculty/edit?successMsg=${successMessage}`);
         }).catch(error => {
-            res.redirect(`/admin/?p=editTeachers&?errorMsg=${error.message}`);
+            res.redirect(`/admin/faculty/edit/?errorMsg=${error.message}`);
         });
     });
 
     app.post('/faculty/:memberId/update', (req, res) => {
         delete req.body.Type;
         Faculty.update(req.params.memberId, req.body).then(() => {
-            res.redirect('/admin/?p=editTeachers&successMsg=Update%20Successful.');
+            res.redirect('/admin/faculty/edit?successMsg=Update%20Successful.');
         }).catch(error => {
-            res.redirect(`/admin/?p=editTeachers&errorMsg=${error}`);
+            res.redirect(`/admin/faculty/edit?errorMsg=${error}`);
         });
     });
 
     app.get('/faculty/:memberId/edit', (req, res) => {
-        Faculty.read(req.params.memberId).then(member => {
-            let editedMember = [];
-            for (let param in member.DisplayableCredentials) {
-                editedMember.push({
-                    key: param,
-                    val: member.DisplayableCredentials[param]
-                });
-            }
-            let data = {
-                layout: 'admin', 
-                memberParams: editedMember, 
-                memberId: member.key,
-                isBeingUpdated: true
-            }
-            res.render('editTeachers', data);
+        Faculty.getUpdatableCredentials(req.params.memberId).then(credentials => {
+            res.render('editTeachers', { 
+                layout: 'admin', edit: true,
+                memberId: req.params.memberId,
+                isBeingUpdated: true, 
+                ...credentials 
+            });
         }).catch(error => {
-            res.render('editTeachers', { layout: 'admin', errorMessage: error });
+            res.render('editTeachers', { layout: 'admin', errorMsg: error });
         });
     });
 
@@ -48,6 +41,12 @@ module.exports = function(app) {
         Groups.reorderAtPath(path, newOrder)
         .then(() => res.end)
         .catch(res.error)
+    });
+
+    app.get('/admin/groups/assistants', (req, res) => {
+        Groups.getAssistants().then(assistants => {
+            res.json(assistants);
+        });
     });
 
 }

@@ -1,9 +1,19 @@
-<table id="query-table">
+<table id="query-table" cellpadding="5px">
     {{#each memberParams}}
         <tr class="form-group">
             <td>{{this.key}}:</td>
             <td><input class="form-control" type="text" name="{{this.key}}" value="{{this.val}}"></td>
         </tr>
     {{/each}}
+    {{#if this.Assistants}}
+        <tr class="form-group">
+            <td>Assistants: </td>
+            <td><select name="Assistants" multiple>
+                {{#each this.Assistants}}
+                    <option value="{{this.key}}" selected="{{this.selected}}">{{this.name}}</option>
+                {{/each}}
+            </select></td>
+        </tr>
+    {{/if}}
 </table>
 <button type="submit" class="btn btn-primary">{{#if isBeingUpdated}}Update{{else}}Add{{/if}}</button>

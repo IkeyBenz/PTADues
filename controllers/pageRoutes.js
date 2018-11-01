@@ -28,10 +28,11 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/admin/faculty/edit', (req, res) => {
+    app.get('/admin/faculty/edit/', (req, res) => {
         const data = {
             layout: 'admin', edit: true, pageName: 'edit faculty',
-            memberParams: [ { key: 'Name' }, { key: 'Group' } ]
+            memberParams: [ { key: 'Name' }, { key: 'Group' } ],
+            ...req.query
         }
         res.render('editTeachers', data);
     });

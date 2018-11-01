@@ -54,11 +54,40 @@ module.exports = (function() {
         });
     }
 
+    function getUpdatableCredentials(memberID) {
+        return new Promise(async (resolve, reject) => {
+            const member = await getFacultyMember(memberID);
+            let data = { memberParams: [], Assistants: false };
+            let editedMember = [];
+            for (let param in member.DisplayableCredentials) {
+                if (param == "Assistants") {
+                    const _assistants = await Groups.getAssistants();
+                    let assistants = [];
+                    for (let key in _assistants) {
+                        assistants.push({
+                            key: key,
+                            name: _assistants[key],
+                            selected: member.DisplayableCredentials.Assistants.includes(key)
+                        });
+                    }
+                    data.Assistants = assistants;
+                } else {
+                    editedMember.push({
+                        key: param,
+                        val: member.DisplayableCredentials[param]
+                    });
+                }
+            }
+            data.memberParams = editedMember;
+            resolve(data);
+        });
+    }
     return {
-        create: (member) => addFacultyMember(member),
-        read:   (memberID) => getFacultyMember(memberID),
-        update: (memberID, newMember) => updateFacultyMember(memberID, newMember),
-        delete: (memberID) => removeFacultyMember(memberID)
+        create: addFacultyMember,
+        read: getFacultyMember,
+        update: updateFacultyMember,
+        delete: removeFacultyMember,
+        getUpdatableCredentials: getUpdatableCredentials
     }
 
 })();
