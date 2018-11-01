@@ -1,0 +1,14 @@
+.sortable {
+    list-style: none;
+    padding: 0;
+}
+
+.sortable li {
+    background: #eee;
+    margin: 1px;
+    padding: 5px 10px;
+}
+
+.sortable-ghost {
+    opacity: .6;
+}

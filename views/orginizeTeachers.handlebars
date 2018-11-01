@@ -1,12 +1,15 @@
+<link rel="stylesheet" href="/css/sortable.css">
 <h2>Miscelaneous:</h2>
-<ul>
+<ul id="/Miscelaneous" class="sortable">
 {{#each misc}}
-    <li>
+    <li id="{{this.groupKey}}">
         <strong>{{this.title}}</strong>
-        <ul id="/Miscelaneous/{{this.index}}/Members" class="sortable">
+        <ul id="/MiscGroups/{{this.groupKey}}/Members" class="sortable">
             {{#each this.members}}
-                <li id="{{this.key}}">{{this.name}}</li>
-             {{!-- href="/faculty/{{this.key}}/edit/" --}}
+                <li id="{{this.key}}">
+                    {{this.name}}
+                    <a href="/faculty/{{this.key}}/edit/" class="btn btn-primary btn-sm">Edit</a>
+                </li>
             {{/each}}
         </ul>
     </li>

@@ -88,21 +88,22 @@ module.exports = (function() {
     function downloadFaculty() {
         return Promise.all([
             ref.once('value'),
-            firebase.database().ref('NewFaculty').once('value')
+            firebase.database().ref('NewFaculty').once('value'),
+            ref.child('MiscGroups').once('value')
         ]);
     }
     function getMiscelaneousFrom(values) {
-        let categories = values[0].val(), members = values[1].val();
+        let categories = values[0].val(), members = values[1].val(), miscGroups = values[2].val();
         let misc = [];
-        for (let groupIndex in categories.Miscelaneous) {
-            const group = categories.Miscelaneous[groupIndex];
+        for (let groupKeyIndex in categories.Miscelaneous) {
+            const groupKey = categories.Miscelaneous[groupKeyIndex];
+            const group = miscGroups[groupKey];
             if (group) {
-                let _group = { title: group.Title, index: groupIndex, members: [] }
+                let _group = { title: group.Title, groupKey: groupKey, members: [] }
                 for (let memberIndex in group.Members) {
                     _group.members.push({
                         name: members[group.Members[memberIndex]].DisplayableCredentials.Name,
-                        key: group.Members[memberIndex],
-                        path: `/Miscelaneous/${groupIndex}/Members/${memberIndex}`
+                        key: group.Members[memberIndex]
                     });
                 }
                 misc.push(_group);
@@ -114,7 +115,7 @@ module.exports = (function() {
         let categories = values[0].val(), members = values[1].val();
         let faculty = [];
         for (let category in categories) {
-            if (category != 'Miscelaneous') {
+            if (category != 'Miscelaneous' && category != 'MiscGroups') {
                 let cat = { title: category, members: [] }
                 for (let memberKey of categories[category]) {
                     let _member = { key: memberKey, properties: [] }
