@@ -18,7 +18,7 @@ module.exports = function (app) {
         Orders.getAsCSV().then(() => {
             const filePath = __dirname + '/../orders.csv';
             res.download(filePath);
-            fs.unlink(filePath, () => {});
+            
         });
     });
 

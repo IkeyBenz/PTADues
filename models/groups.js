@@ -135,13 +135,19 @@ module.exports = (function() {
         }
         return faculty;
     }
+    function formattedMembers(d) {
+        return Object.keys(d.faculty).map(memberKey => {
+            return { id: memberKey, name: d.faculty[memberKey].DisplayableCredentials.Name }
+        }).sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+    }
     function getFaculty() {
         return downloadFaculty().then(values => {
             return {
                 misc: getMiscelaneousFrom(values),
                 otherFaculty: getOtherFacultyFrom(values),
                 elementary: formattedElementary(values),
-                nursary: formattedNursary(values)
+                nursary: formattedNursary(values),
+                faculty: formattedMembers(values)
             }
         });
     }
@@ -193,6 +199,15 @@ module.exports = (function() {
             return newClass;
         });
     }
+    function createNursaryClass(teacherId, className) {
+        return getLastIndexOf('Nursary').then(index => {
+            const classKey = ref.child('NursaryClasses').push({
+                Class: className,
+                Teacher: teacherId
+            }).key;
+            return ref.child(`Nursary/${index}`).set(classKey);
+        });
+    }
 
     return {
         removeMember: removeMemberAt,
@@ -202,7 +217,8 @@ module.exports = (function() {
         getFacultyWithoutMisc: getFacultyWithoutMisc,
         reorderAtPath: reorderAtPath,
         getAssistants: getAssistants,
-        insertMiscIntoGroupId: insertMiscIntoGroupId
+        insertMiscIntoGroupId: insertMiscIntoGroupId,
+        createNursaryClass: createNursaryClass
     }
 
 })();

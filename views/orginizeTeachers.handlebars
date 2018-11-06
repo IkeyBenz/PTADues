@@ -13,7 +13,6 @@
                         <button onclick="showIframe('/faculty/{{this.key}}/edit/')" class="btn btn-primary btn-sm">Edit</button>
                     </li>
                 {{/each}}
-                {{!-- <a href="/admin/faculty/edit?existing=true&path=MiscGroups%2F{{this.groupKey}}%2FMembers" class="btn btn-success">Add Existing Teacher</a> --}}
             </ul>
             {{!-- Don't put this in the list otherwise the reorder function will pick up on it'd id! --}}
             <div class="dropdown">
@@ -22,7 +21,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <div class="dropdown-item btn-group" role="group">
-                        <button type="button" class="btn btn-primary" onclick="displayAddExistingPopup('{{this.groupKey}}')">Existing</button>
+                        <button type="button" class="btn btn-primary" onclick="displayAddMiscMember('{{this.groupKey}}', '{{this.title}}')">Existing</button>
                         <button type="button" class="btn btn-secondary" onclick="displayCreateMiscMember('{{this.groupKey}}', '{{this.title}}')">New</button>
                     </div>
                 </div>
@@ -72,23 +71,45 @@
     </li>
     {{/each}}
     </ul>
+    <button class="btn btn-success" onclick="displayAddClassPopup('Nursary')">Create Class</button>
 </div>
 
 <div class="addFacultyContainer">
-    <div class="addition container" id="elementaryAdd">
-        <h2>Add Elementary Class</h2>
-        <div class="form-group row"><label for="">Class</label><input type="text" class="form-control"></div>
-        <div class="form-group row"><label for="">Room</label><input type="text" class="form-control"></div>
-        <div class="form-group row"><label for="">Teacher</label></div>
+    <div class="addition" id="classAdd">
+        <button class="btn btn-secondary exButton">X</button>
+        <h2>Add <span id="classType"></span> Class:</h2>
+        <input type="text" id="classInput" class="classInputs" placeholder="Class">
+        <input type="text" id="gradeInput" class="classInputs" placeholder="Grade">
+        <input type="text" id="roomNumberInput" class="classInputs" placeholder="Room Number">
+        <label>Existing Teacher? <select id="teacherSelect">
+            <option value="None">Select</option>
+            {{#each faculty}} <option value="{{this.id}}">{{this.name}}</option> {{/each}}
+        </select></label>
+        <label>OR Create New Teacher: <input type="text" id="newTeacherName" placeholder="New Teacher's Name"></label>
+        <label id="assistantAdder" class="classInputs">Assistants: <select id="assistantsSelect" multiple>
+            <option value="None">Select</option>
+            {{#each faculty}} <option value="{{this.id}}">{{this.name}}</option> {{/each}}
+        </select> OR <input type="text" id="newAssistantName" placeholder="New Assistant's Name"></label>
+        <button class="btn btn-primary" id="addClassButton">Add</button>
     </div>
-    <div class="addition container" id="miscMemberAdd">
-        <h2></h2>
-    </div>
+    
     <div class="addition" id="miscMemberCreate">
         <button class="btn btn-secondary exButton">X</button>
-        <h2>Create new member &amp; add to <span id="miscGroupTitle"></span>:</h2>
+        <h2>Create new member &amp; add to <span class="miscGroupTitle"></span>:</h2>
         <input type="text" placeholder="Member's Name" id="memberName">
         <button class="btn btn-primary" id="createMiscMemberButton">Create</button>
+    </div>
+
+    <div class="addition" id="miscMemberAdd">
+        <button class="btn btn-secondary exButton">X</button>
+        <h2>Add Existing Member to <span class="miscGroupTitle"></span>:</h2>
+        <select id="memberToAdd">
+            <option value="None" selected>Select</option>
+            {{#each faculty}}
+            <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+        <button class="btn btn-primary" id="addMiscMemberButton">Add</button>
     </div>
 </div>
 

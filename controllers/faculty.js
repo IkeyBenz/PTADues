@@ -57,6 +57,7 @@ module.exports = function(app) {
         });
     });
 
+    // Shitty Routes But fuck it cause got no time to be pretty
     app.post('/admin/faculty/createMiscAndAdd', (req, res) => {
         const memberName = req.body.memberName;
         const groupId = req.body.groupId;
@@ -64,5 +65,23 @@ module.exports = function(app) {
             res.end();
         });
     });
+
+    app.post('/admin/faculty/addToMiscGroup', (req, res) => {
+        const memberId = req.body.memberId;
+        const groupId = req.body.groupId;
+        Groups.insertMiscIntoGroupId(memberId, groupId).then(() => {
+            res.end();
+        });
+    });
+
+    app.post('/admin/faculty/addClass', (req, res) => {
+        const classType = req.body.Type;
+        if (classType == 'Nursary') {
+            const teacherId = req.body.TeacherID || Faculty.create(req.body.NewTeacherName);
+            Groups.createNursaryClass(teacherId, req.body.Class).then(() => {
+                return res.end();
+            });
+        }
+    })
 
 }
