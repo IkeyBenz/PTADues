@@ -4,5 +4,6 @@ module.exports = function (app) {
     require('./pageRoutes')(app);
     require('./stripe')(app);
     require('./orders')(app);
+    require('./members')(app);
 
 }

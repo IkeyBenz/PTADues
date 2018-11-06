@@ -29,19 +29,6 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/admin/faculty/edit/', (req, res) => {
-        let data = {layout: 'admin', edit: true, pageName: 'edit faculty', ...req.query }
-        if (req.query.existing) {
-            Faculty.getFaculty().then(members => {
-                data['members'] = members;
-                delete data.existing;
-                res.render('editTeachers', data);
-            });
-        } else {
-            res.render('editTeachers', data);
-        }        
-    });
-
     app.get('/admin/faculty/orginize/', (req, res) => {
         Groups.getAllFaculty().then(data => {
             res.render('orginizeTeachers', { layout: 'admin', orginize: true, ...data });
