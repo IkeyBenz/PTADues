@@ -23,6 +23,16 @@ module.exports = (function() {
             }
         });
     }
+    function createFacultyMember(name) {
+        return ref.push({
+            DisplayableCredentials: {
+                Name: name
+            },
+            InternalCredentials: {
+                Earned: 0
+            }
+        }).key;
+    }
     
     function removeFacultyMember(memberID) {
         return ref.child(memberID).remove()
@@ -95,7 +105,8 @@ module.exports = (function() {
         });
     }
     return {
-        create: addFacultyMember,
+        oldCreate: addFacultyMember,
+        create: createFacultyMember,
         read: getFacultyMember,
         update: updateFacultyMember,
         delete: removeFacultyMember,

@@ -73,6 +73,13 @@ module.exports = (function() {
             });
         });
     }
+    function insertMiscIntoGroupId(memberKey, groupId) {
+        return getLastIndexOf(`MiscGroups/${groupId}/Members`).then(index => {
+            console.log(index);
+            console.log(memberKey);
+            return ref.child(`MiscGroups/${groupId}/Members/${index}`).set(memberKey);
+        });
+    }
     
     function getParametersForCategory(category) {
         return new Promise(function(resolve, reject) {
@@ -194,7 +201,8 @@ module.exports = (function() {
         getAllFaculty: getFaculty,
         getFacultyWithoutMisc: getFacultyWithoutMisc,
         reorderAtPath: reorderAtPath,
-        getAssistants: getAssistants
+        getAssistants: getAssistants,
+        insertMiscIntoGroupId: insertMiscIntoGroupId
     }
 
 })();

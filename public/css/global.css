@@ -2,6 +2,7 @@ body {
     margin: 0;
     margin-bottom: 100px;
     background-color: #AFDEFB !important;
+    width: 100vw;
 }
 header {
     padding-top: 10px;

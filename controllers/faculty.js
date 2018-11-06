@@ -57,4 +57,12 @@ module.exports = function(app) {
         });
     });
 
+    app.post('/admin/faculty/createMiscAndAdd', (req, res) => {
+        const memberName = req.body.memberName;
+        const groupId = req.body.groupId;
+        Groups.insertMiscIntoGroupId(Faculty.create(memberName), groupId).then(() => {
+            res.end();
+        });
+    });
+
 }
