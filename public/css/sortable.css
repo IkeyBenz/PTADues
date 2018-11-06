@@ -1,6 +1,8 @@
 .drag-handle {
     cursor: move;
     cursor: -webkit-grabbing;
+    margin-right: 10px;
+    font-size: 1.5em;
 }
 .sortable-ghost {
     opacity: .6;
@@ -21,4 +23,7 @@ li {
     border-radius: 10px;
     min-width: 500px;
     float: left;
+}
+.exButton {
+    margin-left: 13px;
 }

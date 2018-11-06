@@ -23,7 +23,7 @@ module.exports = (function() {
     }
     function formattedElementary(d) {
         return d.orderedGroups.Elementary.map(classKey => {
-            return { ...d.groups.ElemClasses[classKey], id: classKey }
+            return { ...d.groups.Elementary[classKey], id: classKey }
         });
     }
     function formattedFaculty(d) {
@@ -31,21 +31,65 @@ module.exports = (function() {
         for (let memberKey in d.faculty) {
             members.push({
                 id: memberKey,
-                name: d.faculty[memberKey].Name
+                name: d.faculty[memberKey].Name,
+                info: d.faculty[memberKey].Info
             });
         }
-        return members
+        return members.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+    }
+    function formattedNursary(d) {
+        return d.orderedGroups.Nursary.map(classKey => {
+            return { ...d.groups.Nursary[classKey], id: classKey }
+        });
+    }
+    function formattedMiddleSchool(d) {
+        return d.orderedGroups.MiddleSchool.map(classKey => {
+            return { ...d.orderedGroups.MiddleSchool[classKey], id: classKey }
+        });
     }
     function getFaculty() {
         return downloadFaculty().then(d => {
             return {
                 elementary: formattedElementary(d),
-                faculty: formattedFaculty(d)
+                faculty: formattedFaculty(d),
+                nursary: formattedNursary(d),
+                middleSchool: formattedMiddleSchool(d)
             }
         });
     }
+    function getLastOrderedIndexOf(category) {
+        return orderedGroupsRef.child(category).once('value').then(snapshot => {
+            return snapshot.val().length;
+        });
+    }
+    function updateAtPath(path, data) {
+        return groupsRef.child(path).set(data);
+    }
+    function createClass(path, data) {
+        return getLastOrderedIndexOf(path).then(index => {
+            orderedGroupsRef.child(`${path}/${index}`).set(
+                groupsRef.child(path).push(data).key
+            );
+        });
+    }
+    function reorder(path, newOrder) {
+        return orderedGroupsRef.child(path).set(newOrder);
+    }
+    function remove(path, classId) {
+        const promise1 = orderedGroupsRef.child(path).once('value').then(snapshot => {
+            let order = snapshot.val();
+            order.splice(order.indexOf(classId), 1);
+            return orderedGroupsRef.child(path).set(order);
+        });
+        const promise2 = groupsRef.child(`${path}/${classId}`).remove();
+        return Promise.all([promise1, promise2]);
+    }
     return {
-        get: getFaculty
+        create: createClass,
+        get: getFaculty,
+        update: updateAtPath,
+        delete: remove,
+        reorderAtPath: reorder
     }
 })();
 

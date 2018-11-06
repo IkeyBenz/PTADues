@@ -35,14 +35,6 @@ module.exports = function(app) {
         });
     });
 
-    app.post('/admin/faculty/reorder', (req, res) => {
-        const newOrder = req.body.groupOrder;
-        const path = req.body.groupPath;
-        Groups.reorderAtPath(path, newOrder)
-        .then(() => res.end)
-        .catch(res.error)
-    });
-
     app.post('/admin/faculty/addExisting', (req, res) => {
         const path = req.body.path;
         const memberID = req.body.member;
@@ -57,31 +49,29 @@ module.exports = function(app) {
         });
     });
 
-    // Shitty Routes But fuck it cause got no time to be pretty
-    app.post('/admin/faculty/createMiscAndAdd', (req, res) => {
-        const memberName = req.body.memberName;
-        const groupId = req.body.groupId;
-        Groups.insertMiscIntoGroupId(Faculty.create(memberName), groupId).then(() => {
-            res.end();
+
+    app.post('/admin/classes/update', (req, res) => {
+        const path = req.body.path;
+        const data = req.body.data;
+        Groups.update(path, data).then(() => {
+            return res.end();
         });
     });
 
-    app.post('/admin/faculty/addToMiscGroup', (req, res) => {
-        const memberId = req.body.memberId;
-        const groupId = req.body.groupId;
-        Groups.insertMiscIntoGroupId(memberId, groupId).then(() => {
-            res.end();
+    app.post('/admin/classes/create', (req, res) => {
+        const path = req.body.path;
+        delete req.body.path;
+        Groups.create(path, req.body).then(() => {
+            return res.end();
         });
     });
 
-    app.post('/admin/faculty/addClass', (req, res) => {
-        const classType = req.body.Type;
-        if (classType == 'Nursary') {
-            const teacherId = req.body.TeacherID || Faculty.create(req.body.NewTeacherName);
-            Groups.createNursaryClass(teacherId, req.body.Class).then(() => {
-                return res.end();
-            });
-        }
-    })
+    app.post('/admin/classes/remove', (req, res) => {
+        const path = req.body.path;
+        const classId = req.body.classId;
+        Groups.delete(path, classId).then(() => {
+            return res.end();
+        });
+    });
 
 }

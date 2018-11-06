@@ -9,6 +9,8 @@ $(document).ready(function() {
         $('.addFacultyContainer').hide();
         $('.classInputs').hide();
     });
+    $('.classInput').on('change', updateInDB);
+    $('.multi-select').multipleSelect({onClick: updateAssistants});
 });
 
 function reorderInDatabase(event) {
@@ -32,80 +34,48 @@ function getOrderedChildrenIdsFrom(parent) {
     }
     return ids
 }
-function displayCreateMiscMember(groupId, groupTitle) {
-    $('.miscGroupTitle').text(groupTitle);
-    $('#createMiscMemberButton').attr('onclick', `createMiscMember('${groupId}')`);
-    $('.addition').hide();
-    $('.addFacultyContainer').show();
-    $('#miscMemberCreate').show();
-}
-function createMiscMember(groupId) {
-    const memberName = $('#memberName').val();
-    if (!memberName) return alert("Please enter the member's name before continuing.");
-    axios.post('/admin/faculty/createMiscAndAdd', {
-        memberName: memberName,
-        groupId: groupId
-    }).then(res => {
-        window.location.reload();
+
+function updateInDB(e) {
+    axios.post('/admin/classes/update', {
+        path: e.target.id,
+        data: e.target.value
     }).catch(console.error);
 }
-function displayAddMiscMember(groupId, groupTitle) {
-    $('.miscGroupTitle').text(groupTitle);
-    $('#addMiscMemberButton').attr('onclick', `addMiscMember('${groupId}')`);
-    $('.addition').hide();
-    $('.addFacultyContainer').show();
-    $('#miscMemberAdd').show();
-}
-function addMiscMember(groupId) {
-    const memberId = $('#memberToAdd').val();
-    if (memberId == 'None') return alert('Please select a member before continuing.');
-    axios.post('/admin/faculty/addToMiscGroup', {
-        memberId: memberId,
-        groupId, groupId
-    }).then(res => {
-        window.location.reload();
-    }).catch(console.error);
-}
-function displayAddClassPopup(classType) {
-    if (classType == 'Nursary') {
-        $('#classInput').show();
-    } else if (classType == 'Middle') {
-        $('#gradeInput').show();
-    } else if (classType == 'Elementary') {
-        $('.classInputs').show();
+function updateAssistants(e) {
+    const path = e.instance['$el'][0].id;
+    const mamaSelect = e.instance.$parent[0].childNodes[1].childNodes[0];
+    let selected = [];
+    for (let childNode of mamaSelect.childNodes) {
+        if (childNode.classList[1] == "selected") {
+            selected.push(childNode.classList[0]);
+        }
     }
-    $('.addition').hide();
-    $('#classAdd').show();
-    $('#classType').text(classType);
-    $('#addClassButton').attr('onclick', "addClass('Nursary')")
-    $('.addFacultyContainer').show();
+    axios.post('/admin/classes/update', {
+        path: path,
+        data: selected
+    }).catch(console.error);
 }
 
 function addClass(type) {
-    if ($('#teacherSelect').val() == 'None' && $('#newTeacherName').val() == '') {
-         return alert('Please select a teacher or enter the name of a new one before continuing.')
-    };
-    let data = { 
-        Type: type, 
-        TeacherID: $('#teacherSelect').val() == 'None' ? false : $('#teacherSelect').val(),
-        NewTeacherName: $('#newTeacherName').val() == '' ? false : $('#newTeacherName').val()
-    };
-    if (type == 'Nursary') {
-        if ($('#classInput').val() == '') return alert('Please enter the class before continuing.');
-        data = {
-            ...data,
-            Class: $('#classInput').val()
-        }
-    } else if (type == 'Middle') {
-        if ($('#gradeInput').val() == '') return alert('Please enter the grade before continuing.');
-        data = {
-            ...data,
-            Grade: $('#gradeInput').val()
-        }
-    } else if (type == 'Elementary') {
-        
+    let data = {}
+    if (type == "Elementary") {
+        data = { Assistants: [], Class: '', Room: '', path: 'Elementary' }
+    } else if (type == "Nursary") {
+        data = { Class: '', path: 'Nursary' }
+    } else if (type == "MiddleSchool") {
+        data = { Grade: '', path: 'MiddleSchool' }
     }
-    axios.post('/admin/faculty/addClass', data).then(() => {
-        window.location.reload();
-    }).catch(console.error);
+    data['Teacher'] = '';
+
+    axios.post('/admin/classes/create', data)
+    .then(() => window.location.reload())
+    .catch(console.error);
+}
+
+function removeClass(id, type) {
+    axios.post('/admin/classes/remove', {
+        classId: id,
+        path: type
+    }).then(() => window.location.reload())
+    .catch(console.error);
 }
