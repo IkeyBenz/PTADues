@@ -90,11 +90,10 @@ module.exports = (function() {
         return Promise.all([
             ref.once('value'),
             firebase.database().ref('NewFaculty').once('value'),
-            ref.child('MiscGroups').once('value')
-        ]);
+        ]).then(vals => { return { faculty: vals[1].val(), categories: vals[0].val() } });
     }
     function getMiscelaneousFrom(values) {
-        let categories = values[0].val(), members = values[1].val(), miscGroups = values[2].val();
+        let categories = values.categories, members = values.faculty, miscGroups = values.categories.MiscGroups;
         let misc = [];
         for (let groupKeyIndex in categories.Miscelaneous) {
             const groupKey = categories.Miscelaneous[groupKeyIndex];
@@ -113,10 +112,10 @@ module.exports = (function() {
         return misc;
     }
     function getOtherFacultyFrom(values) {
-        let categories = values[0].val(), members = values[1].val();
+        let categories = values.categories, members = values.faculty;
         let faculty = [];
         for (let category in categories) {
-            if (category != 'Miscelaneous' && category != 'MiscGroups') {
+            if (!['Miscelaneous', 'MiscGroups', 'ElemClasses', 'Elementary', 'NursaryClasses', 'Nursary'].includes(category)) {
                 let cat = { title: category, members: [] }
                 for (let memberKey of categories[category]) {
                     cat.members.push({ 
@@ -130,12 +129,13 @@ module.exports = (function() {
         return faculty;
     }
     function getFaculty() {
-        return new Promise(function(resolve, reject) {
-            downloadFaculty().then(values => {
-                let misc = getMiscelaneousFrom(values);
-                let otherFaculty = getOtherFacultyFrom(values);
-                resolve({ misc: misc, other: otherFaculty });
-            }).catch(error => reject(error));
+        return downloadFaculty().then(values => {
+            return {
+                misc: getMiscelaneousFrom(values),
+                otherFaculty: getOtherFacultyFrom(values),
+                elementary: formattedElementary(values),
+                nursary: formattedNursary(values)
+            }
         });
     }
     function getFacultyWithoutMisc() {
@@ -167,6 +167,26 @@ module.exports = (function() {
         });
     }
 
+    function formattedElementary(d) {
+        return d.categories.Elementary.map(classKey => {
+            let newClass = d.categories.ElemClasses[classKey];
+            newClass.Teacher = { id: newClass.Teacher, Name: d.faculty[newClass.Teacher].DisplayableCredentials.Name };
+            newClass.id = classKey;
+            newClass.Assistants = typeof newClass.Assistants == 'string'
+            ? { id: newClass.Assistants, Name: d.faculty[newClass.Assistants].DisplayableCredentials.Name }
+            : newClass.Assistants.map(key => { return { id: key, Name: d.faculty[key].DisplayableCredentials.Name } });
+            return newClass;
+        });
+    }
+    function formattedNursary(d) {
+        return d.categories.Nursary.map(classKey => {
+            let newClass = d.categories.NursaryClasses[classKey];
+            newClass.id = classKey;
+            newClass.Teacher = { id: newClass.Teacher, Name: d.faculty[newClass.Teacher].DisplayableCredentials.Name }
+            return newClass;
+        });
+    }
+
     return {
         removeMember: removeMemberAt,
         insertMiscInto: insertMiscIntoGroup,
@@ -176,4 +196,5 @@ module.exports = (function() {
         reorderAtPath: reorderAtPath,
         getAssistants: getAssistants
     }
-})()
+
+})();

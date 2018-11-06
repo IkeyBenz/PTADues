@@ -46,3 +46,22 @@ function getFormHTMLForElementary() {
         return html;
     });
 }
+function addExisting() {
+    const member = $('#member').val();
+    const path = $('#path').val();
+    console.log('Was suppose to add Member ' + member + ' to path ' + path);
+    hideSelf();
+}
+function createMember() {
+    let newMember = {}
+    $('.createParams').forEach(input => {
+        const name = $(input).attr('name');
+        const val = $(input).val();
+        newMember[name] = val;
+    });
+    
+}
+
+function hideSelf() {
+    parent.hideIframe();
+}

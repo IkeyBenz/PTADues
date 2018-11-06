@@ -1,4 +1,3 @@
-
 <div style="min-width: 420px;" class="list-container">
     <h2>Miscelaneous:</h2>
     <ul id="/Miscelaneous" class="sortable list-group">
@@ -11,8 +10,7 @@
                     <li id="{{this.key}}" class="list-group-item">
                         <span class="drag-handle" style="font-size: 1.3em">☰ </span>
                         {{this.name}}
-                        <a href="/faculty/{{this.key}}/edit/" class="btn btn-primary btn-sm">Edit</a>
-                        {{!-- <button class="btn btn-danger" onclick="remove('{{}}', {{}})">X</button> --}}
+                        <button onclick="showIframe('/faculty/{{this.key}}/edit/')" class="btn btn-primary btn-sm">Edit</button>
                     </li>
                 {{/each}}
                 <a href="/admin/faculty/edit?existing=true&path=MiscGroups%2F{{this.groupKey}}%2FMembers" class="btn btn-success">Add Existing Teacher</a>
@@ -21,17 +19,16 @@
     {{/each}}
     </ul>
 </div>
-{{#each other}}
+{{#each otherFaculty}}
     <div class="list-container">
         <h1>{{this.title}}:</h1>
         <ul class="sortable list-group" id="/{{this.title}}">
             {{#each this.members}}
             <li class="list-group-item" id="{{this.key}}">
                 <span class="drag-handle" style="font-size: 1.3em">☰ </span>
-                {{#if this.props.Class}}{{this.props.Class}} | {{/if}}
                 {{#if this.props.Room}}{{this.props.Room}} | {{/if}}
                 {{#if this.props.Name}}{{this.props.Name}} {{/if}}
-                <a href="/faculty/{{this.key}}/edit/" class="btn btn-primary btn-sm">Edit</a>
+                <button onclick="showIframe('/faculty/{{this.key}}/edit/')" class="btn btn-primary btn-sm">Edit</button>
             </li>
             {{/each}}
             <a href="/admin/faculty/edit?existing=true&path={{this.title}}" class="btn btn-success">Add Existing Teacher</a>
@@ -39,8 +36,42 @@
     </div>
 {{/each}}
 
+<div class="list-container">
+    <h1>Elementary</h1>
+    <ul class="sortable list-group" id="/Elementary">
+    {{#each elementary}}
+        <li class="list-group-item" id="{{this.id}}">
+            <span class="drag-handle" style="font-size: 1.3em">☰ </span>
+            {{this.Class}} | {{this.Room}} | {{this.Teacher.Name}}
+            Assistants: {{#each this.Assistants}} {{this.Name}} {{/each}}
+            <button onclick="showIframe('/admin/faculty/{{this.id}}/edit/')" class="btn btn-primary">Edit</a>
+        </li>
+    {{/each}}
+    </ul>
+</div>
 
+<div class="list-container">
+    <h1>Nursary</h1>
+    <ul class="sortable list-group" id="/Nursary">
+    {{#each nursary}}
+    <li class="list-group-item" id="{{this.id}}">
+        <span class="drag-handle" style="font-size: 1.3em">☰ </span>
+        {{this.Class}} {{this.Teacher.Name}}
+    </li>
+    {{/each}}
+    </ul>
+</div>
 
+<div class="addFacultyContainer">
+    <div class="addition container" id="elementaryAdd">
+        <h2>Add Elementary Class</h2>
+        <div class="form-group row"><label for="">Class</label><input type="text" class="form-control"></div>
+        <div class="form-group row"><label for="">Room</label><input type="text" class="form-control"></div>
+        <div class="form-group row"><label for="">Teacher</label></div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/css/orginizePage.css">
 <link rel="stylesheet" href="/css/sortable.css">
 <script src="/js/Sortable.min.js"></script>
 <script src="/js/sortFaculty.js"></script>

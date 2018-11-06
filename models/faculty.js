@@ -62,7 +62,7 @@ module.exports = (function() {
             for (let param in member.DisplayableCredentials) {
                 if (param == "Assistants") {
                     const _assistants = await Groups.getAssistants();
-                    let assistants = [];
+                                                                                                                                       assistants = [];
                     for (let key in _assistants) {
                         assistants.push({
                             key: key,

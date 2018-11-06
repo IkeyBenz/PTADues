@@ -2,13 +2,13 @@
 {{#if successMsg}}<div class="alert alert-success" role="alert">{{successMsg}}</div>{{/if}}
 <div class="container">
     {{#if members}}
-        <form action="/admin/faculty/addExisting" method="POST">
-            <input type="hidden" name="path" value="{{path}}">
-            <select name="member">
+        {{!-- <form action="/admin/faculty/addExisting" method="POST"> --}}
+            <input type="hidden" id="path" value="{{path}}">
+            <select id="member">
                 {{#each members}} <option value="{{this.key}}">{{this.name}}</option> {{/each}}
             </select>
-            <button class="btn btn-primary" type="submit">Add</button>
-        </form>
+            <button class="btn btn-primary" onclick="addExisting()">Add</button>
+        {{!-- </form> --}}
     {{else}}
         {{#if isBeingUpdated}}
             <form action="/faculty/{{memberId}}/update" method="POST">

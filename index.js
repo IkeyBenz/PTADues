@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
-app.use('/admin/', expressAuth({
+app.use('/admin', expressAuth({
     users: JSON.parse(process.env.ADMINS || require('./keys').ADMINS),
     challenge: true,
     unauthorizedResponse: displayUnauthorizedPage

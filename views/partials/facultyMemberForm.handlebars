@@ -2,7 +2,7 @@
     {{#each memberParams}}
         <tr class="form-group">
             <td>{{this.key}}:</td>
-            <td><input class="form-control" type="text" name="{{this.key}}" value="{{this.val}}"></td>
+            <td><input class="form-control createParams" type="text" name="{{this.key}}" value="{{this.val}}"></td>
         </tr>
     {{/each}}
     {{#if this.Assistants}}
@@ -16,4 +16,8 @@
         </tr>
     {{/if}}
 </table>
-<button type="submit" class="btn btn-primary" id="add-button">{{#if isBeingUpdated}}Update{{else}}Add{{/if}}</button>
+{{#if isBeingUpdated}}
+    <button onclick="updateMember" class="btn btn-primary" id="add-button">Update</button>
+{{else}}
+    <button onclick="createMember" class="btn btn-primary" id="add-button">Add</button>
+{{/if}}
