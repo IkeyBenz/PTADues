@@ -29,11 +29,11 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/admin/faculty/orginize/', (req, res) => {
-        Groups.getAllFaculty().then(data => {
-            res.render('orginizeTeachers', { layout: 'admin', orginize: true, ...data });
-        });
-    });
+    // app.get('/admin/faculty/orginize/', (req, res) => {
+    //     Groups.getAllFaculty().then(data => {
+    //         res.render('orginizeTeachers', { layout: 'admin', orginize: true, ...data });
+    //     });
+    // });
 
     app.get('/admin/faculty/stats/', (req, res) => {
         res.render('adminComingSoon', { layout: 'admin', stats: true, pageName: 'faculty stats' });
