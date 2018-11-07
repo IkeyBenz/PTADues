@@ -44,11 +44,12 @@ module.exports = (function() {
     }
     function formattedMiddleSchool(d) {
         return d.orderedGroups.MiddleSchool.map(classKey => {
-            return { ...d.orderedGroups.MiddleSchool[classKey], id: classKey }
+            return { ...d.groups.MiddleSchool[classKey], id: classKey }
         });
     }
     function getFaculty() {
         return downloadFaculty().then(d => {
+            console.log(formattedMiddleSchool(d));
             return {
                 elementary: formattedElementary(d),
                 faculty: formattedFaculty(d),
