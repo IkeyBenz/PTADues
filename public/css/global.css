@@ -40,3 +40,18 @@ header {
     background-color: #AFDEFB !important;
     color: #01389D;
 }
+
+.center {
+    text-align: center;
+    margin: 20px;
+}
+.classTable {
+    margin-top: 48px;
+}
+.classTable tr td, .classTable tr th {
+    padding-left: 15px;
+}
+input[type='checkbox'] {
+    transform: scale(1.005) !important;
+    border-radius: 4px;
+}

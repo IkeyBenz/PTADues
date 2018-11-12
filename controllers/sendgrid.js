@@ -10,7 +10,7 @@ module.exports = (function() {
             Sendgrid.send({
                 to: orderInfo.Email,
                 from: 'PTADues@gmail.com',
-                subject: 'Thank you for your contribution!',
+                subject: orderInfo.Subject || 'Thank you for your contribution!',
                 html: html
             });
         });

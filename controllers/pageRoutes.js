@@ -1,12 +1,14 @@
-const Groups = require('../models/groups');
+const OrderedFaculty = require('../models/groups');
 const Orders = require('../models/orders');
-const Faculty = require('../models/faculty');
+const Members = require('../models/member');
+
 
 module.exports = function(app) {
 
     app.get(['/', '/dues/'], (req, res) => {
-        const c = ['1','2','3','4','5'];
-        res.render('dues', { children: c, dues: true  });
+        // const c = ['1','2','3','4','5'];
+        // res.render('dues', { children: c, dues: true  });
+        res.render('comingSoon', {dues: true, pageName: 'Dues' });
     });
 
     app.get('/hanukkah/', (req, res) => {
@@ -29,14 +31,16 @@ module.exports = function(app) {
         });
     });
 
-    // app.get('/admin/faculty/orginize/', (req, res) => {
-    //     Groups.getAllFaculty().then(data => {
-    //         res.render('orginizeTeachers', { layout: 'admin', orginize: true, ...data });
-    //     });
-    // });
-
     app.get('/admin/faculty/stats/', (req, res) => {
-        res.render('adminComingSoon', { layout: 'admin', stats: true, pageName: 'faculty stats' });
+        Members.getStats().then(members => {
+            res.render('facultyStats', { layout: 'admin', stats: true, members: members });
+        });
+    });
+
+    app.get('/admin/hannukaPreview', (req, res) => {
+        OrderedFaculty.getDisplayable().then(data => {
+            res.render('hanukkah', { layout: 'admin', hannuka: true, ...data });
+        }); 
     });
 
 }

@@ -1,1 +1,15 @@
 <h1>Faculty Stats</h1>
+<table cellpadding="8" style="border: 1px solid black;">
+    <tr>
+        <th style="border: 1px solid black">Name</th>
+        <th style="border: 1px solid black">Children (gifters)</th>
+    </tr>
+    {{#each members}}
+    <tr>
+        <td style="border: 1px solid black">{{this.Name}}</td>
+        <td style="border: 1px solid black">{{this.Children}}</td>
+    </tr>
+    {{/each}}
+</table>
+
+<a href="/admin/faculty/stats/download" target="_blank" rel="noopener" class="btn btn-primary">Download</a>

@@ -8,9 +8,8 @@ module.exports = function (app) {
         });
     });
 
-    app.post('/admin/members/:id/edit', (req, res) => {
-        const path = `${req.params.id}/${req.body.param}`;
-        Members.update(path, req.body.data).then(() => {
+    app.post('/admin/members/edit', (req, res) => {
+        Members.update(req.body.path, req.body.value).then(() => {
             res.end();
         });
     });

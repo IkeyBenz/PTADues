@@ -30,7 +30,9 @@
               {{#each this.children}}
                 <tr>
                   <td><strong>Name:</strong> {{this.name}}</td>
+                  {{#if this.grade}}
                   <td><strong>Grade:</strong> {{this.grade}}</td>
+                  {{/if}}
                 </tr>
               {{/each}}
               </table>

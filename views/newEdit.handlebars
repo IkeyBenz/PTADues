@@ -1,25 +1,24 @@
-
-    <h2>Faculty Members:</h2>
-    <ul class="list-group">
-    {{#each members}}
-        <li class="list-group-item">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Name:</span>
-                </div>
-                <input type="text" class="form-control memberInput" value="{{this.name}}" id="{{this.id}}_Name">
+<h2>Faculty Members:</h2>
+<ul class="list-group">
+{{#each members}}
+    <li class="list-group-item">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Name:</span>
             </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Info:</span>
-                </div>
-                <input type="text" class="form-control memberInput" value="{{this.info}}" id="{{this.id}}_Info">
+            <input type="text" class="form-control memberInput" value="{{this.name}}" id="{{this.id}}/Name">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Info:</span>
             </div>
-            <button class="btn btn-danger" onclick="remove('{{this.id}}')">X</button>
-        </li>
-    {{/each}}
-    <button class="btn btn-primary" onclick="addMember()">Add Member</button>
-    </ul>
+            <input type="text" class="form-control memberInput" value="{{this.info}}" id="{{this.id}}/Info">
+        </div>
+        <button class="btn btn-danger" onclick="remove('{{this.id}}')">X</button>
+    </li>
+{{/each}}
+<button class="btn btn-primary" onclick="addMember()">Add Member</button>
+</ul>
 
 
 <script src="/js/editMembers.js"></script>

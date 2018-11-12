@@ -1,5 +1,7 @@
 const firebase = require('firebase');
 const ref = firebase.database().ref('FacultyMembers');
+const promise = require('bluebird');
+const writeFile = promise.promisify(require('fs').writeFile);
 
 module.exports = (function() {
 
@@ -15,8 +17,8 @@ module.exports = (function() {
         });
     }
 
-    function edit(path, data) {
-        return ref.child(path).set(data);
+    function edit(path, value) {
+        return ref.child(path).set(value);
     }
 
     function create(member) {
@@ -25,11 +27,34 @@ module.exports = (function() {
     function remove(memberId) {
         return ref.child(memberId).remove();
     }
+    function getStats() {
+        return ref.once('value').then(snapshot => {
+            const faculty = snapshot.val();
+            return Object.keys(faculty).map(memberKey => {
+                let name = faculty[memberKey].Name;
+                if (faculty[memberKey].Info) { name += ` (${faculty[memberKey].Info})` }
+                let obj = { Name: name }
+                if (faculty[memberKey].Donors) { obj['Children'] = faculty[memberKey].Donors.join(', ') }
+                return obj;
+            });
+        });
+    }
+    function createStatsCSV() {
+        return getStats().then(stats => {
+            let csvString = `"Name","Children"\n`;
+            for (let member of stats) {
+                csvString += `"${member.Name}","${member.Children || ''}"\n`;
+            }
+            return writeFile(__dirname + '/../stats.csv', csvString);
+        });
+    }
 
     return {
         create: create,
         getAll: getAllMembers,
         update: edit,
-        remove: remove
+        remove: remove,
+        getStats: getStats,
+        createStatsSpreadSheet: createStatsCSV
     }
 })();

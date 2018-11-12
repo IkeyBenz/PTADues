@@ -2,35 +2,20 @@ const firebase = require('firebase');
 if (firebase.apps.length < 1) {
     firebase.initializeApp(JSON.parse(require('./keys').FIREBASE_CONFIG));
 }
-const faculty = firebase.database().ref('FacultyMembers');
+const facultyRef = firebase.database().ref('FacultyMembers');
 const OrderedGroups = firebase.database().ref('OrderedGroups');
-const Groups = firebase.database().ref('Groups');
+const groupsRef = firebase.database().ref('Groups');
+const ref = firebase.database().ref('Orders');
 
-// Elementary, Nursary, Middle,
+const Faculty = require('./models/member');
 
-
-function doWork() {
-    const newClass = Groups.child('Elementary').push({
-        Class: '1A-am',
-        Room: 'Rm 205',
-        Teacher: '-LQctb01yVl2UETg-8ky',
-        Assistants: ['-LQcxsEkay8LeguP-tRl']
-    }).key;
-    OrderedGroups.child('Elementary/0').set(newClass);
-}
-function doMoreWork() {
-    const newClass = Groups.child('Nursary').push({
-        Class: 'PPG1',
-        Teacher: '-LQcyIMgOpYUlVghKOBW'
-    }).key;
-    OrderedGroups.child('Nursary/0').set(newClass);
-}
-function doEvenMoreWork() {
-    const newClass = Groups.child('MiddleSchool').push({
-        Grade: '',
-        Teacher: '-LQcy6K8JMAwFLssdiZ6'
-    }).key;
-    OrderedGroups.child('MiddleShool/0').set(newClass);
+function addDonorToTeacher(teacherId, childName) {
+    return facultyRef.child(teacherId).once('value').then(snapshot => {
+        const member = snapshot.val();
+        let children = [childName];
+        if (member.Donors) { children = children.concat(member.Donors) }
+        return facultyRef.child(`${teacherId}/Donors`).set(children);
+    });
 }
 
-
+addDonorToTeacher('-LR6blqLPDJb69C7NiiW', 'Ikey');

@@ -26,7 +26,7 @@
 </div>
 
 <div class="list-container">
-    <h1>Early Childhoodn:</h1>
+    <h1>Early Childhood:</h1>
     <ul class="sortable list-group" id="Nursary">
         {{#each nursary as |class|}}
         <li class="list-group-item" id="{{class.id}}">
@@ -57,7 +57,7 @@
                 <input type="text" class="form-control classInput" id="MiddleSchool/{{class.id}}/Subject" placeholder="Subject" value="{{class.Subject}}">
                 <select id="MiddleSchool/{{class.id}}/Teacher" class="form-control classInput">
                     {{#each ../faculty}}
-                        <option value="{{this.id}}" {{#ifEquals class.Teacher this.id}}selected{{/ifEquals}}>{{this.name}}</option>
+                        <option value="{{this.id}}"{{#ifEquals class.Teacher this.id}} selected{{/ifEquals}}>{{this.name}}</option>
                     {{/each}}
                 </select>
                 <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'MiddleSchool')">X</button>

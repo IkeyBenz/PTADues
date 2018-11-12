@@ -16,6 +16,15 @@ module.exports = (function() {
             }
         });
     }
+    function createHanukkahOrder(orderInfo) {
+        return getNewOrderId().then(newOrderId => {
+            ref.child(newOrderId).set({
+                orderInfo: { Amount: orderInfo.Amount, Email: orderInfo.Email, Timestamp: orderInfo.Timestamp },
+                children: orderInfo.Children
+            });
+            return newOrderId;
+        });
+    }
     function structureOrder(orderDetails) {
         let children = []
         for (let i = 1; i <= 5; i++) {
@@ -110,6 +119,7 @@ module.exports = (function() {
     }
     return {
         create: create,
+        createHanukkahOrder: createHanukkahOrder,
         getAll: getOrdersForHandlebars,
         getAsCSV: getAllAsCSV
     }
