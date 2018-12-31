@@ -15,6 +15,7 @@ module.exports = function (app) {
     });
 
     app.post('/admin/members/new', (req, res) => {
+        console.log('Hello there lad.');
         Members.create(req.body).then(() => {
             res.end();
         });

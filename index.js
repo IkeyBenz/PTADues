@@ -9,9 +9,7 @@ const expressAuth = require('express-basic-auth');
 
 const app = express();
 const port = process.env.PORT || 5000;
-const firebaseConfig = process.env.FIREBASE_CONFIG || require('./keys').FIREBASE_CONFIG;
-firebase.initializeApp(JSON.parse(firebaseConfig));
-
+firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main', helpers: require('./hbsHelpers') }));
 app.set('view engine', 'handlebars')
@@ -22,7 +20,7 @@ app.use(methodOverride('_method'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 app.use('/admin', expressAuth({
-    users: JSON.parse(process.env.ADMINS || require('./keys').ADMINS),
+    users: JSON.parse(process.env.ADMINS),
     challenge: true,
     unauthorizedResponse: displayUnauthorizedPage
 }));

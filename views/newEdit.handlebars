@@ -1,5 +1,7 @@
 <h2>Faculty Members:</h2>
-<ul class="list-group">
+<label class="d-inline">Amount: <input type="number" id="membersAmount" value="1"></label>
+<button class="d-inline btn btn-primary" onclick="addMultipleMembers()">Add Multiple Members</button>
+<ul class="list-group mt-4">
 {{#each members}}
     <li class="list-group-item">
         <div class="input-group mb-3">
