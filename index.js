@@ -7,6 +7,8 @@ const favicon = require('serve-favicon');
 const https = require('https');
 const expressAuth = require('express-basic-auth');
 
+require('dotenv').config();
+
 const app = express();
 const port = process.env.PORT || 5000;
 firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
@@ -28,14 +30,14 @@ app.use('/admin', expressAuth({
 function displayUnauthorizedPage(req) {
     return req.auth
         ? 'You are logged in.'
-        : "You dont't have authorization to view this page."    
+        : "You dont't have authorization to view this page."
 }
 
 require('./controllers/main')(app);
 
 app.listen(port, () => {
     console.log("Running PTA Dues on " + port);
-    setInterval(function() {
+    setInterval(function () {
         https.get('https://mdy-pta-dues.herokuapp.com')
     }, 1500000);
 });

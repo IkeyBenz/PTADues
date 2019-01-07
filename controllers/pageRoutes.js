@@ -3,12 +3,12 @@ const Orders = require('../models/orders');
 const Members = require('../models/member');
 
 
-module.exports = function(app) {
+module.exports = function (app) {
 
     app.get(['/', '/dues/'], (req, res) => {
         // const c = ['1','2','3','4','5'];
         // res.render('dues', { children: c, dues: true  });
-        res.render('comingSoon', {dues: true, pageName: 'Dues' });
+        res.render('comingSoon', { dues: true, pageName: 'Dues' });
     });
 
     app.get('/hanukkah/', (req, res) => {
@@ -24,7 +24,7 @@ module.exports = function(app) {
         // }).catch(console.error);
         res.render('comingSoon', { purim: true, pageName: 'Purim' });
     });
-    
+
     app.get(['/admin/', '/admin/orders/'], (req, res) => {
         Orders.getAll().then(orders => {
             res.render('donationHistory', { layout: 'admin', orders: orders, history: true });
@@ -40,7 +40,7 @@ module.exports = function(app) {
     app.get('/admin/hannukaPreview', (req, res) => {
         OrderedFaculty.getDisplayable().then(data => {
             res.render('hanukkah', { layout: 'admin', hannuka: true, ...data });
-        }); 
+        });
     });
 
 }

@@ -1,16 +1,16 @@
-$(document).ready(function() {
+$(document).ready(function () {
     for (let element of $('.sortable')) {
-        Sortable.create(element, { 
+        Sortable.create(element, {
             handle: '.drag-handle',
             onEnd: reorderInDatabase
         });
     }
-    $('.exButton').click((e) => { 
+    $('.exButton').click((e) => {
         $('.addFacultyContainer').hide();
         $('.classInputs').hide();
     });
     $('.classInput').on('change', updateInDB);
-    $('.multi-select').multipleSelect({onClick: updateAssistants});
+    $('.multi-select').multipleSelect({ onClick: updateAssistants });
 });
 
 function reorderInDatabase(event) {
@@ -68,8 +68,8 @@ function addClass(type) {
     data['Teacher'] = '';
 
     axios.post('/admin/classes/create', data)
-    .then(() => window.location.reload())
-    .catch(console.error);
+        .then(() => window.location.reload())
+        .catch(console.error);
 }
 
 function removeClass(id, type) {
@@ -77,5 +77,5 @@ function removeClass(id, type) {
         classId: id,
         path: type
     }).then(() => window.location.reload())
-    .catch(console.error);
+        .catch(console.error);
 }

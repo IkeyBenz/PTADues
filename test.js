@@ -1,6 +1,7 @@
 const firebase = require('firebase');
+require('dotenv').config();
 if (firebase.apps.length < 1) {
-    firebase.initializeApp(JSON.parse(require('./keys').FIREBASE_CONFIG));
+    firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 }
 const facultyRef = firebase.database().ref('FacultyMembers');
 const OrderedGroups = firebase.database().ref('OrderedGroups');
@@ -9,13 +10,9 @@ const ref = firebase.database().ref('Orders');
 
 const Faculty = require('./models/member');
 
-function addDonorToTeacher(teacherId, childName) {
-    return facultyRef.child(teacherId).once('value').then(snapshot => {
-        const member = snapshot.val();
-        let children = [childName];
-        if (member.Donors) { children = children.concat(member.Donors) }
-        return facultyRef.child(`${teacherId}/Donors`).set(children);
-    });
-}
+const stuff = ['yo', 'hee', 'yurr'];
 
-addDonorToTeacher('-LR6blqLPDJb69C7NiiW', 'Ikey');
+stuff.forEach(str => {
+    console.log(str);
+});
+
