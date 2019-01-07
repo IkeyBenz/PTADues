@@ -5,7 +5,7 @@ const orderedGroupsRef = firebase.database().ref('OrderedGroups');
 const facultyRef = firebase.database().ref('FacultyMembers');
 
 
-module.exports = (function() {
+module.exports = (function () {
     function downloadFaculty() {
         return Promise.all([
             facultyRef.once('value'),
@@ -93,19 +93,43 @@ module.exports = (function() {
                 }
             });
             const elemClasses = d.orderedGroups.Elementary.map(classKey => {
-                const classObj = d.groups.Elementary[classKey]
+                const classObj = d.groups.Elementary[classKey];
+                const teachers = typeof classObj.Teacher == 'string'
+                    ? [{ Id: classObj.Teacher, Name: d.faculty[classObj.Teacher].Name }]
+                    : classObj.Teacher.map(id => {
+                        return {
+                            Id: id,
+                            Name: d.faculty[id].Name
+                        }
+                    });
+                const assistants = (classObj.Assistants)
+                    ? classObj.Assistants.map(id => {
+                        return {
+                            Id: id,
+                            Name: d.faculty[id].Name
+                        }
+                    }) : []
+                const len = teachers.length > assistants.length
+                    ? teachers.length
+                    : assistants.length;
+                let pairs = [];
+                for (let i = 0; i < len; i++) {
+                    let newPair = {};
+                    if (teachers.length > i && teachers[i]) {
+                        newPair.main = teachers[i];
+                    }
+                    if (assistants.length > i && assistants[i]) {
+                        newPair.assistant = assistants[i];
+                    }
+                    pairs.push(newPair);
+                }
+
                 return {
                     ClassId: classKey,
                     Class: classObj.Class,
                     Room: classObj.Room,
-                    Teacher: d.faculty[classObj.Teacher].Name,
-                    TeacherId: classObj.Teacher,
-                    Assistants: classObj.Assistants.map(assistantId => {
-                        return {
-                            Name: d.faculty[assistantId].Name,
-                            Id: assistantId
-                        }
-                    })
+                    FirstRowTeachers: pairs[0],
+                    ExtraTeachers: pairs.slice(1)
                 }
             });
             const middleSchool = d.orderedGroups.MiddleSchool.map(classKey => {
@@ -118,7 +142,7 @@ module.exports = (function() {
                 }
             });
             const nursary = addSpaces(nursaryClasses);
-            
+
             return {
                 nursary: nursary,
                 elementary: elemClasses,
@@ -129,10 +153,10 @@ module.exports = (function() {
     function addSpaces(classes) {
         let newClasses = [classes[0]];
         for (let i = 0; i < classes.length - 1; i++) {
-            if (removeNumbers(classes[i].Class) != removeNumbers(classes[i+1].Class)) {
+            if (removeNumbers(classes[i].Class) != removeNumbers(classes[i + 1].Class)) {
                 newClasses.push({ space: true });
             }
-            newClasses.push(classes[i+1]);
+            newClasses.push(classes[i + 1]);
         }
         return newClasses
     }

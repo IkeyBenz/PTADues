@@ -1,8 +1,9 @@
 <h2>Faculty Members:</h2>
 <label class="d-inline">Amount: <input type="number" id="membersAmount" value="1"></label>
 <button class="d-inline btn btn-primary" onclick="addMultipleMembers()">Add Multiple Members</button>
+<h5 class="mt-2">Last Edited: {{lastEdited}}</h5>
 <ul class="list-group mt-4">
-{{#each members}}
+    {{#each members}}
     <li class="list-group-item">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -18,8 +19,8 @@
         </div>
         <button class="btn btn-danger" onclick="remove('{{this.id}}')">X</button>
     </li>
-{{/each}}
-<button class="btn btn-primary" onclick="addMember()">Add Member</button>
+    {{/each}}
+    <button class="btn btn-primary" onclick="addMember()">Add Member</button>
 </ul>
 
 

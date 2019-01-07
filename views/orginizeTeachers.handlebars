@@ -1,27 +1,26 @@
 <div class="list-container">
     <h1>Elementary:</h1>
     <ul class="sortable list-group" id="Elementary" style="width: 1377.5px">
-    {{#each elementary as |class|}}
+        {{#each elementary as |class|}}
         <li class="list-group-item" id="{{class.id}}">
             <div class="input-group">
                 <span class="drag-handle">☰</span>
-                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Class" placeholder="Class" value="{{class.Class}}">
-                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Room" placeholder="Room" value="{{class.Room}}">
-                <select id="Elementary/{{class.id}}/Teacher" class="form-control classInput">
+                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Class" placeholder="Class"
+                    value="{{class.Class}}">
+                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Room" placeholder="Room"
+                    value="{{class.Room}}">
+                <select id="Elementary/{{class.id}}/Teacher" class="multi-select" multiple="multiple">
                     {{#each ../faculty}}
-                        <option value="{{this.id}}" {{#ifEquals class.Teacher this.id}}selected{{/ifEquals}}>{{this.name}}</option>
-                    {{/each}}
-                </select>
-                <select id="Elementary/{{class.id}}/Assistants" class="multi-select" multiple="multiple" style="width: 300px">
-                    {{#each ../faculty}}
-                        <option class="{{this.id}}" value="{{this.id}}" {{#ifInside this.id class.Assistants}}selected{{/ifInside}}>{{this.name}}</option>
-                    {{/each}}
-                </select>
-                <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'Elementary')">X</button>
+                    <option class="{{this.id}}" value="{{this.id}}" {{#ifInside this.id class.Teacher}} selected{{/ifInside}}>{{this.name}}
+                        </option> {{/each}} </select> <select id="Elementary/{{class.id}}/Assistants" class="multi-select"
+                        multiple="multiple" style="width: 300px">
+                        {{#each ../faculty}}
+                    <option class="{{this.id}}" value="{{this.id}}" {{#ifInside this.id class.Assistants}} selected{{/ifInside}}>{{this.name}}
+                        </option> {{/each}} </select> <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'Elementary')">X</button>
             </div>
         </li>
-    {{/each}}
-    <button class="btn btn-primary" onclick="addClass('Elementary')">Add Class</button>
+        {{/each}}
+        <button class="btn btn-primary" onclick="addClass('Elementary')">Add Class</button>
     </ul>
 </div>
 
@@ -32,13 +31,12 @@
         <li class="list-group-item" id="{{class.id}}">
             <div class="input-group">
                 <span class="drag-handle">☰</span>
-                <input type="text" class="form-control classInput" id="Nursary/{{class.id}}/Class" placeholder="Class" value="{{class.Class}}">
+                <input type="text" class="form-control classInput" id="Nursary/{{class.id}}/Class" placeholder="Class"
+                    value="{{class.Class}}">
                 <select id="Nursary/{{class.id}}/Teacher" class="form-control classInput">
                     {{#each ../faculty}}
-                        <option value="{{this.id}}" {{#ifEquals class.Teacher this.id}}selected{{/ifEquals}}>{{this.name}}</option>
-                    {{/each}}
-                </select>
-                <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'Nursary')">X</button>
+                    <option value="{{this.id}}" {{#ifEquals class.Teacher this.id}} selected{{/ifEquals}}>{{this.name}}
+                        </option> {{/each}} </select> <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'Nursary')">X</button>
             </div>
         </li>
         {{/each}}
@@ -53,14 +51,14 @@
         <li class="list-group-item" id="{{class.id}}">
             <div class="input-group">
                 <span class="drag-handle">☰</span>
-                <input type="text" class="form-control classInput" id="MiddleSchool/{{class.id}}/Grade" placeholder="Grade" value="{{class.Grade}}">
-                <input type="text" class="form-control classInput" id="MiddleSchool/{{class.id}}/Subject" placeholder="Subject" value="{{class.Subject}}">
+                <input type="text" class="form-control classInput" id="MiddleSchool/{{class.id}}/Grade" placeholder="Grade"
+                    value="{{class.Grade}}">
+                <input type="text" class="form-control classInput" id="MiddleSchool/{{class.id}}/Subject" placeholder="Subject"
+                    value="{{class.Subject}}">
                 <select id="MiddleSchool/{{class.id}}/Teacher" class="form-control classInput">
                     {{#each ../faculty}}
-                        <option value="{{this.id}}"{{#ifEquals class.Teacher this.id}} selected{{/ifEquals}}>{{this.name}}</option>
-                    {{/each}}
-                </select>
-                <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'MiddleSchool')">X</button>
+                    <option value="{{this.id}}" {{#ifEquals class.Teacher this.id}} selected{{/ifEquals}}>{{this.name}}
+                        </option> {{/each}} </select> <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'MiddleSchool')">X</button>
             </div>
         </li>
         {{/each}}
@@ -71,7 +69,7 @@
 
 <link rel="stylesheet" href="/css/multiple-select.css">
 <link rel="stylesheet" href="/css/sortable.css">
+
 <script src="/js/multiple-select.js"></script>
 <script src="/js/Sortable.min.js"></script>
 <script src="/js/sortFaculty.js"></script>
-
