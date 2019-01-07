@@ -3,7 +3,7 @@ const ref = firebase.database().ref('FacultyMembers');
 const promise = require('bluebird');
 const writeFile = promise.promisify(require('fs').writeFile);
 
-module.exports = (function() {
+module.exports = (function () {
 
     function getAllMembers() {
         return ref.once('value').then(snapshot => {
@@ -18,9 +18,18 @@ module.exports = (function() {
     }
 
     function edit(path, value) {
+        const key = path.slice(0, path.indexOf('/'));
+        firebase.database().ref('lastEditedMember').set(key);
         return ref.child(path).set(value);
     }
-
+    function getRecentlyEdited() {
+        return firebase.database().ref('lastEditedMember').once('value').then(snap => {
+            const memberKey = snap.val();
+            return ref.child(memberKey + '/Name').once('value').then(snap2 => {
+                return snap2.val();
+            });
+        });
+    }
     function create(member) {
         return ref.push(member);
     }
@@ -52,6 +61,7 @@ module.exports = (function() {
     return {
         create: create,
         getAll: getAllMembers,
+        getRecentlyEdited: getRecentlyEdited,
         update: edit,
         remove: remove,
         getStats: getStats,

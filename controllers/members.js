@@ -3,8 +3,13 @@ const Members = require('../models/member');
 module.exports = function (app) {
 
     app.get('/admin/editFaculty', (req, res) => {
-        Members.getAll().then(members => {
-            res.render('newEdit', { layout: 'admin', edit: true, members: members });
+        Promise.all([
+            Members.getAll(),
+            Members.getRecentlyEdited()
+        ]).then(vals => {
+            const members = vals[0];
+            const lastEdited = vals[1];
+            res.render('newEdit', { layout: 'admin', edit: true, members: members, lastEdited: lastEdited });
         });
     });
 
@@ -15,7 +20,6 @@ module.exports = function (app) {
     });
 
     app.post('/admin/members/new', (req, res) => {
-        console.log('Hello there lad.');
         Members.create(req.body).then(() => {
             res.end();
         });
