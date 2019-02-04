@@ -1,7 +1,7 @@
 const Faculty = require('../models/member');
 const Groups = require('../models/groups');
 
-module.exports = function(app) {
+module.exports = function (app) {
 
     // app.post('/faculty/create', (req, res) => {
     //     Faculty.create(req.body)
@@ -62,6 +62,12 @@ module.exports = function(app) {
         const path = req.body.path;
         delete req.body.path;
         Groups.create(path, req.body).then(() => {
+            return res.end();
+        });
+    });
+
+    app.post('/admin/classes/addMiscMember', (req, res) => {
+        Groups.addMiscMember(req.body.group).then(() => {
             return res.end();
         });
     });

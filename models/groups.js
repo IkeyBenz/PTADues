@@ -19,11 +19,6 @@ module.exports = (function () {
             }
         });
     }
-    function formattedElementary(d) {
-        return d.orderedGroups.Elementary.map(classKey => {
-            return { ...d.groups.Elementary[classKey], id: classKey }
-        });
-    }
     function formattedFaculty(d) {
         let members = [];
         for (let memberKey in d.faculty) {
@@ -35,23 +30,76 @@ module.exports = (function () {
         }
         return members.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
     }
-    function formattedNursary(d) {
-        return d.orderedGroups.Nursary.map(classKey => {
-            return { ...d.groups.Nursary[classKey], id: classKey }
-        });
+    function teacherExists(teachers, faculty) {
+        if (typeof teachers == 'object') {
+            for (let teacherKey of teachers) {
+                if (!faculty[teacherKey]) {
+                    return false
+                }
+            }
+            return true;
+        } else {
+            return faculty[teachers] || false;
+        }
     }
-    function formattedMiddleSchool(d) {
-        return d.orderedGroups.MiddleSchool.map(classKey => {
-            return { ...d.groups.MiddleSchool[classKey], id: classKey }
+    function getTeacherName(teachers, faculty) {
+        if (typeof teachers == 'object') {
+            return teachers.map(key => {
+                return faculty[key].Name;
+            }).join(', ');
+        }
+        return faculty[teachers].Name;
+    }
+
+    function formattedGroup(d, groupName) {
+        return d.orderedGroups[groupName] ? d.orderedGroups[groupName].map(key => {
+            const teacherKey = d.groups[groupName][key].Teacher;
+            const assistantKey = d.groups[groupName][key].Assistants || undefined;
+            const teacherName = teacherExists(teacherKey, d.faculty) ? getTeacherName(teacherKey, d.faculty) : '';
+            const assistantName = assistantKey && teacherExists(assistantKey, d.faculty) ? getTeacherName(assistantKey, d.faculty) : '';
+            return { ...d.groups[groupName][key], id: key, teacherName, assistantName }
+        }) : {};
+    }
+    function formattedMisc(d) {
+        /* administration: [
+            {
+                Title: 'Principal', 
+                id: groupKey,
+                Members: [
+                    {
+                        name: 'Dina Yeager', 
+                        info: '', 
+                        id: '-LR4WSEDPnl2mwpWaRIM'
+                    }, 
+                    ...
+                ]
+            }, 
+            ...
+        ] */
+        return d.orderedGroups.Administration.map(groupKey => {
+            const group = d.groups.Administration[groupKey];
+            return {
+                Title: group.Title,
+                id: groupKey,
+                Members: group.Members ? group.Members.map((memberKey, index) => {
+                    const member = d.faculty[memberKey];
+                    return member ? {
+                        name: member.Name + (member.Info) ? ` (${member.Info})` : '',
+                        index: index,
+                        id: memberKey
+                    } : { name: '', index: index, id: '' }
+                }) : []
+            }
         });
     }
     function getFaculty() {
         return downloadFaculty().then(d => {
             return {
-                elementary: formattedElementary(d),
+                elementary: formattedGroup(d, 'Elementary'),
                 faculty: formattedFaculty(d),
-                nursary: formattedNursary(d),
-                middleSchool: formattedMiddleSchool(d)
+                nursary: formattedGroup(d, 'Nursary'),
+                middleSchool: formattedGroup(d, 'MiddleSchool'),
+                administration: formattedMisc(d)
             }
         });
     }
@@ -70,8 +118,14 @@ module.exports = (function () {
             );
         });
     }
+    function addMiscMember(group) {
+        return groupsRef.child(`Administration/${group}/Members`).once('value').then(snap => {
+            const index = snap.val() ? snap.val().length : 0;
+            return groupsRef.child(`Administration/${group}/Members/${index}`).set('Unselected');
+        });
+    }
     function reorder(path, newOrder) {
-        return orderedGroupsRef.child(path).set(newOrder);
+        return firebase.database().ref(path).set(newOrder);
     }
     function remove(path, classId) {
         const promise1 = orderedGroupsRef.child(path).once('value').then(snapshot => {
@@ -87,14 +141,15 @@ module.exports = (function () {
             const nursaryClasses = d.orderedGroups.Nursary.map(classKey => {
                 return {
                     ClassId: classKey,
-                    Class: d.groups.Nursary[classKey].Class,
-                    TeacherId: d.groups.Nursary[classKey].Teacher,
-                    TeacherName: d.faculty[d.groups.Nursary[classKey].Teacher].Name
+                    Class: d.groups.Nursary[classKey].Class || '',
+                    TeacherId: d.groups.Nursary[classKey].Teacher || '',
+                    TeacherName: d.faculty[d.groups.Nursary[classKey].Teacher].Name || ''
                 }
-            });
+            }).filter(obj => { return (obj.Class != '' && obj.TeacherId != '') });
+
             const elemClasses = d.orderedGroups.Elementary.map(classKey => {
                 const classObj = d.groups.Elementary[classKey];
-                const teachers = typeof classObj.Teacher == 'string'
+                const teachers = !classObj.Teacher ? [] : (typeof classObj.Teacher == 'string')
                     ? [{ Id: classObj.Teacher, Name: d.faculty[classObj.Teacher].Name }]
                     : classObj.Teacher.map(id => {
                         return {
@@ -136,29 +191,34 @@ module.exports = (function () {
                 const classObj = d.groups.MiddleSchool[classKey];
                 return {
                     ClassId: classKey,
-                    Grade: classObj.Grade,
-                    Teacher: d.faculty[classObj.Teacher].Name,
-                    TeacherId: classObj.Teacher
+                    Grade: classObj.Grade || '',
+                    Subject: classObj.Subject || '',
+                    Teacher: d.faculty[classObj.Teacher].Name || '',
+                    TeacherId: classObj.Teacher || ''
                 }
-            });
-            const nursary = addSpaces(nursaryClasses);
+            }).filter(obj => { return (obj.Grade != '' && obj.TeacherId != '' && obj.Subject != '') });
 
             return {
-                nursary: nursary,
+                nursaryGroups: groupByGrade(nursaryClasses),
                 elementary: elemClasses,
                 middleSchool: middleSchool
             }
         });
     }
-    function addSpaces(classes) {
-        let newClasses = [classes[0]];
-        for (let i = 0; i < classes.length - 1; i++) {
-            if (removeNumbers(classes[i].Class) != removeNumbers(classes[i + 1].Class)) {
-                newClasses.push({ space: true });
+    function groupByGrade(classes) {
+        let grouped = [];
+        let currGroup = { name: removeNumbers(classes[0].Class), classes: [classes[0]] };
+        for (let i = 1; i < classes.length; i++) {
+            const name = removeNumbers(classes[i].Class);
+            if (currGroup.name != name) {
+                grouped.push(currGroup);
+                currGroup = { name: removeNumbers(classes[i].Class), classes: [classes[i]] };
+            } else {
+                currGroup.classes.push(classes[i])
             }
-            newClasses.push(classes[i + 1]);
         }
-        return newClasses
+        grouped.push(currGroup);
+        return grouped;
     }
     function removeNumbers(string) {
         const indexOfNumbers = string.indexOf(string.match(/[1-9]/g).join(''));
@@ -193,6 +253,7 @@ module.exports = (function () {
         update: updateAtPath,
         delete: remove,
         reorderAtPath: reorder,
-        saveHanukkahOrder: saveHanukkahOrder
+        saveHanukkahOrder: saveHanukkahOrder,
+        addMiscMember: addMiscMember
     }
 })();

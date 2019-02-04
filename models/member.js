@@ -33,9 +33,6 @@ module.exports = (function () {
     function create(member) {
         return ref.push(member);
     }
-    function remove(memberId) {
-        return ref.child(memberId).remove();
-    }
     function getStats() {
         return ref.once('value').then(snapshot => {
             const faculty = snapshot.val();
@@ -57,7 +54,11 @@ module.exports = (function () {
             return writeFile(__dirname + '/../stats.csv', csvString);
         });
     }
-
+    function remove(memberId) {
+        return new Promise(function (resolve, reject) {
+            
+        });
+    }
     return {
         create: create,
         getAll: getAllMembers,

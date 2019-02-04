@@ -4,6 +4,7 @@
         <h4>Please check the classes that your children have. For each class you check off, input your child's name.</h4>
     </div>
     <form action="/orders/hanukkah/new" id="hanukkahForm" method="POST">
+        <h2>Early Childhood</h2>
         <table class="classTable">
             <tr>
                 <th> </th>
@@ -11,16 +12,17 @@
                 <th>Teacher</th>
                 <th>Child's Name</th>
             </tr>
-            {{> emptyRow}}
-            {{#each nursary}}
-            {{#if this.space}}{{>emptyRow}}{{else}}
-            <tr>
+
+            {{#each nursaryGroups}}
+            {{>emptyRow}}
+            {{#each this.classes}}
+            <tr class="grade-{{this.name}}">
                 <td><input type="checkbox" name="Nursary/{{this.ClassId}}"></td>
                 <td>{{this.Class}}</td>
                 <td>{{this.TeacherName}}</td>
                 <td><input type="text" class="childName" name="Nursary/{{this.ClassId}}/childName"></td>
             </tr>
-            {{/if}}
+            {{/each}}
             {{/each}}
         </table>
         <table class="classTable">

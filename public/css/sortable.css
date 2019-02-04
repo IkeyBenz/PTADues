@@ -24,6 +24,6 @@ li {
     min-width: 500px;
     float: left;
 }
-.exButton {
+.exButton, .editButton {
     margin-left: 13px;
 }

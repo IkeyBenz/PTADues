@@ -1,6 +1,6 @@
 <div class="list-container">
     <h1>Elementary:</h1>
-    <ul class="sortable list-group" id="Elementary" style="width: 1377.5px">
+    <ul class="sortable list-group" id="OrderedGroups/Elementary" style="width: 1377.5px">
         {{#each elementary as |class|}}
         <li class="list-group-item" id="{{class.id}}">
             <div class="input-group">
@@ -20,33 +20,34 @@
             </div>
         </li>
         {{/each}}
-        <button class="btn btn-primary" onclick="addClass('Elementary')">Add Class</button>
+        <button class="btn btn-primary" onclick="addClasses('Elementary')">Add Class</button>
     </ul>
 </div>
 
 <div class="list-container">
     <h1>Early Childhood:</h1>
-    <ul class="sortable list-group" id="Nursary">
+    <ul class="sortable list-group" id="OrderedGroups/Nursary">
         {{#each nursary as |class|}}
         <li class="list-group-item" id="{{class.id}}">
             <div class="input-group">
                 <span class="drag-handle">☰</span>
                 <input type="text" class="form-control classInput" id="Nursary/{{class.id}}/Class" placeholder="Class"
                     value="{{class.Class}}">
-                <select id="Nursary/{{class.id}}/Teacher" class="form-control classInput">
-                    {{#each ../faculty}}
-                    <option value="{{this.id}}" {{#ifEquals class.Teacher this.id}} selected{{/ifEquals}}>{{this.name}}
-                        </option> {{/each}} </select> <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'Nursary')">X</button>
+                <select id="Nursary/{{class.id}}/Teacher" class="form-control classInput teacherSelect">
+                    <option value="{{this.Teacher}}" selected>{{this.teacherName}}</option>
+                </select>
+                <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'Nursary')">X</button>
             </div>
         </li>
         {{/each}}
-        <button class="btn btn-primary" onclick="addClass('Nursary')">Add Class</button>
     </ul>
+    <button class="btn btn-primary d-inline" onclick="addClasses('Nursary')">Add Class</button>
+    <input type="number" class="d-inline" id="NursaryAddAmount" value="1">
 </div>
 
 <div class="list-container">
     <h1>Middle School:</h1>
-    <ul class="sortable list-group" id="MiddleSchool">
+    <ul class="sortable list-group" id="OrderedGroups/MiddleSchool">
         {{#each middleSchool as |class|}}
         <li class="list-group-item" id="{{class.id}}">
             <div class="input-group">
@@ -55,20 +56,59 @@
                     value="{{class.Grade}}">
                 <input type="text" class="form-control classInput" id="MiddleSchool/{{class.id}}/Subject" placeholder="Subject"
                     value="{{class.Subject}}">
-                <select id="MiddleSchool/{{class.id}}/Teacher" class="form-control classInput">
-                    {{#each ../faculty}}
-                    <option value="{{this.id}}" {{#ifEquals class.Teacher this.id}} selected{{/ifEquals}}>{{this.name}}
-                        </option> {{/each}} </select> <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'MiddleSchool')">X</button>
+                <select id="MiddleSchool/{{class.id}}/Teacher" class="form-control classInput teacherSelect">
+                    <option value="{{class.Teacher}}">{{class.teacherName}}</option>
+                </select>
+                <button class="btn btn-danger exButton" onclick="removeClass('{{class.id}}', 'MiddleSchool')">X</button>
             </div>
         </li>
         {{/each}}
-        <button class="btn btn-primary" onclick="addClass('MiddleSchool')">Add Class</button>
     </ul>
+    <button class="btn btn-primary d-inline" onclick="addClasses('MiddleSchool')">Add Class(es)</button>
+    <input type="number" class="d-inline" id="MiddleSchoolAddAmount" value="1">
 </div>
 
+{{!-- <div class="list-container">
+    <h1>Administration:</h1>
+    <ul class="sortable list-group" id="OrderedGroups/Administration">
+        {{#each administration as |group|}}
+        <li id="{{group.id}}" class="list-group-item">
+            <div class="drag-handle input-group d-flex">
+                <label>☰</label>
+                <input class="form-control classInput" type="text" id="Administration/{{group.id}}/Title" placeholder="Group Title"
+                    value="{{group.Title}}">
+            </div>
+            <ul class="sortable list-group" id="Groups/Administration/{{group.id}}/Members">
+                {{#each group.Members as |member|}}
+                <li class="list-group-item" id="{{member.id}}">
+                    <div class="input-group">
+                        <span class="drag-handle">☰</span>
+                        <select class="form-control classInput" id="Administration/{{group.id}}/Members/{{member.index}}">
+                            {{#each ../../faculty}}
+                            <option value="{{this.id}}" {{#ifEquals this.id member.id}} selected {{/ifEquals}}>{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <button class="ml-3 d-inline btn btn-danger">X</button>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+            <input type="text" class="form-control d-inline" id="miscAddAmount">
+            <button class="btn btn-primary" onclick="addAdministratorMember('{{group.id}}')">Add Member</button>
+        </li>
+        {{/each}}
+    </ul>
+    <button class="btn btn-primary" onclick="addAdministratorGroup()">Add Group</button>
+</div> --}}
+<div id="selectorOptions" class="d-none">
+    {{#each faculty}}
+    <option value="{{this.id}}">{{this.name}}</option>
+    {{/each}}
+</div>
 
 <link rel="stylesheet" href="/css/multiple-select.css">
 <link rel="stylesheet" href="/css/sortable.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <script src="/js/multiple-select.js"></script>
 <script src="/js/Sortable.min.js"></script>

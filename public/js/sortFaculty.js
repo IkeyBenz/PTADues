@@ -5,12 +5,15 @@ $(document).ready(function () {
             onEnd: reorderInDatabase
         });
     }
-    $('.exButton').click((e) => {
-        $('.addFacultyContainer').hide();
-        $('.classInputs').hide();
-    });
+    // $('.exButton').click((e) => {
+    //     $('.addFacultyContainer').hide();
+    //     $('.classInputs').hide();
+    // });
+    $('.teacherSelect').on('focus', addOptions);
+    $('.editButton').click(addOptions);
     $('.classInput').on('change', updateInDB);
     $('.multi-select').multipleSelect({ onClick: updateAssistants });
+
 });
 
 function reorderInDatabase(event) {
@@ -56,7 +59,7 @@ function updateAssistants(e) {
     }).catch(console.error);
 }
 
-function addClass(type) {
+function dataFromType(type) {
     let data = {}
     if (type == "Elementary") {
         data = { Assistants: [], Class: '', Room: '', path: 'Elementary' }
@@ -66,16 +69,47 @@ function addClass(type) {
         data = { Grade: '', path: 'MiddleSchool' }
     }
     data['Teacher'] = '';
+    if (type == 'Administrator') {
+        // Why is type 'Administrator' and the path is 'Administration'??????
+        delete data['Teacher'];
+        data = { Title: '', Members: [], path: 'Administration' }
+    }
+    return data;
+}
 
-    axios.post('/admin/classes/create', data)
+async function addClasses(type) {
+    const amount = $(`#${type}AddAmount`).val();
+    for (let i = 0; i < amount; i++) {
+        await axios.post('/admin/classes/create', dataFromType(type));
+    }
+    window.location.reload();
+}
+function addAdministratorGroup() {
+    axios.post('/admin/classes/create', dataFromType('Administrator'))
         .then(() => window.location.reload())
         .catch(console.error);
 }
-
+function addAdminMembers(group) {
+    const amount = $('#miscAddAmount').val();
+    let promises = [];
+    for (let i = 0; i < amount; i++) {
+        const promise = axios.post('/admin/classes/addMiscMember', { group: group })
+        promises.push(promise);
+    }
+    Promise.all(promises).then(() => {
+        window.location.reload();
+    }).catch(console.error);
+}
 function removeClass(id, type) {
     axios.post('/admin/classes/remove', {
         classId: id,
         path: type
     }).then(() => window.location.reload())
         .catch(console.error);
+}
+
+function addOptions(e) {
+    const val = $(e.target).children('option:selected').val();
+    $(e.target).html($('#selectorOptions').html());
+    $(e.target).val(val);
 }

@@ -11,8 +11,8 @@ module.exports = function (app) {
         const newOrder = req.body.groupOrder;
         const path = req.body.groupPath;
         OrderedFaculty.reorderAtPath(path, newOrder)
-        .then(() => res.end)
-        .catch(res.error)
+            .then(() => res.end)
+            .catch(res.error)
     });
 
 }
