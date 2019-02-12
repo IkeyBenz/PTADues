@@ -89,21 +89,26 @@ function addAdministratorGroup() {
         .then(() => window.location.reload())
         .catch(console.error);
 }
-function addAdminMembers(group) {
-    const amount = $('#miscAddAmount').val();
-    let promises = [];
+async function addAdminMembers(group) {
+    const amount = $(`#${group}-addAmount`).val();
+    console.log(amount);
     for (let i = 0; i < amount; i++) {
-        const promise = axios.post('/admin/classes/addMiscMember', { group: group })
-        promises.push(promise);
+        await axios.post('/admin/classes/addMiscMember', { group: group });
     }
-    Promise.all(promises).then(() => {
-        window.location.reload();
-    }).catch(console.error);
+    window.location.reload();
 }
 function removeClass(id, type) {
     axios.post('/admin/classes/remove', {
         classId: id,
         path: type
+    }).then(() => window.location.reload())
+        .catch(console.error);
+}
+
+function removeAdmin(groupId, containerId) {
+    axios.post('/admin/classes/removeMiscMember', {
+        group: groupId,
+        container: containerId
     }).then(() => window.location.reload())
         .catch(console.error);
 }

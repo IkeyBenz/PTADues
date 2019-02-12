@@ -28,7 +28,7 @@ module.exports = function (app) {
     app.post('/admin/members/:id/remove', (req, res) => {
         Members.remove(req.params.id).then(() => {
             res.end();
-        });
+        }).catch(console.error);
     });
 
 }

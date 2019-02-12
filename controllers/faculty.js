@@ -3,38 +3,6 @@ const Groups = require('../models/groups');
 
 module.exports = function (app) {
 
-    // app.post('/faculty/create', (req, res) => {
-    //     Faculty.create(req.body)
-    //     .then(() => {
-    //         const successMessage = `Successfully%20Added%20${req.body.Name}`;
-    //         res.redirect(`/admin/faculty/edit?successMsg=${successMessage}`);
-    //     }).catch(error => {
-    //         res.redirect(`/admin/faculty/edit/?errorMsg=${error.message}`);
-    //     });
-    // });
-
-    // app.post('/faculty/:memberId/update', (req, res) => {
-    //     delete req.body.Type;
-    //     Faculty.update(req.params.memberId, req.body).then(() => {
-    //         res.redirect('/admin/faculty/edit?successMsg=Update%20Successful.');
-    //     }).catch(error => {
-    //         res.redirect(`/admin/faculty/edit?errorMsg=${error}`);
-    //     });
-    // });
-
-    // app.get('/faculty/:memberId/edit', (req, res) => {
-    //     Faculty.getUpdatableCredentials(req.params.memberId).then(credentials => {
-    //         res.render('editTeachers', { 
-    //             layout: 'admin', edit: true,
-    //             memberId: req.params.memberId,
-    //             isBeingUpdated: true, 
-    //             ...credentials 
-    //         });
-    //     }).catch(error => {
-    //         res.render('editTeachers', { layout: 'admin', errorMsg: error });
-    //     });
-    // });
-
     app.post('/admin/faculty/addExisting', (req, res) => {
         const path = req.body.path;
         const memberID = req.body.member;
@@ -68,6 +36,12 @@ module.exports = function (app) {
 
     app.post('/admin/classes/addMiscMember', (req, res) => {
         Groups.addMiscMember(req.body.group).then(() => {
+            return res.end();
+        });
+    });
+
+    app.post('/admin/classes/removeMiscMember', (req, res) => {
+        Groups.removeMiscMember(req.body.group, req.body.container).then(() => {
             return res.end();
         });
     });

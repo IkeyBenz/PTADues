@@ -55,9 +55,7 @@ module.exports = (function () {
         });
     }
     function remove(memberId) {
-        return new Promise(function (resolve, reject) {
-            
-        });
+        return ref.child(memberId).remove();
     }
     return {
         create: create,

@@ -61,33 +61,19 @@ module.exports = (function () {
         }) : {};
     }
     function formattedMisc(d) {
-        /* administration: [
-            {
-                Title: 'Principal', 
-                id: groupKey,
-                Members: [
-                    {
-                        name: 'Dina Yeager', 
-                        info: '', 
-                        id: '-LR4WSEDPnl2mwpWaRIM'
-                    }, 
-                    ...
-                ]
-            }, 
-            ...
-        ] */
         return d.orderedGroups.Administration.map(groupKey => {
             const group = d.groups.Administration[groupKey];
             return {
                 Title: group.Title,
                 id: groupKey,
-                Members: group.Members ? group.Members.map((memberKey, index) => {
+                Members: group.Members ? group.Members.map((containerKey) => {
+                    const memberKey = d.groups.Administration.Containers[containerKey];
                     const member = d.faculty[memberKey];
                     return member ? {
-                        name: member.Name + (member.Info) ? ` (${member.Info})` : '',
-                        index: index,
-                        id: memberKey
-                    } : { name: '', index: index, id: '' }
+                        name: member.Name + ((member.Info) ? ` (${member.Info})` : ''),
+                        id: memberKey,
+                        container: containerKey
+                    } : { name: '', id: '', container: containerKey }
                 }) : []
             }
         });
@@ -121,7 +107,19 @@ module.exports = (function () {
     function addMiscMember(group) {
         return groupsRef.child(`Administration/${group}/Members`).once('value').then(snap => {
             const index = snap.val() ? snap.val().length : 0;
-            return groupsRef.child(`Administration/${group}/Members/${index}`).set('Unselected');
+            const containerKey = groupsRef.child('Administration/Containers').push('Unselected').key;
+            return groupsRef.child(`Administration/${group}/Members/${index}`).set(containerKey);
+        });
+    }
+    function removeMiscMember(groupId, containerId) {
+        return groupsRef.child(`Administration/${groupId}/Members`).once('value').then(s => {
+            const members = s.val();
+            console.log(members);
+            members.splice(members.indexOf(containerId), 1);
+            console.log(members);
+            return groupsRef.child(`Administration/${groupId}/Members`).set(members).then(() => {
+                return groupsRef.child(`Administration/Containers/${containerId}`).remove();
+            });
         });
     }
     function reorder(path, newOrder) {
@@ -254,6 +252,7 @@ module.exports = (function () {
         delete: remove,
         reorderAtPath: reorder,
         saveHanukkahOrder: saveHanukkahOrder,
-        addMiscMember: addMiscMember
+        addMiscMember: addMiscMember,
+        removeMiscMember
     }
 })();

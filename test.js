@@ -158,4 +158,30 @@ function addMiddleShoolTeacher() {
     }).key;
     firebase.database().ref('OrderedGroups/MiddleSchool/0').set(key);
 }
-addMiddleShoolTeacher();
+function addAdministrationToTheMix() {
+    const firstKey = groupsRef.child('Administration').push({
+        Members: [],
+        Title: 'Principal'
+    }).key;
+    OrderedGroups.child('Administration').remove();
+    OrderedGroups.child('Administration/0').set(firstKey);
+}
+function addAdminContainers() {
+    groupsRef.child('Administration').once('value').then(s => {
+        const admin = s.val();
+        for (let categoryKey in admin) {
+            const members = admin[categoryKey].Members;
+            for (let i in members) {
+                // get index and value at this location
+                const memberKey = members[i];
+                const memberPath = groupsRef.child(`Administration/${categoryKey}/Members/${i}`);
+                // create new push in Administration/Containers with value of memberKey
+                const containerKey = groupsRef.child('Administration/Containers').push(memberKey).key;
+                // set push key to be value at this index in reg Admin
+                memberPath.set(containerKey);
+            }
+        }
+    });
+}
+
+addAdminContainers();
