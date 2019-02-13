@@ -5,12 +5,7 @@ $(document).ready(function () {
             onEnd: reorderInDatabase
         });
     }
-    // $('.exButton').click((e) => {
-    //     $('.addFacultyContainer').hide();
-    //     $('.classInputs').hide();
-    // });
     $('.teacherSelect').on('focus', addOptions);
-    $('.editButton').click(addOptions);
     $('.classInput').on('change', updateInDB);
     $('.multi-select').multipleSelect({ onClick: updateAssistants });
 
@@ -77,6 +72,7 @@ function dataFromType(type) {
     return data;
 }
 
+// Very Bad. Not dry at all. Very wet code.
 async function addClasses(type) {
     const amount = $(`#${type}AddAmount`).val();
     for (let i = 0; i < amount; i++) {
@@ -84,14 +80,15 @@ async function addClasses(type) {
     }
     window.location.reload();
 }
-function addAdministratorGroup() {
-    axios.post('/admin/classes/create', dataFromType('Administrator'))
-        .then(() => window.location.reload())
-        .catch(console.error);
+async function addAdministratorGroups() {
+    const amount = $('#miscGroupAddAmount').val();
+    for (let i = 0; i < amount; i++) {
+        await axios.post('/admin/classes/create', dataFromType('Administrator'))
+    }
+    window.location.reload();
 }
 async function addAdminMembers(group) {
     const amount = $(`#${group}-addAmount`).val();
-    console.log(amount);
     for (let i = 0; i < amount; i++) {
         await axios.post('/admin/classes/addMiscMember', { group: group });
     }

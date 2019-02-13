@@ -97,13 +97,14 @@
                 {{/each}}
             </ul>
             <div class="input-group d-flex my-2">
-                <input type="text" class="form-control" value="1" id="{{group.id}}-addAmount">
+                <input type="number" class="form-control" value="1" id="{{group.id}}-addAmount">
                 <button class="btn btn-primary" onclick="addAdminMembers('{{group.id}}')">Add Member</button>
             </div>
         </li>
         {{/each}}
     </ul>
-    <button class="btn btn-primary" onclick="addAdministratorGroup()">Add Group</button>
+    <input type="number" value="1" id="miscGroupAddAmount">
+    <button class="btn btn-primary" onclick="addAdministratorGroups()">Add Group(s)</button>
 </div>
 <div id="selectorOptions" class="d-none">
     {{#each faculty}}
@@ -111,10 +112,9 @@
     {{/each}}
 </div>
 
-<link rel="stylesheet" href="/css/multiple-select.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.css">
 <link rel="stylesheet" href="/css/sortable.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<script src="/js/multiple-select.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.js"></script>
 <script src="/js/Sortable.min.js"></script>
 <script src="/js/sortFaculty.js"></script>
