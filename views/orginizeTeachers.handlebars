@@ -15,8 +15,10 @@
         </li>
         {{/each}}
     </ul>
-    <button class="btn btn-primary d-inline" onclick="addClasses('Nursary')">Add Class</button>
-    <input type="number" class="d-inline" id="NursaryAddAmount" value="1">
+    <div class="d-flex my-2">
+        <button class="btn btn-primary" onclick="addClasses('Nursary')">Add Class</button>
+        <input type="number" class="form-control" id="NursaryAddAmount" value="1">
+    </div>
 </div>
 
 <div class="list-container">
@@ -38,8 +40,10 @@
         </li>
         {{/each}}
     </ul>
-    <button class="btn btn-primary d-inline" onclick="addClasses('MiddleSchool')">Add Class(es)</button>
-    <input type="number" class="d-inline" id="MiddleSchoolAddAmount" value="1">
+    <div class="d-flex my-2">
+        <button class="btn btn-primary d-inline" onclick="addClasses('MiddleSchool')">Add Class(es)</button>
+        <input type="number" class="form-control" id="MiddleSchoolAddAmount" value="1">
+    </div>
 </div>
 
 <div class="list-container">
@@ -74,8 +78,10 @@
         </li>
         {{/each}}
     </ul>
-    <input type="number" value="1" id="miscGroupAddAmount">
-    <button class="btn btn-primary" onclick="addAdministratorGroups()">Add Group(s)</button>
+    <div class="d-flex my-2">
+        <button class="btn btn-primary" onclick="addAdministratorGroups()">Add Group(s)</button>
+        <input type="number" class="form-control" value="1" id="miscGroupAddAmount">
+    </div>
 </div>
 
 <div class="list-container">
@@ -103,8 +109,11 @@
             </div>
         </li>
         {{/each}}
-        <button class="btn btn-primary" onclick="addClasses('Elementary')">Add Class</button>
     </ul>
+    <div class="d-flex my-2">
+        <button class="btn btn-primary" onclick="addClasses('Elementary')">Add Class</button>
+        <input type="number" value="1" id="ElementaryAddAmount" class="form-control">
+    </div>
 </div>
 
 
