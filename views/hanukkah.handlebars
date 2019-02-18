@@ -4,7 +4,7 @@
         <h4>Please check the classes that your children have. For each class you check off, input your child's name.
         </h4>
     </div>
-    <div class="card my-2">
+    {{!-- <div class="card my-2">
         <div class="card-header">
             <h3 class="card-title">Early Childhood</h3>
         </div>
@@ -13,7 +13,7 @@
                 {{#each earlyChildhood as |grade|}}
                 <button class="btn card p-4 m-2" data-toggle="collapse" aria-expanded="false" data-target="#{{@key}}"
                     aria-controls="{{@key}}">{{@key}} &darr;</button>
-                <div class="collapse border-bottom border-dark p-2 w-100" id="{{@key}}">
+                <div class="collapse p-2 w-100" id="{{@key}}">
                     <ul class="list-group">
                         {{#each grade as |class|}}
                         <li class="list-group-item">
@@ -32,21 +32,106 @@
         <div class="card-footer">
             <p>Teachers Selected: 0</p>
         </div>
+    </div> --}}
+    {{!-- <div class="card my-2">
+        <div class="card-header">
+            <h3 class="card-title">Early Childhood</h3>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="early-accordion">
+                {{#each earlyChildhood as |grade|}}
+                <div class="card">
+                    <div class="card-header" id="{{@key}}-heading">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                data-target="#{{@key}}-collapse" aria-expanded="false"
+                                aria-controls="{{@key}}-collapse">
+                                {{@key}}
+                            </button>
+                        </h2>
+                    </div>
+                </div>
+                <div class="collapse" id="{{@key}}-collapse" aria-labelledby="{{@key}}-heading"
+                    data-parent="#early-accordion">
+                    <ul class="list-group">
+                        {{#each grade as |class|}}
+                        <li class="list-group-item">
+                            <strong class="mx-1">{{@key}}</strong>
+                            {{#each class as |teacher|}}
+                            <input type="checkbox" style="margin-left: 8px;">
+                            {{teacher.Name}}
+                            {{/each}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div> --}}
+    <div class="card my-2">
+        <div class="card-header">
+            <h3 class="card-title">Early Childhood</h3>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs" role="tablist">
+                {{#each earlyChildhood as |grade|}}
+                <li class="nav-item">
+                    <a class="nav-link text-dark{{#if grade.First}} active{{/if}}" id="{{@key}}-tab" data-toggle="tab"
+                        href="#{{@key}}" role="tab" aria-controls="{{@key}}"
+                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{grade.gradeName}}</a>
+                </li>
+                {{/each}}
+            </ul>
+            <div class="tab-content">
+                {{#each earlyChildhood as |grade|}}
+                <div class="tab-pane fade{{#if grade.First}} show active{{/if}}" id="{{@key}}" role="tabpanel"
+                    aria-labelledby="{{@key}}-tab">
+                    <ul class="list-group">
+                        {{#each grade.Classes as |class|}}
+                        <li class="list-group-item">
+                            <strong class="mx-1">{{@key}}</strong>
+                            {{#each class as |teacher|}}
+                            <input type="checkbox" style="margin-left: 8px;">
+                            {{teacher.Name}}
+                            {{/each}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/each}}
+            </div>
+        </div>
     </div>
+
 
     <div class="card my-2">
         <div class="card-header">
             <h3 class="card-title">Middle School</h3>
         </div>
         <div class="card-body px-5">
-            <div class="d-flex justify-content-between flex-wrap">
+            <ul class="nav nav-tabs" role="tablist">
                 {{#each middleSchool as |grade|}}
-                <button class="btn card p-4 m-2" data-toggle="collapse" aria-expanded="false"
-                    data-target="#middle-{{@key}}" aria-controls="middle-{{@key}}">{{@key}}th Grade &darr;</button>
-                <div class="collapse border-bottom border-dark p-2 w-100" id="middle-{{@key}}">
-                    {{#each grade as |class|}}
-                    <p><strong>{{class.Grade}}</strong> <input type="checkbox"> {{class.Teacher.Name}}</p>
-                    {{/each}}
+                <li class="nav-item">
+                    <a class="nav-link text-dark{{#if grade.First}} active{{/if}}" id="{{@key}}-tab" data-toggle="tab"
+                        href="#M{{@key}}" role="tab" aria-controls="{{@key}}"
+                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{@key}}th Grade</a>
+                </li>
+                {{/each}}
+            </ul>
+            <div class="tab-content">
+                {{#each middleSchool as |grade|}}
+                <div class="tab-pane fade{{#if grade.First}} show active{{/if}}" id="M{{@key}}" role="tabpanel"
+                    aria-labelledby="{{@key}}-tab">
+                    <ul class="list-group">
+                        {{#each grade.Classes as |class|}}
+                        <li class="list-group-item">
+                            <input type="checkbox" class="mx-2">
+                            <strong>{{class.Teacher.Name}}</strong>
+                            {{this.Subject}}
+                        </li>
+                        {{/each}}
+                    </ul>
                 </div>
                 {{/each}}
             </div>
@@ -57,68 +142,65 @@
             <h3 class="card-title">Elementary</h3>
         </div>
         <div class="card-body">
-            <table class="classTable">
-                <tr>
-                    <th>Class</th>
-                    <th>Room</th>
-                    <th> </th>
-                    <th>Teacher</th>
-                    <th> </th>
-                    <th>Associate/Assistant</th>
-                    <th>Child's Name</th>
-                </tr>
-                {{#each elementary}}
-                <tr>
+            <ul class="nav nav-tabs" role="tablist">
+                {{#each elementary as |grade|}}
+                <li class="nav-item">
+                    <a class="nav-link text-dark{{#if grade.First}} active{{/if}}" id="{{@key}}-tab" data-toggle="tab"
+                        href="#E{{@key}}" role="tab" aria-controls="{{@key}}"
+                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{@key}} Grade</a>
+                </li>
+                {{/each}}
+            </ul>
+            <div class="tab-content">
+                {{#each elementary as |grade|}}
+                <div class="tab-pane fade{{#if grade.First}} show active{{/if}}" id="E{{@key}}" role="tabpanel"
+                    aria-labelledby="{{@key}}-tab">
+                    <table cellpadding="8">
+                        <tr class="border-bottom-0 border-gray">
+                            <th>Class</th>
+                            <th>Room</th>
+                            <th> </th>
+                            <th>Teacher</th>
+                            <th> </th>
+                            <th>Associate/Assistant</th>
+                            <th>Child's Name</th>
+                        </tr>
+                        {{#each grade.Classes}}
+                        <tr class="border border-bottom-0 border-gray px-3">
+                            <td>{{this.Class}}</td>
+                            <td>{{this.Room}}</td>
+                            <td><input type="checkbox" name="FacultyMembers/{{this.FirstRowTeachers.main.Id}}"></td>
+                            <td>{{this.FirstRowTeachers.main.Name}}</td>
+                            <td>{{#if this.FirstRowTeachers.assistant.Name}}<input type="checkbox"
+                                    name="FacultyMembers/{{this.FirstRowTeachers.assistant.Id}}">{{/if}}</td>
+                            <td>{{this.FirstRowTeachers.assistant.Name}}</td>
+                            <td><input type="text" name="Elementary/{{../ClassId}}/childName"
+                                    class="form-control childName"></td>
+                        </tr>
+                        {{#if this.ExtraTeachers}}
+                        {{#each this.ExtraTeachers}}
+                        <tr class="border-left border-right border-gray px-3">
+                            <td></td>
+                            <td></td>
+                            <td>{{#if this.main.Name}}<input type="checkbox"
+                                    name="FacultyMembers/{{this.main.Id}}">{{/if}}
+                            </td>
+                            <td>{{this.main.Name}}</td>
+                            <td>{{#if this.assistant.Name}}<input type="checkbox"
+                                    name="FacultyMembers/{{this.assistant.Id}}">{{/if}}
+                            </td>
+                            <td>{{this.assistant.Name}}</td>
+                            <td></td>
+                        </tr>
+                        {{/each}}
+                        {{/if}}
+                        {{/each}}
+                    </table>
+                </div>
+                {{/each}}
+            </div>
 
-                    <td>{{this.Class}}</td>
-                    <td>{{this.Room}}</td>
-                    <td><input type="checkbox" name="FacultyMembers/{{this.FirstRowTeachers.main.Id}}"></td>
-                    <td>{{this.FirstRowTeachers.main.Name}}</td>
-                    <td>{{#if this.FirstRowTeachers.assistant.Name}}<input type="checkbox"
-                            name="FacultyMembers/{{this.FirstRowTeachers.assistant.Id}}">{{/if}}</td>
-                    <td>{{this.FirstRowTeachers.assistant.Name}}</td>
-                    <td><input type="text" name="Elementary/{{../ClassId}}/childName" class="childName"></td>
-                </tr>
-                {{#if this.ExtraTeachers}}
-                {{#each this.ExtraTeachers}}
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>{{#if this.main.Name}}<input type="checkbox" name="FacultyMembers/{{this.main.Id}}">{{/if}}</td>
-                    <td>{{this.main.Name}}</td>
-                    <td>{{#if this.assistant.Name}}<input type="checkbox"
-                            name="FacultyMembers/{{this.assistant.Id}}">{{/if}}
-                    </td>
-                    <td>{{this.assistant.Name}}</td>
-                    <td></td>
-                </tr>
-                {{/each}}
-                {{/if}}
-                {{/each}}
-            </table>
         </div>
     </div>
-    {{!-- <table class="classTable">
-        <tr>
-            <th> </th>
-            <th>Grade</th>
-            <th>Teacher</th>
-            <th>Subject</th>
-            <th>Child's Name</th>
-        </tr>
-        {{#each middleSchool}}
-        <tr>
-            <td><input type="checkbox" name="MiddleSchool/{{this.ClassId}}"></td>
-            <td>{{this.Grade}}</td>
-            <td>{{this.Teacher}}</td>
-            <td>{{this.Subject}}</td>
-            <td><input type="text" name="MiddleSchool/{{this.ClassId}}/childName" class="childName"></td>
-        </tr>
-        {{/each}}
-    </table> --}}
-    {{!--<input type="hidden" id="paymentAmount" name="Amount">
-    <input type="hidden" id="emailAddress" name="Email">
-    <button class="btn btn-primary" type="button" id="continueBtn" onclick="calculatePrice()">Continue</button>
-</div> --}}
 
     <script src="/js/hanukkah.js"></script>

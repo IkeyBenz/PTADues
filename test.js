@@ -213,6 +213,8 @@ function getEarlyChildhood(db) {
             grades[grade][_class.Class] = []
         grades[grade][_class.Class].push({ Id: _class.Teacher, ...db.faculty[_class.Teacher] });
     }
+    grades[Object.keys(grades)[0]].First = true;
+    console.log(grades);
     return grades;
 }
 function getMiddleSchool(db) {
@@ -229,4 +231,5 @@ function getMiddleSchool(db) {
     }
     return grades;
 }
-downloadFaculty().then(getMiddleSchool);
+const numbersFrom = (str) => str.replace(/\D+/g, '');
+console.log(numbersFrom('hel0o'));
