@@ -197,9 +197,9 @@ module.exports = (function () {
             }).filter(obj => { return (obj.Grade != '' && obj.TeacherId != '' && obj.Subject != '') });
 
             return {
-                nursaryGroups: groupByGrade(nursaryClasses),
+                earlyChildhood: earlyChildhood(d),
                 elementary: elemClasses,
-                middleSchool: middleSchool
+                middleSchool: getMiddleSchool(d)
             }
         });
     }
@@ -230,21 +230,36 @@ module.exports = (function () {
         },
     }
     */
-
-    function groupByGrade(classes) {
-        let grouped = [];
-        let currGroup = { name: removeNumbers(classes[0].Class), classes: [classes[0]] };
-        for (let i = 1; i < classes.length; i++) {
-            const name = removeNumbers(classes[i].Class);
-            if (currGroup.name != name) {
-                grouped.push(currGroup);
-                currGroup = { name: removeNumbers(classes[i].Class), classes: [classes[i]] };
-            } else {
-                currGroup.classes.push(classes[i])
-            }
+    function earlyChildhood(db) {
+        const nursary = db.orderedGroups.Nursary.map(key => {
+            return db.groups.Nursary[key];
+        });
+        let grades = {}
+        for (let _class of nursary) {
+            let grade = removeNumbers(_class.Class);
+            if (!grades[grade])
+                grades[grade] = {}
+            if (!grades[grade][_class.Class])
+                grades[grade][_class.Class] = []
+            grades[grade][_class.Class].push({ Id: _class.Teacher, ...db.faculty[_class.Teacher] });
         }
-        grouped.push(currGroup);
-        return grouped;
+        return grades;
+    }
+
+
+    function getMiddleSchool(db) {
+        const middleSchool = db.orderedGroups.MiddleSchool.map(key => {
+            const classInfo = db.groups.MiddleSchool[key],
+                withTeacher = { ...classInfo, Teacher: { ...db.faculty[classInfo.Teacher], Id: classInfo.Teacher } }
+            return withTeacher
+        });
+        const grades = {};
+        for (let _class of middleSchool) {
+            if (!grades[_class.Grade])
+                grades[_class.Grade] = []
+            grades[_class.Grade].push(_class);
+        }
+        return grades;
     }
     function removeNumbers(string) {
         const indexOfNumbers = string.indexOf(string.match(/[1-9]/g).join(''));
