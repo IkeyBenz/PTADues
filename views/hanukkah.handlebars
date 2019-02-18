@@ -1,87 +1,135 @@
 <div class="container">
     <div class="center">
         <h3>PTA Dues | Hanukkah</h3>
-        <h4>Please check the classes that your children have. For each class you check off, input your child's name.</h4>
+        <h4>Please check the classes that your children have. For each class you check off, input your child's name.
+        </h4>
     </div>
-    <form action="/orders/hanukkah/new" id="hanukkahForm" method="POST">
-        <h2>Early Childhood</h2>
-        <table class="classTable">
-            <tr>
-                <th> </th>
-                <th>Class</th>
-                <th>Teacher</th>
-                <th>Child's Name</th>
-            </tr>
-
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Early Childhood</h3>
+        </div>
+        <div class="card-body px-5">
+            <div class="d-flex justify-content-between flex-wrap">
+                <button class="btn card p-4 mx-2" data-toggle="collapse" aria-expanded="false" data-target="#PG"
+                    aria-controls="PG">Playgroup &darr;</button>
+                <button class="btn card p-4 mx-2" data-toggle="collapse" aria-expanded="false" data-target="#N"
+                    aria-controls="N">Nursary &darr;</button>
+                <button class="btn card p-4 mx-2" data-toggle="collapse" aria-expanded="false" data-target="#PK"
+                    aria-controls="PK">Pre-Kindergarten &darr;</button>
+                <button class="btn card p-4 mx-2" data-toggle="collapse" aria-expanded="false" data-target="#K"
+                    aria-controls="K">Kindergarten &darr;</button>
+            </div>
             {{#each nursaryGroups}}
-            {{>emptyRow}}
-            {{#each this.classes}}
-            <tr class="grade-{{this.name}}">
-                <td><input type="checkbox" name="Nursary/{{this.ClassId}}"></td>
-                <td>{{this.Class}}</td>
-                <td>{{this.TeacherName}}</td>
-                <td><input type="text" class="childName" name="Nursary/{{this.ClassId}}/childName"></td>
-            </tr>
+            <div class="collapse" id="{{this.name}}">
+                {{#each this.classes}}
+                <p>{{this.Class}} {{this.TeacherName}}</p>
+                {{/each}}
+            </div>
             {{/each}}
-            {{/each}}
-        </table>
-        <table class="classTable">
-            <tr>
-                <th> </th>
-                <th>Class</th>
-                <th>Room</th>
-                <th>Teacher</th>
-                <th>Associate/Assistant</th>
-                <th>Child's Name</th>
-            </tr>
-            {{#each elementary}}
-            <tr>
-                <td><input type="checkbox" name="Elementary/{{this.ClassId}}"></td>
-                <td>{{this.Class}}</td>
-                <td>{{this.Room}}</td>
-                <td>{{this.FirstRowTeachers.main.Name}}</td>
-                <td>{{this.FirstRowTeachers.assistant.Name}}</td>
-                <td><input type="text" name="Elementary/{{../ClassId}}/childName" class="childName"></td>
-            </tr>
-            {{#if this.ExtraTeachers}}
-            {{#each this.ExtraTeachers}}
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{this.main.Name}}</td>
-                <td>{{this.assistant.Name}}</td>
-                <td></td>
-            </tr>
-            {{/each}}
-            {{/if}}
-            {{/each}}
-        </table>
-        <table class="classTable">
-            <tr>
-                <th> </th>
-                <th>Grade</th>
-                <th>Teacher</th>
-                <th>Child's Name</th>
-            </tr>
-            {{#each middleSchool}}
-            <tr>
-                <td><input type="checkbox" name="MiddleSchool/{{this.ClassId}}"></td>
-                <td>{{this.Grade}}</td>
-                <td>{{this.Teacher}}</td>
-                <td><input type="text" name="MiddleSchool/{{this.ClassId}}/childName" class="childName"></td>
-            </tr>
-            {{/each}}
-        </table>
-        <input type="hidden" id="paymentAmount" name="Amount">
-        <input type="hidden" id="emailAddress" name="Email">
-        <button class="btn btn-primary" type="button" id="continueBtn" onclick="calculatePrice()">Continue</button>
-    </form>
-</div>
+            <div class="collapse" id="Playgroup">
+
+            </div>
+            <div class="collapse" id="Nursary">
+                <h1>This is nursary!</h1>
+            </div>
+            <div class="collapse" id="Pre-Kindergarten">
+                <h1>This is Pre-Kindergarten</h1>
+            </div>
+            <div class="collapse" id="Kindergarten">
+                <h1>This is the real deal, this is Kindergarten.</h1>
+            </div>
+        </div>
+        <div class="card-footer">
+            <p>Teachers Selected: 0</p>
+        </div>
+    </div>
+
+    {{!-- <form action="/orders/hanukkah/new" id="hanukkahForm" method="POST"> --}}
+    <h2>Early Childhood</h2>
+    <table class="classTable">
+        <tr>
+            <th> </th>
+            <th>Class</th>
+            <th>Teacher</th>
+            <th>Child's Name</th>
+        </tr>
+
+        {{#each nursaryGroups}}
+        {{>emptyRow}}
+        {{#each this.classes}}
+        <tr class="grade-{{this.name}}">
+            <td><input type="checkbox" name="Nursary/{{this.ClassId}}"></td>
+            <td>{{this.Class}}</td>
+            <td>{{this.TeacherName}}</td>
+            <td><input type="text" class="childName" name="Nursary/{{this.ClassId}}/childName"></td>
+        </tr>
+        {{/each}}
+        {{/each}}
+    </table>
+
+
+
+
+    {{!-- <table class="classTable">
+        <tr>
+            <th>Class</th>
+            <th>Room</th>
+            <th> </th>
+            <th>Teacher</th>
+            <th> </th>
+            <th>Associate/Assistant</th>
+            <th>Child's Name</th>
+        </tr>
+        {{#each elementary}}
+        <tr>
+
+            <td>{{this.Class}}</td>
+            <td>{{this.Room}}</td>
+            <td><input type="checkbox" name="FacultyMembers/{{this.FirstRowTeachers.main.Id}}"></td>
+            <td>{{this.FirstRowTeachers.main.Name}}</td>
+            <td>{{#if this.FirstRowTeachers.assistant.Name}}<input type="checkbox"
+                    name="FacultyMembers/{{this.FirstRowTeachers.assistant.Id}}">{{/if}}</td>
+            <td>{{this.FirstRowTeachers.assistant.Name}}</td>
+            <td><input type="text" name="Elementary/{{../ClassId}}/childName" class="childName"></td>
+        </tr>
+        {{#if this.ExtraTeachers}}
+        {{#each this.ExtraTeachers}}
+        <tr>
+            <td></td>
+            <td></td>
+            <td>{{#if this.main.Name}}<input type="checkbox" name="FacultyMembers/{{this.main.Id}}">{{/if}}</td>
+            <td>{{this.main.Name}}</td>
+            <td>{{#if this.assistant.Name}}<input type="checkbox" name="FacultyMembers/{{this.assistant.Id}}">{{/if}}
+            </td>
+            <td>{{this.assistant.Name}}</td>
+            <td></td>
+        </tr>
+        {{/each}}
+        {{/if}}
+        {{/each}}
+    </table>
+    <table class="classTable">
+        <tr>
+            <th> </th>
+            <th>Grade</th>
+            <th>Teacher</th>
+            <th>Subject</th>
+            <th>Child's Name</th>
+        </tr>
+        {{#each middleSchool}}
+        <tr>
+            <td><input type="checkbox" name="MiddleSchool/{{this.ClassId}}"></td>
+            <td>{{this.Grade}}</td>
+            <td>{{this.Teacher}}</td>
+            <td>{{this.Subject}}</td>
+            <td><input type="text" name="MiddleSchool/{{this.ClassId}}/childName" class="childName"></td>
+        </tr>
+        {{/each}}
+    </table>
+    <input type="hidden" id="paymentAmount" name="Amount">
+    <input type="hidden" id="emailAddress" name="Email">
+    <button class="btn btn-primary" type="button" id="continueBtn" onclick="calculatePrice()">Continue</button>
+    {{!-- </form> --}}
+</div> --}}
 
 <script src="/js/hanukkah.js"></script>
-
-
-<script>
-
-</script>

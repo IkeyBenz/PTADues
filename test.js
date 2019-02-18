@@ -183,5 +183,52 @@ function addAdminContainers() {
         }
     });
 }
+function downloadFaculty() {
+    return Promise.all([
+        facultyRef.once('value'),
+        groupsRef.once('value'),
+        OrderedGroups.once('value')
+    ]).then(vals => {
+        return {
+            faculty: vals[0].val(),
+            groups: vals[1].val(),
+            orderedGroups: vals[2].val()
+        }
+    });
+}
+function removeNumbers(string) {
+    const indexOfNumbers = string.indexOf(string.match(/[1-9]/g).join(''));
+    return string.slice(0, indexOfNumbers);
+}
+async function getEarlyChildhood() {
+    const db = await downloadFaculty(),
+        nursary = db.orderedGroups.Nursary.map(key => {
+            return db.groups.Nursary[key];
+        });
+    let grades = {}
+    for (let _class of nursary) {
+        const grade = removeNumbers(_class.Class);
+        if (!grades[grade])
+            grades[grade] = {}
+        if (!grades[grade][_class.Class])
+            grades[grade][_class.Class] = { Class: _class.Class, Teachers: [] }
+        grades[grade][_class.Class].Teachers.push({ Id: _class.Teacher, ...db.faculty[_class.Teacher] });
+    }
+    let newGrades = {}
+    for (let grade in grades) {
+        let grade;
+        switch (grade) {
+            case 'PG': _grade = 'Playgroup'
+            case 'N': _grade = 'Nursary'
+            case 'PK': _grade = 'Pre-Kindergarten'
+            case 'K': _grade = 'Kindergarten'
+        }
+        newGrades[_grade] = []
+        for (let className in grades[grade]) {
+            newGrades[_grade].push(grades[grade][className]);
+        }
+    }
+    console.log(newGrades);
+}
 
-addAdminContainers();
+getEarlyChildhood();

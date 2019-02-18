@@ -1,33 +1,4 @@
 <div class="list-container">
-    <h1>Elementary:</h1>
-    <ul class="sortable list-group" id="OrderedGroups/Elementary" style="width: 1377.5px">
-        {{#each elementary as |class|}}
-        <li class="list-group-item" id="{{class.id}}">
-            <div class="input-group">
-                <span class="drag-handle">☰</span>
-                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Class"
-                    placeholder="Class" value="{{class.Class}}">
-                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Room" placeholder="Room"
-                    value="{{class.Room}}">
-                <select id="Elementary/{{class.id}}/Teacher" class="multi-select" multiple="multiple">
-                    {{#each ../faculty}}
-                    <option class="{{this.id}}" value="{{this.id}}" {{#ifInside this.id class.Teacher}}
-                        selected{{/ifInside}}>{{this.name}}
-                    </option> {{/each}} </select> <select id="Elementary/{{class.id}}/Assistants" class="multi-select"
-                    multiple="multiple" style="width: 300px">
-                    {{#each ../faculty}}
-                    <option class="{{this.id}}" value="{{this.id}}" {{#ifInside this.id class.Assistants}}
-                        selected{{/ifInside}}>{{this.name}}
-                    </option> {{/each}} </select> <button class="btn btn-danger exButton"
-                    onclick="removeClass('{{class.id}}', 'Elementary')">X</button>
-            </div>
-        </li>
-        {{/each}}
-        <button class="btn btn-primary" onclick="addClasses('Elementary')">Add Class</button>
-    </ul>
-</div>
-
-<div class="list-container">
     <h1>Early Childhood:</h1>
     <ul class="sortable list-group" id="OrderedGroups/Nursary">
         {{#each nursary as |class|}}
@@ -106,6 +77,37 @@
     <input type="number" value="1" id="miscGroupAddAmount">
     <button class="btn btn-primary" onclick="addAdministratorGroups()">Add Group(s)</button>
 </div>
+
+<div class="list-container">
+    <h1>Elementary:</h1>
+    <ul class="sortable list-group" id="OrderedGroups/Elementary" style="width: 1377.5px">
+        {{#each elementary as |class|}}
+        <li class="list-group-item" id="{{class.id}}">
+            <div class="input-group">
+                <span class="drag-handle">☰</span>
+                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Class"
+                    placeholder="Class" value="{{class.Class}}">
+                <input type="text" class="form-control classInput" id="Elementary/{{class.id}}/Room" placeholder="Room"
+                    value="{{class.Room}}">
+                <select id="Elementary/{{class.id}}/Teacher" class="multi-select" multiple="multiple">
+                    {{#each ../faculty}}
+                    <option class="{{this.id}}" value="{{this.id}}" {{#ifInside this.id class.Teacher}}
+                        selected{{/ifInside}}>{{this.name}}
+                    </option> {{/each}} </select> <select id="Elementary/{{class.id}}/Assistants" class="multi-select"
+                    multiple="multiple" style="width: 300px">
+                    {{#each ../faculty}}
+                    <option class="{{this.id}}" value="{{this.id}}" {{#ifInside this.id class.Assistants}}
+                        selected{{/ifInside}}>{{this.name}}
+                    </option> {{/each}} </select> <button class="btn btn-danger exButton"
+                    onclick="removeClass('{{class.id}}', 'Elementary')">X</button>
+            </div>
+        </li>
+        {{/each}}
+        <button class="btn btn-primary" onclick="addClasses('Elementary')">Add Class</button>
+    </ul>
+</div>
+
+
 <div id="selectorOptions" class="d-none">
     {{#each faculty}}
     <option value="{{this.id}}">{{this.name}}</option>

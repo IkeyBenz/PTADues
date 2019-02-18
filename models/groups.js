@@ -203,6 +203,34 @@ module.exports = (function () {
             }
         });
     }
+    /* 
+    DATA = {
+        Early_Childhood: {
+            Playgroup: [
+                {
+                    Class: N1,
+                    Teachers: [
+                        { id: id, name: name },
+                        { id: id, name: name },
+                        { id: id, name: name }
+                    ]
+                },
+                { ... },
+                { ... }
+            ],
+            Nursary: {
+                <same_as_above>
+            },
+            Pre_Kindergarten: {
+                <same_as_above>
+            },
+            Kindergarten: {
+                <same_as_above>
+            }
+        },
+    }
+    */
+
     function groupByGrade(classes) {
         let grouped = [];
         let currGroup = { name: removeNumbers(classes[0].Class), classes: [classes[0]] };
