@@ -37,18 +37,19 @@ function updateChildren() {
     // remove any data that might be in the dropdown.
     while ($('#namesDropdownMenu').children().length < $('#numChildren').val()) {
         const i = $('#namesDropdownMenu').children().length + 1;
-        const options = `<option value="Playgroup">Playgroup</option>
+        const options = `<option value="Pre-Playgroup">Pre-Playgroup</option>
+    <option value="Playgroup">Playgroup</option>
     <option value="Nursery">Nursery</option>
     <option value="Pre-Kindergarten">Pre-Kindergarten</option>
     <option value="Kindergarten">Kindergarten</option>
-    <option value="1st Grade">1</option>
-    <option value="2nd Grade">2</option>
-    <option value="3rd Grade">3</option>
-    <option value="4th Grade">4</option>
-    <option value="5th Grade">5</option>
-    <option value="6th Grade">6</option>
-    <option value="7th Grade">7</option>
-    <option value="8th Grade">8</option>`;
+    <option value="E1st">1</option>
+    <option value="E2nd">2</option>
+    <option value="E3rd">3</option>
+    <option value="E4th">4</option>
+    <option value="E5th">5</option>
+    <option value="M6">6</option>
+    <option value="M7">7</option>
+    <option value="M8">8</option>`;
 
         const template = `<li class="d-flex">
     <input class="form-control" type="text" id="childname${i}" placeholder="Full Name">

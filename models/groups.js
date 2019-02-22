@@ -186,17 +186,31 @@ module.exports = (function () {
             elemGrades[Object.keys(elemGrades)[0]].First = true;
             return {
                 earlyChildhood: earlyChildhood(d),
-                elementary: elemGrades,
-                middleSchool: getMiddleSchool(d)
+                elementary: getElementary(d),
+                middleSchool: getMiddleSchool(d),
+                admin: getAdministration(d)
             }
         });
     }
+    function getAdministration(db) {
+        return db.orderedGroups.Administration.map(key => {
+            const group = { ...db.groups.Administration[key], Id: key };
+            return {
+                ...group,
+                Members: group.Members.map(containerKey => {
+                    const teacherId = db.groups.Administration.Containers[containerKey];
+                    return { ...db.faculty[teacherId], Id: teacherId }
+                })
+            }
+        });
+    }
+
 
     function earlyChildhood(db) {
         const nursary = db.orderedGroups.Nursary.map(key => ({ ...db.groups.Nursary[key], Id: key }));
         let grades = {}
         const gradeNames = {
-            'PG': 'Playgroup', 'N': 'Nursary', 'PK': 'Pre-Kindergarten', 'K': 'Kindergarten', 'PPG': 'Pre-Playgroup'
+            'PG': 'Playgroup', 'N': 'Nursery', 'PK': 'Pre-Kindergarten', 'K': 'Kindergarten', 'PPG': 'Pre-Playgroup'
         }
         for (let _class of nursary) {
             let grade = removeNumbers(_class.Class),
@@ -226,6 +240,35 @@ module.exports = (function () {
         }
         grades[Object.keys(grades)[0]].First = true;
         return grades;
+    }
+    function getElementary(db) {
+        const elementary = db.orderedGroups.Elementary.map(key => {
+            const classInfo = db.groups.Elementary[key];
+            return {
+                ...classInfo,
+                Id: key,
+                Teachers: () => {
+                    let teachers = [];
+                    (typeof classInfo.Teacher == 'string') ? classInfo.Teacher = [classInfo.Teacher] : null;
+                    (typeof classInfo.Assistants == 'string') ? classInfo.Assistants = [classInfo.Assistants] : null;
+                    for (let teacher of classInfo.Teacher || [])
+                        teachers.push({ ...db.faculty[teacher], Id: teacher });
+                    for (let teacher of classInfo.Assistants || [])
+                        teachers.push({ ...db.faculty[teacher], Id: teacher });
+                    return teachers;
+                }
+            }
+        });
+        let elemGrades = {};
+        for (let _class of elementary) {
+            const grade = numberPostFix(numbersFrom(_class.Class));
+            if (!elemGrades[grade])
+                elemGrades[grade] = { Classes: [] };
+            elemGrades[grade].Classes.push(_class);
+        }
+        elemGrades[Object.keys(elemGrades)[0]].First = true;
+
+        return elemGrades;
     }
     function removeNumbers(string) {
         const indexOfNumbers = string.indexOf(string.match(/[1-9]/g).join(''));

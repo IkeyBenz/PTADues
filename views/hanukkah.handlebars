@@ -38,6 +38,26 @@
         </div> --}}
 
     </div>
+
+    <div class="card my-2">
+        <div class="card-header">
+            <h3 class="card-title">Administration</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                {{#each admin as |miscGroup|}}
+                <li class="list-group-item" id="{{miscGroup.Id}}">
+                    <div><strong>{{miscGroup.Title}}</strong></div>
+                    {{#each miscGroup.Members as |teacher|}}
+                    <label for="{{teacher.Id}}" class="mx-2">
+                        <input type="checkbox" name="{{teacher.Id}}" class="teacherCheckbox"> {{teacher.Name}}
+                    </label>
+                    {{/each}}
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
     <div class="card my-2">
         <div class="card-header">
             <h3 class="card-title">Early Childhood</h3>
@@ -59,7 +79,10 @@
                     <ul class="list-group">
                         {{#each grade.Classes as |class|}}
                         <li class="list-group-item" id="{{class.Id}}">
-                            <strong class="mx-1">{{@key}}</strong>
+                            <div class="h-100">
+                                <strong class="mx-1">{{@key}}</strong>
+                            </div>
+
                             {{#each class.Teachers as |teacher|}}
                             <label for="{{teacher.Id}}" class="mx-1">
                                 <input type="checkbox" name="{{teacher.Id}}" class="teacherCheckbox"> {{teacher.Name}}
@@ -76,7 +99,7 @@
     </div>
 
 
-    <div class="card my-2">
+    {{!-- <div class="card my-2">
         <div class="card-header">
             <h3 class="card-title">Elementary</h3>
         </div>
@@ -140,7 +163,46 @@
             </div>
 
         </div>
+    </div> --}}
+    <div class="card my-2">
+        <div class="card-header">
+            <h3 class="card-title">Elementary</h3>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs" role="tablist">
+                {{#each elementary as |grade|}}
+                <li class="nav-item">
+                    <a class="nav-link text-dark{{#if grade.First}} active{{/if}}" id="{{@key}}-tab" data-toggle="tab"
+                        href="#E{{@key}}" role="tab" aria-controls="{{@key}}"
+                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{@key}} Grade</a>
+                </li>
+                {{/each}}
+            </ul>
+            <div class="tab-content">
+                {{#each elementary as |grade|}}
+                <div class="tab-pane fade{{#if grade.First}} show active{{/if}}" id="E{{@key}}" role="tabpanel"
+                    aria-labelledby="{{@key}}-tab">
+                    <ul class="list-group">
+                        {{#each grade.Classes as |class|}}
+                        {{!-- I'm assuming the elem classes have ids --}}
+                        <li class="list-group-item" id="{{class.Id}}">
+                            <div>
+                                <strong>{{class.Class}} ({{class.Room}})</strong>
+                            </div>
+                            {{#each class.Teachers as |teacher|}}
+                            <label for="{{teacher.Id}}" class="mx-1">
+                                <input type="checkbox" name="{{teacher.Id}}" class="teacherCheckbox"> {{teacher.Name}}
+                            </label>
+                            {{/each}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/each}}
+            </div>
+        </div>
     </div>
+
 
     <div class="card my-2">
         <div class="card-header">
@@ -176,3 +238,21 @@
     </div>
 
     <script src="/js/hanukkah.js"></script>
+
+    <style>
+        .list-group {
+            max-height: 600px !important;
+            overflow: scroll;
+        }
+
+        ::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 7px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, .5);
+            -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+        }
+    </style>
