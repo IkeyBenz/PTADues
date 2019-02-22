@@ -1,8 +1,37 @@
 $(document).ready(function () {
     $('#continueBtn').on('click', openStripeHandler);
     $('#numChildren').on('change', updateChildren);
+    $('.list-group-item input[type="checkbox"]').on('click', toggleChildSelector);
 });
 
+// When the checkbox inputs inside of listgroupitems are checked, grab the id of the 
+// list-group-item (which is the class id), and paste the selector in it with id {{@key}}-childname
+
+function toggleChildSelector() {
+    const parent = $(this).closest('.list-group-item');
+    const selector = $(`#${parent.attr('id')}-childname`);
+    if ($(this).is(':checked')) {
+        if (!selector.length)
+            parent.append(renderChildSelector(parent.attr('id')));
+    } else {
+        if (!$(`#${parent.attr('id')} input[type="checkbox"]:checked`).length)
+            selector.remove();
+    }
+}
+function renderChildSelector(classId) {
+    let name_grade = [];
+    for (tag of ['input', 'select']) {
+        $('#namesDropdownMenu ' + tag).each((i, inp) => {
+            const d = $(inp).val();
+            name_grade[i] ? name_grade[i][1] = d : name_grade[i] = [d];
+        });
+    }
+    const options = name_grade.map(pair => {
+        const selected = $(`#${classId}`).closest('.tab-pane').attr('id') == pair[1] ? 'selected' : '';
+        return `<option value="${pair[1]}" ${selected}>${pair[0]}</option>`;
+    }).join('');
+    return `<select id="${classId}-childname">${options}</select>`;
+}
 function updateChildren() {
     // Two separate loops because we dont want to unneccesarily
     // remove any data that might be in the dropdown.

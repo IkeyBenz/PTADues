@@ -193,20 +193,19 @@ module.exports = (function () {
     }
 
     function earlyChildhood(db) {
-        const nursary = db.orderedGroups.Nursary.map(key => {
-            return db.groups.Nursary[key];
-        });
+        const nursary = db.orderedGroups.Nursary.map(key => ({ ...db.groups.Nursary[key], Id: key }));
         let grades = {}
         const gradeNames = {
-            'PG': 'Playgroup', 'N': 'Nursary', 'PK': 'Pre-Kindergarten', 'K': 'Kindergarten'
+            'PG': 'Playgroup', 'N': 'Nursary', 'PK': 'Pre-Kindergarten', 'K': 'Kindergarten', 'PPG': 'Pre-Playgroup'
         }
         for (let _class of nursary) {
-            let grade = removeNumbers(_class.Class);
-            if (!grades[grade])
-                grades[grade] = { Classes: {}, gradeName: gradeNames[grade] }
-            if (!grades[grade].Classes[_class.Class])
-                grades[grade].Classes[_class.Class] = []
-            grades[grade].Classes[_class.Class].push({ Id: _class.Teacher, ...db.faculty[_class.Teacher] });
+            let grade = removeNumbers(_class.Class),
+                gradeName = gradeNames[grade];
+
+            (!grades[gradeName]) ? grades[gradeName] = { Classes: {} } : null;
+            (!grades[gradeName].Classes[_class.Class]) ? grades[gradeName].Classes[_class.Class] = { Id: _class.Id, Teachers: [] } : null;
+
+            grades[gradeName].Classes[_class.Class].Teachers.push({ Id: _class.Teacher, ...db.faculty[_class.Teacher] });
         }
         grades[Object.keys(grades)[0]].First = true;
         return grades;
@@ -216,7 +215,7 @@ module.exports = (function () {
     function getMiddleSchool(db) {
         const middleSchool = db.orderedGroups.MiddleSchool.map(key => {
             const classInfo = db.groups.MiddleSchool[key],
-                withTeacher = { ...classInfo, Teacher: { ...db.faculty[classInfo.Teacher], Id: classInfo.Teacher } }
+                withTeacher = { ...classInfo, Id: key, Teacher: { ...db.faculty[classInfo.Teacher], Id: classInfo.Teacher } }
             return withTeacher
         });
         const grades = {};

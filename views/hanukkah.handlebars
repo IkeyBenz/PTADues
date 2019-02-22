@@ -48,7 +48,7 @@
                 <li class="nav-item">
                     <a class="nav-link text-dark{{#if grade.First}} active{{/if}}" id="{{@key}}-tab" data-toggle="tab"
                         href="#{{@key}}" role="tab" aria-controls="{{@key}}"
-                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{grade.gradeName}}</a>
+                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{@key}}</a>
                 </li>
                 {{/each}}
             </ul>
@@ -58,11 +58,13 @@
                     aria-labelledby="{{@key}}-tab">
                     <ul class="list-group">
                         {{#each grade.Classes as |class|}}
-                        <li class="list-group-item">
+                        <li class="list-group-item" id="{{class.Id}}">
                             <strong class="mx-1">{{@key}}</strong>
-                            {{#each class as |teacher|}}
-                            <input type="checkbox" name="{{teacher.Id}}" style="margin-left: 8px;">
-                            {{teacher.Name}}
+                            {{#each class.Teachers as |teacher|}}
+                            <label for="{{teacher.Id}}" class="mx-1">
+                                <input type="checkbox" name="{{teacher.Id}}" class="teacherCheckbox"> {{teacher.Name}}
+                            </label>
+
                             {{/each}}
                         </li>
                         {{/each}}
@@ -160,8 +162,8 @@
                     aria-labelledby="{{@key}}-tab">
                     <ul class="list-group">
                         {{#each grade.Classes as |class|}}
-                        <li class="list-group-item">
-                            <input type="checkbox" class="mx-2">
+                        <li class="list-group-item" id="{{class.Id}}">
+                            <input type="checkbox" name="{{class.Teacher.Id}}" class="mx-2 teacherCheckbox">
                             <strong>{{class.Teacher.Name}}</strong>
                             {{this.Subject}}
                         </li>
