@@ -80,26 +80,34 @@ var StripeHandler = StripeCheckout.configure({
     locale: 'auto',
     token: function (tkn) {
         const amnt = updatePrice() * 100;
-        $.ajax({
-            url: `/charge/`,
-            method: 'POST',
-            data: { token: tkn.id, amount: amnt, email: tkn.email },
-            statusCode: {
-                200: function () {
-                    $('#emailAddress').val(tkn.email);
-                    $('#hanukkahForm').submit();
-                },
-                500: function () {
-                    alert('Something went wrong.');
-                }
-            }
-        });
+        fetch('/charge/', {
+            token: tkn.id,
+            amount: amnt,
+            email: tkn.email
+        }).then(res => {
+            saveOrder(tkn.email);
+        }).catch(alert);
     }
 });
 window.addEventListener('popstate', function () {
     StripeHandler.close();
 });
+function saveOrder(email) {
+    const now = new Date();
+    const order = {
+        email: email,
+        total: `$${updatePrice()}.00`,
+        date: `${now.getMonth()}/${now.getDate()}/${now.getFullYear()}`,
+        teachers: $('.teacherCheckbox:checked').map((i, el) => {
+            const classId = $(el).closest('.list-group-item').attr('id');
+            const childName = $(`#${classId} select option:selected`).text();
+            const teacherId = $(el).attr('name');
+            return { Id: teacherId, gifter: childName }
+        })
+    }
 
+    //fetch('/orders/new/', order).catch(alert);
+}
 function openStripeHandler() {
     const price = updatePrice() * 100;
     StripeHandler.open({

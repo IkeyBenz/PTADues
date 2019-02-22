@@ -3,13 +3,13 @@ const ref = firebase.database().ref('Orders');
 const promise = require('bluebird');
 const writeFile = promise.promisify(require('fs').writeFile);
 
-module.exports = (function() {
+module.exports = (function () {
     function create(orderInfo) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             if (orderInfo) {
                 getNewOrderId().then(newOrderId => {
-                    ref.child(newOrderId).set(structureOrder(orderInfo));
-                    resolve(newOrderId);
+                    ref.child(newOrderId).set(orderInfo);
+                    resolve({ ...populateTeachers(orderInfo), orderId: newOrderId });
                 });
             } else {
                 reject('Form not filled out.');
@@ -24,6 +24,14 @@ module.exports = (function() {
             });
             return newOrderId;
         });
+    }
+    function populateTeachers(orderInfo) {
+        orderInfo.Teachers = orderInfo.Teachers.map(async (obj) => {
+            return await firebase.database().ref('NewFaculty/' + obj.Id).once('value').then(s => {
+                return { teacher: s.Name, gifter: obj.gifter }
+            });
+        });
+        return orderInfo;
     }
     function structureOrder(orderDetails) {
         let children = []
@@ -47,17 +55,9 @@ module.exports = (function() {
             children: children
         }
     }
-    function read() {
 
-    }
-    function update() {
-
-    }
-    function remove() {
-
-    }
     function getNewOrderId() {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             ref.orderByKey().limitToLast(1).once('value').then(snapshot => {
                 const lastId = Object.keys(snapshot.val())[0];
                 resolve(fixOrderId(lastId));

@@ -3,14 +3,11 @@ const Groups = require('../models/groups');
 const Emailer = require('./sendgrid');
 
 module.exports = function (app) {
-    
+
     app.post('/orders/new/', (req, res) => {
-        req.body.Amount /= 100;
-        let ct = new Date();
-        let dateString = `${ct.getMonth() + 1}/${ct.getDate()}/${ct.getFullYear()}`;
-        Orders.create({ Timestamp: ct.toString(), ...req.body }).then(orderId => {
-            Emailer.sendConfirmationEmail({ date: dateString, orderId: orderId, ...req.body });
-            res.render('thankYou', { name: req.body.Name, email: req.body.Email });
+        Orders.create(req.body).then(orderInfo => {
+            Emailer.sendConfirmationEmail(orderInfo);
+            res.render('thankYou', orderInfo);
         });
     });
 
@@ -28,15 +25,15 @@ module.exports = function (app) {
         const children = classes.map(obj => obj.ChildName)
         Groups.saveHanukkahOrder(classes).catch(console.error);
         Orders.createHanukkahOrder({
-            Amount: req.body.Amount/100,
+            Amount: req.body.Amount / 100,
             Email: req.body.Email,
             Children: children.map(child => { return { name: child } }),
             Timestamp: now
         }).then(orderId => {
-            return Emailer.sendConfirmationEmail({ 
-                date: now, 
+            return Emailer.sendConfirmationEmail({
+                date: now,
                 orderId: orderId,
-                Amount: req.body.Amount/100,
+                Amount: req.body.Amount / 100,
                 Email: req.body.Email,
                 Children: children.join(', '),
                 Subject: 'Thank you for your gift!',
@@ -45,14 +42,14 @@ module.exports = function (app) {
         }).then(() => {
             res.render('thankYou', { email: req.body.Email });
         });
-        
+
     });
 
     app.get('/admin/orderHistory/csv', (req, res) => {
         Orders.getAsCSV().then(() => {
             const filePath = __dirname + '/../orders.csv';
             res.download(filePath);
-            
+
         });
     });
 
