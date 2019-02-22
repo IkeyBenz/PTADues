@@ -1,7 +1,8 @@
 $(document).ready(function () {
     $('#continueBtn').on('click', openStripeHandler);
     $('#numChildren').on('change', updateChildren);
-    $('.list-group-item input[type="checkbox"]').on('click', toggleChildSelector);
+    $('.teacherCheckbox').on('click', toggleChildSelector);
+    $('#checkout-button').on('click', openStripeHandler);
 });
 
 // When the checkbox inputs inside of listgroupitems are checked, grab the id of the 
@@ -17,6 +18,12 @@ function toggleChildSelector() {
         if (!$(`#${parent.attr('id')} input[type="checkbox"]:checked`).length)
             selector.remove();
     }
+    updatePrice();
+}
+function updatePrice() {
+    const price = $('.teacherCheckbox:checked').length * 4;
+    $('#orderTotal').text(price);
+    return price;
 }
 function renderChildSelector(classId) {
     let name_grade = [];
@@ -64,15 +71,6 @@ function updateChildren() {
     }
 
 }
-function calculatePrice() {
-    const base = 36;
-    const uniqueNames = []
-    for (let nameInput of $('.childName')) {
-        if (nameInput.value != '' && !uniqueNames.includes(nameInput.value))
-            uniqueNames.push(nameInput.value);
-    }
-    return base * uniqueNames.length;
-}
 
 var StripeHandler = StripeCheckout.configure({
     // My Test Live Key: pk_test_sPgdIFsNfyEgBxVx3omCpyLX
@@ -81,7 +79,7 @@ var StripeHandler = StripeCheckout.configure({
     image: '/images/favicon.ico',
     locale: 'auto',
     token: function (tkn) {
-        const amnt = $('#paymentAmount').val();
+        const amnt = updatePrice() * 100;
         $.ajax({
             url: `/charge/`,
             method: 'POST',
@@ -103,13 +101,11 @@ window.addEventListener('popstate', function () {
 });
 
 function openStripeHandler() {
-    if (validate()) {
-        const price = calculatePrice() * 100;
-        $('#paymentAmount').val(price);
-        StripeHandler.open({
-            name: 'PTA Dues',
-            description: '',
-            amount: price
-        });
-    }
+    const price = updatePrice() * 100;
+    StripeHandler.open({
+        name: 'PTA Purim Presents',
+        description: '',
+        amount: price
+    });
+
 }

@@ -4,6 +4,12 @@ body {
     background-color: #AFDEFB !important;
     width: 100vw;
 }
+.light-btn {
+    background-color: #AFDEFB !important;
+}
+.dark-bg {
+    color: #01389D !important;
+}
 header {
     padding-top: 10px;
     background-color: #002261;
@@ -29,7 +35,7 @@ header {
 .jumbotron {
     margin-top: 20px;
 }
-.btn-primary {
+.btn-primary, .bg-primary {
     background-color: #01389D !important;
     border-color: #01389D !important;
 }
