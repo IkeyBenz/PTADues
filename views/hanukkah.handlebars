@@ -4,6 +4,40 @@
         <h4>Please check the classes that your children have. For each class you check off, input your child's name.
         </h4>
     </div>
+    <div class="row">
+        <div class="col-4">
+            <label for="numChildren">How many children do you have attending MDY? <input type="number"
+                    class="form-control" id="numChildren" value="1"></label>
+        </div>
+        <div class="col-8">
+            <label for="">Enter your childrens' information:</label>
+            <div id="namesDropdownMenu">
+                <li class="d-flex">
+                    <input class="form-control" type="text" id="childname1" placeholder="Full Name">
+                    <select name="" class="form-control" id="childgrade1">
+                        <option value="Playgroup">Playgroup</option>
+                        <option value="Nursery">Nursery</option>
+                        <option value="Pre-Kindergarten">Pre-Kindergarten</option>
+                        <option value="Kindergarten">Kindergarten</option>
+                        <option value="1st Grade">1</option>
+                        <option value="2nd Grade">2</option>
+                        <option value="3rd Grade">3</option>
+                        <option value="4th Grade">4</option>
+                        <option value="5th Grade">5</option>
+                        <option value="6th Grade">6</option>
+                        <option value="7th Grade">7</option>
+                        <option value="8th Grade">8</option>
+                    </select>
+                </li>
+            </div>
+        </div>
+        {{!-- <div class="dropdown">
+            <a href="#" role="button" class="btn btn-secondary dropdown-toggle" id="namesDropdownBtn"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Input names</a>
+            
+        </div> --}}
+
+    </div>
     <div class="card my-2">
         <div class="card-header">
             <h3 class="card-title">Early Childhood</h3>
@@ -27,7 +61,7 @@
                         <li class="list-group-item">
                             <strong class="mx-1">{{@key}}</strong>
                             {{#each class as |teacher|}}
-                            <input type="checkbox" style="margin-left: 8px;">
+                            <input type="checkbox" name="{{teacher.Id}}" style="margin-left: 8px;">
                             {{teacher.Name}}
                             {{/each}}
                         </li>
@@ -40,38 +74,6 @@
     </div>
 
 
-    <div class="card my-2">
-        <div class="card-header">
-            <h3 class="card-title">Middle School</h3>
-        </div>
-        <div class="card-body px-5">
-            <ul class="nav nav-tabs" role="tablist">
-                {{#each middleSchool as |grade|}}
-                <li class="nav-item">
-                    <a class="nav-link text-dark{{#if grade.First}} active{{/if}}" id="{{@key}}-tab" data-toggle="tab"
-                        href="#M{{@key}}" role="tab" aria-controls="{{@key}}"
-                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{@key}}th Grade</a>
-                </li>
-                {{/each}}
-            </ul>
-            <div class="tab-content">
-                {{#each middleSchool as |grade|}}
-                <div class="tab-pane fade{{#if grade.First}} show active{{/if}}" id="M{{@key}}" role="tabpanel"
-                    aria-labelledby="{{@key}}-tab">
-                    <ul class="list-group">
-                        {{#each grade.Classes as |class|}}
-                        <li class="list-group-item">
-                            <input type="checkbox" class="mx-2">
-                            <strong>{{class.Teacher.Name}}</strong>
-                            {{this.Subject}}
-                        </li>
-                        {{/each}}
-                    </ul>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-    </div>
     <div class="card my-2">
         <div class="card-header">
             <h3 class="card-title">Elementary</h3>
@@ -135,6 +137,39 @@
                 {{/each}}
             </div>
 
+        </div>
+    </div>
+
+    <div class="card my-2">
+        <div class="card-header">
+            <h3 class="card-title">Middle School</h3>
+        </div>
+        <div class="card-body px-5">
+            <ul class="nav nav-tabs" role="tablist">
+                {{#each middleSchool as |grade|}}
+                <li class="nav-item">
+                    <a class="nav-link text-dark{{#if grade.First}} active{{/if}}" id="{{@key}}-tab" data-toggle="tab"
+                        href="#M{{@key}}" role="tab" aria-controls="{{@key}}"
+                        aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{@key}}th Grade</a>
+                </li>
+                {{/each}}
+            </ul>
+            <div class="tab-content">
+                {{#each middleSchool as |grade|}}
+                <div class="tab-pane fade{{#if grade.First}} show active{{/if}}" id="M{{@key}}" role="tabpanel"
+                    aria-labelledby="{{@key}}-tab">
+                    <ul class="list-group">
+                        {{#each grade.Classes as |class|}}
+                        <li class="list-group-item">
+                            <input type="checkbox" class="mx-2">
+                            <strong>{{class.Teacher.Name}}</strong>
+                            {{this.Subject}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/each}}
+            </div>
         </div>
     </div>
 
