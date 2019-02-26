@@ -7,9 +7,10 @@ module.exports = (function () {
     function create(orderInfo) {
         return new Promise(function (resolve, reject) {
             if (orderInfo) {
-                getNewOrderId().then(newOrderId => {
-                    ref.child(newOrderId).set(orderInfo);
-                    resolve({ ...populateTeachers(orderInfo), orderId: newOrderId });
+                getNewOrderId().then(async (newOrderId) => {
+                    const infoWithTeachers = await _populateTeachers(orderInfo);
+                    ref.child(newOrderId).set(infoWithTeachers);
+                    resolve({ ...infoWithTeachers, orderId: newOrderId });
                 });
             } else {
                 reject('Form not filled out.');
@@ -26,12 +27,30 @@ module.exports = (function () {
         });
     }
     function populateTeachers(orderInfo) {
-        orderInfo.Teachers = orderInfo.Teachers.map(async (obj) => {
-            return await firebase.database().ref('NewFaculty/' + obj.Id).once('value').then(s => {
-                return { teacher: s.Name, gifter: obj.gifter }
+        return Promise.all(orderInfo.teachers.map((obj) => {
+            return firebase.database().ref('NewFaculty/' + obj.Id).once('value');
+        })).then(vals => {
+            vals = vals.map(v => { return v.val() });
+            console.log(vals);
+            vals.forEach((teacher, index) => {
+                delete orderInfo.teachers[index].Id;
+                orderInfo.teachers[index].teacher = teacher;
             });
+        }).then(() => {
+            return orderInfo;
         });
-        return orderInfo;
+    }
+    function _populateTeachers(orderInfo) {
+        return new Promise(async (resolve, reject) => {
+            let teachers = [];
+            for (let teacher of orderInfo.teachers) {
+                const teacherName = await firebase.database().ref(`FacultyMembers/${teacher.Id}`).once('value').then(s => {
+                    return { teacher: s.val().Name, gifter: teacher.gifter }
+                });
+                teachers.push(teacherName);
+            }
+            resolve({ ...orderInfo, teachers })
+        });
     }
     function structureOrder(orderDetails) {
         let children = []

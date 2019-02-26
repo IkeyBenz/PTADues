@@ -7,7 +7,7 @@ module.exports = function (app) {
     app.post('/orders/new/', (req, res) => {
         Orders.create(req.body).then(orderInfo => {
             Emailer.sendConfirmationEmail(orderInfo);
-            res.render('thankYou', orderInfo);
+            res.json(orderInfo);
         });
     });
 

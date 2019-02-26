@@ -3,11 +3,12 @@ const stripe = require('stripe')(process.env.STRIPE_PRIVATE);
 module.exports = function (app) {
 
     app.post('/charge/', (req, res) => {
+        console.log('Hey hey hey')
         if (!req.body.token) { return res.status(400).send('No token, cannot process').end() }
         stripe.charges.create({
             amount: req.body.amount,
             currency: 'usd',
-            description: 'PTA Purim Presents',
+            description: 'PTA Purim Gifts',
             source: req.body.token
         }).then(chrg => {
             res.status(200).end();

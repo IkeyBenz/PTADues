@@ -14,11 +14,24 @@ function toggleChildSelector() {
     if ($(this).is(':checked')) {
         if (!selector.length)
             parent.append(renderChildSelector(parent.attr('id')));
+        $('.childSelect').change(checkForOtherOption);
     } else {
-        if (!$(`#${parent.attr('id')} input[type="checkbox"]:checked`).length)
+        if (!$(`#${parent.attr('id')} input[type="checkbox"]:checked`).length) {
             selector.remove();
+            parent.children('input[type="text"]').remove();
+        }
     }
     updatePrice();
+}
+function checkForOtherOption() {
+    `Called when a .childSelect is clicked. Checks if the option with val "Other" is selected.`
+    if ($(this).val() == "Other") {
+        $(this).parent().children('input[type="text"]').remove();
+        $(this).parent().append('<input type="text" class="form-control" placeholder="Enter other name">');
+    } else {
+        /* Remove the "other" name input */
+        $(this).parent().children('input[type="text"]').remove();
+    }
 }
 function updatePrice() {
     const price = $('.teacherCheckbox:checked').length * 4;
@@ -37,7 +50,10 @@ function renderChildSelector(classId) {
         const selected = $(`#${classId}`).closest('.tab-pane').attr('id') == pair[1] ? 'selected' : '';
         return `<option value="${pair[1]}" ${selected}>${pair[0]}</option>`;
     }).join('');
-    return `<select id="${classId}-childname">${options}</select>`;
+    return `<select class="childSelect" id="${classId}-childname">
+                ${options}
+                <option value="Other">Other</option>
+            </select>`;
 }
 function updateChildren() {
     // Two separate loops because we dont want to unneccesarily
@@ -81,10 +97,15 @@ var StripeHandler = StripeCheckout.configure({
     token: function (tkn) {
         const amnt = updatePrice() * 100;
         fetch('/charge/', {
-            token: tkn.id,
-            amount: amnt,
-            email: tkn.email
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: tkn.id,
+                amount: amnt,
+                email: tkn.email
+            })
         }).then(res => {
+            console.log(res);
             saveOrder(tkn.email);
         }).catch(alert);
     }
@@ -94,26 +115,33 @@ window.addEventListener('popstate', function () {
 });
 function saveOrder(email) {
     const now = new Date();
+    let teachers = [];
+    $('.teacherCheckbox:checked').each((i, el) => {
+        const classId = $(el).closest('.list-group-item').attr('id'),
+            childSelect = $(`#${classId} select option:selected`),
+            teacherId = $(el).attr('name'),
+            childName = (childSelect.text() == 'Other')
+                ? $($(el).closest('.list-group-item').children('input[type="text"]')[0]).val()
+                : childSelect.text();
+
+        teachers.push({ Id: teacherId, gifter: childName })
+    });
     const order = {
         email: email,
         total: `$${updatePrice()}.00`,
         date: `${now.getMonth()}/${now.getDate()}/${now.getFullYear()}`,
-        teachers: $('.teacherCheckbox:checked').map((i, el) => {
-            const classId = $(el).closest('.list-group-item').attr('id');
-            const childName = $(`#${classId} select option:selected`).text();
-            const teacherId = $(el).attr('name');
-            return { Id: teacherId, gifter: childName }
-        })
+        teachers
     }
-
-    //fetch('/orders/new/', order).catch(alert);
+    fetch('/orders/new/', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order)
+    }).then(res => res.json()).then(console.log).catch(alert);
 }
 function openStripeHandler() {
-    const price = updatePrice() * 100;
     StripeHandler.open({
-        name: 'PTA Purim Presents',
+        name: 'PTA Purim Gifts',
         description: '',
-        amount: price
+        amount: updatePrice() * 100
     });
-
 }
