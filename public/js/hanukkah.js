@@ -123,7 +123,6 @@ function saveOrder(email) {
             childName = (childSelect.text() == 'Other')
                 ? $($(el).closest('.list-group-item').children('input[type="text"]')[0]).val()
                 : childSelect.text();
-
         teachers.push({ Id: teacherId, gifter: childName })
     });
     const order = {
@@ -136,7 +135,10 @@ function saveOrder(email) {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(order)
-    }).then(res => res.json()).then(console.log).catch(alert);
+    }).then(res => res.json()).then(() => {
+        alert(`Thank you!\nA confirmation email has been sent to ${email}`);
+        window.location.replace('/');
+    }).catch(alert);
 }
 function openStripeHandler() {
     StripeHandler.open({

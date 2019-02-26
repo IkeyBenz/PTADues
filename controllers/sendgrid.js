@@ -6,13 +6,12 @@ module.exports = (function () {
 
     function sendConfirmationEmail(orderInfo) {
         hb.render('views/emails/purim.handlebars', orderInfo).then(html => {
-            // Sendgrid.send({
-            //     to: orderInfo.email,
-            //     from: 'PTADues@gmail.com',
-            //     subject: orderInfo.Subject || 'PTA Purim Gifts - Confirmation',
-            //     html: html
-            // });
-            console.log('Not sending email because that code is commented.')
+            Sendgrid.send({
+                to: orderInfo.email,
+                from: 'PTADues@gmail.com',
+                subject: orderInfo.Subject || 'PTA Purim Gifts - Confirmation',
+                html: html
+            });
         });
     }
 
