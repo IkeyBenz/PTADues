@@ -197,10 +197,10 @@ module.exports = (function () {
             const group = { ...db.groups.Administration[key], Id: key };
             return {
                 ...group,
-                Members: group.Members.map(containerKey => {
+                Members: (group.Members) ? group.Members.map(containerKey => {
                     const teacherId = db.groups.Administration.Containers[containerKey];
                     return { ...db.faculty[teacherId], Id: teacherId }
-                })
+                }) : []
             }
         });
     }
