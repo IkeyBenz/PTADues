@@ -46,12 +46,16 @@ function renderChildSelector(classId) {
             name_grade[i] ? name_grade[i][1] = d : name_grade[i] = [d];
         });
     }
-    const options = name_grade.map(pair => {
+    let options = name_grade.map(pair => {
         const selected = $(`#${classId}`).closest('.tab-pane').attr('id') == pair[1] ? 'selected' : '';
         return `<option value="${pair[1]}" ${selected}>${pair[0]}</option>`;
-    }).join('');
+    });
+    if ($('#parentsName').val() != '') {
+        options.push(`<option>${$('#parentsName').val()}, and family</option>`)
+    }
+
     return `<select class="childSelect" id="${classId}-childname">
-                ${options}
+                ${options.join('')}
                 <option value="Other">Other</option>
             </select>`;
 }
