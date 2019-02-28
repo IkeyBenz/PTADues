@@ -136,75 +136,27 @@ module.exports = (function () {
     }
     function getDisplayableFaculty() {
         return downloadFaculty().then(d => {
-            const elemClasses = d.orderedGroups.Elementary.map(classKey => {
-                const classObj = d.groups.Elementary[classKey];
-                const teachers = !classObj.Teacher ? [] : (typeof classObj.Teacher == 'string')
-                    ? [{ Id: classObj.Teacher, Name: d.faculty[classObj.Teacher].Name }]
-                    : classObj.Teacher.map(id => {
-                        return {
-                            Id: id,
-                            Name: d.faculty[id].Name
-                        }
-                    });
-                const assistants = (classObj.Assistants)
-                    ? classObj.Assistants.map(id => {
-                        return {
-                            Id: id,
-                            Name: d.faculty[id].Name
-                        }
-                    }) : []
-                const len = teachers.length > assistants.length
-                    ? teachers.length
-                    : assistants.length;
-                let pairs = [];
-                for (let i = 0; i < len; i++) {
-                    let newPair = {};
-                    if (teachers.length > i && teachers[i]) {
-                        newPair.main = teachers[i];
-                    }
-                    if (assistants.length > i && assistants[i]) {
-                        newPair.assistant = assistants[i];
-                    }
-                    pairs.push(newPair);
-                }
-
-                return {
-                    ClassId: classKey,
-                    Class: classObj.Class,
-                    Room: classObj.Room,
-                    FirstRowTeachers: pairs[0],
-                    ExtraTeachers: pairs.slice(1)
-                }
-            });
-            let elemGrades = {};
-            for (let _class of elemClasses) {
-                const grade = numberPostFix(numbersFrom(_class.Class));
-                if (!elemGrades[grade])
-                    elemGrades[grade] = { Classes: [] };
-                elemGrades[grade].Classes.push(_class);
-            }
-            elemGrades[Object.keys(elemGrades)[0]].First = true;
             return {
                 earlyChildhood: earlyChildhood(d),
                 elementary: getElementary(d),
                 middleSchool: getMiddleSchool(d),
-                admin: getAdministration(d)
+                admin: getAdminOrMisc(d, 'Administration'),
+                misc: getAdminOrMisc(d, 'Misc')
             }
         });
     }
-    function getAdministration(db) {
-        return db.orderedGroups.Administration.map(key => {
-            const group = { ...db.groups.Administration[key], Id: key };
+    function getAdminOrMisc(db, type) {
+        return db.orderedGroups[type].map(key => {
+            const group = { ...db.groups[type][key], Id: key };
             return {
                 ...group,
                 Members: (group.Members) ? group.Members.map(containerKey => {
-                    const teacherId = db.groups.Administration.Containers[containerKey];
+                    const teacherId = db.groups[type].Containers[containerKey];
                     return { ...db.faculty[teacherId], Id: teacherId }
                 }) : []
             }
         });
     }
-
 
     function earlyChildhood(db) {
         const nursary = db.orderedGroups.Nursary.map(key => ({ ...db.groups.Nursary[key], Id: key }));

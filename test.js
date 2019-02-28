@@ -231,5 +231,49 @@ function getMiddleSchool(db) {
     }
     return grades;
 }
-const numbersFrom = (str) => str.replace(/\D+/g, '');
-console.log(numbersFrom('hel0o'));
+
+async function separateMiscFromAdmin() {
+    const db = await Promise.all([
+        firebase.database().ref('OrderedGroups/Administration').once('value'),
+        firebase.database().ref('Groups/Administration').once('value')
+    ]).then(vals => {
+        return {
+            orderedAdmin: vals[0].val(),
+            admin: vals[1].val()
+        }
+    });
+
+    // Create admin backup (just in case):
+    firebase.database().ref('AdminBackup/Groups').set(db.admin);
+    firebase.database().ref('AdminBackup/Ordered').set(db.orderedAdmin);
+
+    // Get array of groupId's to move
+    const groupsToMove = db.orderedAdmin.splice(24)
+        , groupsToKeep = db.orderedAdmin;
+
+    // Move ordered Admin group ids out of Administration and into Misc
+    firebase.database().ref('OrderedGroups/Administration').set(groupsToKeep);
+    firebase.database().ref('OrderedGroups/Misc').set(groupsToMove);
+
+    // Create ref in Groups for Misc and set its value to ...
+    const createGroup = (groupIds) => {
+        const newGroup = { Containers: {} }
+        for (let groupId of groupIds) {
+            const group = db.admin[groupId];
+            newGroup[groupId] = group;
+            for (let containerId of group.Members) {
+                newGroup.Containers[containerId] = db.admin.Containers[containerId];
+            }
+        }
+        return newGroup;
+    }
+
+    // Move actual Admin groups out of Administration and into Misc
+    const admin = createGroup(groupsToKeep)
+        , misc = createGroup(groupsToMove);
+
+    firebase.database().ref('Groups/Administration').set(admin);
+    firebase.database().ref('Groups/Misc').set(misc);
+
+    // If everything works, manually delete the Admin backup
+}

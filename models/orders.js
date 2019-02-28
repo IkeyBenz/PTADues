@@ -8,8 +8,8 @@ module.exports = (function () {
         return new Promise(function (resolve, reject) {
             if (orderInfo) {
                 getNewOrderId().then(async (newOrderId) => {
+                    ref.child(newOrderId).set(orderInfo);
                     const infoWithTeachers = await _populateTeachers(orderInfo);
-                    ref.child(newOrderId).set(infoWithTeachers);
                     resolve({ ...infoWithTeachers, orderId: newOrderId });
                 });
             } else {

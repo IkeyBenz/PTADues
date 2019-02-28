@@ -5,7 +5,7 @@ const Members = require('../models/member');
 
 module.exports = function (app) {
 
-    app.get(['/', '/dues/'], (req, res) => {
+    app.get('/dues/', (req, res) => {
         // const c = ['1','2','3','4','5'];
         // res.render('dues', { children: c, dues: true  });
         res.render('comingSoon', { dues: true, pageName: 'Dues' });
@@ -18,11 +18,10 @@ module.exports = function (app) {
         res.render('comingSoon', { hanukkah: true, pageName: 'Hanukkah' });
     });
 
-    app.get('/purim/', (req, res) => {
-        // Groups.getAllFaculty().then(faculty => {
-        //     res.render('purim', { faculty: faculty, purim: true });
-        // }).catch(console.error);
-        res.render('comingSoon', { purim: true, pageName: 'Purim' });
+    app.get(['/', '/purim/'], (req, res) => {
+        OrderedFaculty.getDisplayable().then(data => {
+            res.render('purim', { purim: true, ...data });
+        });
     });
 
     app.get(['/admin/', '/admin/orders/'], (req, res) => {
