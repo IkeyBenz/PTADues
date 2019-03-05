@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html>
-    {{!-- Project Developed By Isaac J. Benzaken --}}
-    {{!-- Contact: ikey.benz@gmail.com --}}
-    <head>
-        <title>MDY PTA Dues {{#if subtitle}}| {{subtitle}}{{/if}}</title>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="og:image" content="/images/coloredLogo.jpg">
-        <link rel="stylesheet" href="/css/global.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://checkout.stripe.com/checkout.js"></script>
-    </head>
-    <body>
-        <header class="header">
-            <ul class="nav nav-pills">
-                <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo" src="/images/WhiteLogo.png"></a></li>
-                <li class="nav-item"><a href="/dues/" class="nav-link{{#if dues}} active{{/if}}">Dues</a></li>
-                <li class="nav-item"><a href="/hanukkah/" class="nav-link{{#if hanukkah}} active{{/if}}">Hanukkah</a></li>
-                <li class="nav-item"><a href="/purim/" class="nav-link{{#if purim}} active{{/if}}">Purim</a></li>
-            </ul>
-        </header>
-        <main class="container-fluid">
-            {{{body}}}
-        </main>
-        <footer>
+{{!-- Project Developed By Isaac J. Benzaken --}}
+{{!-- Contact: ikey.benz@gmail.com --}}
 
-        </footer>
-    </body>
+<head>
+    <title>MDY PTA Dues {{#if subtitle}}| {{subtitle}}{{/if}}</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="og:image" content="/images/coloredLogo.jpg">
+    <link rel="stylesheet" href="/css/global.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+    <header class="header">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo"
+                        src="/images/WhiteLogo.png"></a></li>
+            <li class="nav-item"><a href="/dues/" class="nav-link{{#if dues}} active{{/if}}">Dues</a></li>
+            <li class="nav-item"><a href="/hanukkah/" class="nav-link{{#if hanukkah}} active{{/if}}">Hanukkah</a></li>
+            <li class="nav-item"><a href="/purim/" class="nav-link{{#if purim}} active{{/if}}">Purim</a></li>
+        </ul>
+    </header>
+    <main class="container-fluid">
+        {{{body}}}
+    </main>
+    <footer>
+
+    </footer>
+</body>
+
 </html>
