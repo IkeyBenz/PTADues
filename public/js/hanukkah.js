@@ -106,7 +106,7 @@ function saveOrder(email) {
         date: `${now.getMonth()}/${now.getDate()}/${now.getFullYear()}`,
         teachers: getSelectedTeachers()
     }
-    fetch('/admin/orders/new/', {
+    fetch('/orders/new/', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(order)

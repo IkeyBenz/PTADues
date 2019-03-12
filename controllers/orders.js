@@ -8,7 +8,7 @@ module.exports = function (app) {
 
     /* CREATE new order */
     // TODO: change POST route to /orders
-    app.post('/admin/orders/new/', (req, res) => {
+    app.post('/orders/new/', (req, res) => {
         Orders.create(req.body).then(orderInfo => {
             Emailer.sendConfirmationEmail(orderInfo);
             res.json(orderInfo);
@@ -17,7 +17,7 @@ module.exports = function (app) {
 
     /* CREATE hannukkah order */
     // TODO: Remove this route and make a general create route
-    app.post('/admin/orders/hanukkah/new', (req, res) => {
+    app.post('/orders/hanukkah/new', (req, res) => {
         const classes = Object.keys(req.body).map(key => {
             const newKey = key.slice(key.indexOf('/') + 1);
             if (newKey.indexOf('/') == -1 && req.body[key] == 'on') {
