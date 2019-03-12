@@ -1,4 +1,4 @@
-#leftPanel {
+/* #leftPanel {
     background-color: var(--secondary);
     height: calc(100vh - 40px);
     width: 20vw;
@@ -74,6 +74,6 @@ input[type="text"] {
     width: 100%;
     padding: 20px;
     text-align: center;
-}
+} */
 
 

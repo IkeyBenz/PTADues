@@ -17,35 +17,20 @@ module.exports = (function () {
             }
         });
     }
-    function createHanukkahOrder(orderInfo) {
-        return getNewOrderId().then(newOrderId => {
-            ref.child(newOrderId).set({
-                orderInfo: { Amount: orderInfo.Amount, Email: orderInfo.Email, Timestamp: orderInfo.Timestamp },
-                children: orderInfo.Children
-            });
-            return newOrderId;
+    async function createHanukkahOrder(orderInfo) {
+        const newOrderId = await getNewOrderId();
+        ref.child(newOrderId).set({
+            orderInfo: { Amount: orderInfo.Amount, Email: orderInfo.Email, Timestamp: orderInfo.Timestamp },
+            children: orderInfo.Children
         });
-    }
-    function populateTeachers(orderInfo) {
-        return Promise.all(orderInfo.teachers.map((obj) => {
-            return firebase.database().ref('NewFaculty/' + obj.Id).once('value');
-        })).then(vals => {
-            vals = vals.map(v => { return v.val() });
-            console.log(vals);
-            vals.forEach((teacher, index) => {
-                delete orderInfo.teachers[index].Id;
-                orderInfo.teachers[index].teacher = teacher;
-            });
-        }).then(() => {
-            return orderInfo;
-        });
+        return newOrderId;
     }
     function _populateTeachers(orderInfo) {
         return new Promise(async (resolve, reject) => {
             let teachers = [];
             for (let teacher of orderInfo.teachers) {
                 const teacherName = await firebase.database().ref(`FacultyMembers/${teacher.Id}`).once('value').then(s => {
-                    return { teacher: s.val().Name, gifter: teacher.gifter }
+                    return { teacher: s.val().Name, gifter: teacher.gifter, teacherId: teacher.Id }
                 });
                 teachers.push(teacherName);
             }
@@ -89,43 +74,41 @@ module.exports = (function () {
         newNumber = '0'.repeat(numberString.length - newNumber.length) + newNumber;
         return 'PTA' + newNumber
     }
-    function getOrdersForHandlebars() {
-        return ref.once('value').then(snapshot => {
-            const orders = snapshot.val();
-            let formattedOrders = []
-            for (let orderKey in orders) {
-                let newOrder = {
-                    orderId: orderKey,
-                    orderInfo: [],
-                    children: orders[orderKey].children
-                }
-                for (let key in orders[orderKey].orderInfo) {
-                    newOrder.orderInfo.push({
-                        key: key,
-                        val: orders[orderKey].orderInfo[key]
-                    });
-                }
-                formattedOrders.push(newOrder);
+    async function getOrdersForHandlebars() {
+        const snapshot = await ref.once('value');
+        const orders = snapshot.val();
+        let formattedOrders = [];
+        for (let orderKey in orders) {
+            let newOrder = {
+                orderId: orderKey,
+                orderInfo: [],
+                children: orders[orderKey].children
+            };
+            for (let key in orders[orderKey].orderInfo) {
+                newOrder.orderInfo.push({
+                    key: key,
+                    val: orders[orderKey].orderInfo[key]
+                });
             }
-            return formattedOrders
-        });
+            formattedOrders.push(newOrder);
+        }
+        return formattedOrders;
     }
 
-    function getAllAsCSV() {
-        return ref.once('value').then(snapshot => {
-            const orders = snapshot.val();
-            let csvString = 'OrderID,Name,Email,Phone,Address,Amount\n'
-            for (let orderKey in orders) {
-                const name = orders[orderKey].orderInfo.Name;
-                const email = orders[orderKey].orderInfo.Email;
-                const phone = orders[orderKey].orderInfo.Phone;
-                const address = removeCommasFrom(orders[orderKey].orderInfo.Address);
-                const amount = orders[orderKey].orderInfo.Amount;
-                const str = `${orderKey},${name},${email},${phone},${address},${amount}\n`
-                csvString += str;
-            }
-            return writeFile(__dirname + '/../orders.csv', csvString);
-        });
+    async function getAllAsCSV() {
+        const snapshot = await ref.once('value');
+        const orders = snapshot.val();
+        let csvString = 'OrderID,Name,Email,Phone,Address,Amount\n';
+        for (let orderKey in orders) {
+            const name = orders[orderKey].orderInfo.Name
+                , email = orders[orderKey].orderInfo.Email
+                , phone = orders[orderKey].orderInfo.Phone
+                , address = removeCommasFrom(orders[orderKey].orderInfo.Address)
+                , amount = orders[orderKey].orderInfo.Amount;
+
+            csvString += `${orderKey},${name},${email},${phone},${address},${amount}\n`;
+        }
+        return writeFile(__dirname + '/../orders.csv', csvString);
     }
     function removeCommasFrom(string) {
         let newString = '';
@@ -136,10 +119,94 @@ module.exports = (function () {
         }
         return newString
     }
+
+    async function getOrders() {
+        const orders = await ref.once('value').then(s => s.val())
+            , faculty = await firebase.database().ref('FacultyMembers').once('value').then(s => s.val())
+            , firstPurimOrderNumber = 69
+            , lastDuesOrderNumber = 57
+            , orderNumber = (str) => Number(str.slice(3));
+
+        let duesOrders = [];
+        let purimOrders = [];
+
+        for (let orderId in orders) {
+            let order = { ...orders[orderId], orderId }
+            if (orderNumber(orderId) <= lastDuesOrderNumber) {
+                order.orderInfo = Object.entries(order.orderInfo).map(v => { return { key: v[0], val: v[1] } })
+                duesOrders.push(order);
+            } else if (orderNumber(orderId) >= firstPurimOrderNumber) {
+                try {
+                    order.teachers = order.teachers.map(teacher => {
+                        return { ...teacher, teacherName: faculty[teacher.Id].Name }
+                    });
+                } catch (e) {
+                    console.error(e);
+                    console.log(order);
+                }
+                purimOrders.push(order);
+            }
+        }
+        return { purimOrders, duesOrders }
+    }
+    function update(orderId, newData) {
+        return ref.child(orderId).set(newData);
+    }
+
     return {
         create: create,
         createHanukkahOrder: createHanukkahOrder,
-        getAll: getOrdersForHandlebars,
-        getAsCSV: getAllAsCSV
+        getAll: getOrders,
+        getAsCSV: getAllAsCSV,
+        update
     }
 })();
+
+// This is how I should have written every single model:
+
+class Order {
+    constructor(email, total) {
+        const now = new Date();
+        this.date = `${now.getMonth()}/${now.getDate()}/${now.getFullYear()}`;
+        this.email = email;
+        this.total = `$${total}.00`;
+        this.ref = firebase.database().ref('Orders');
+    }
+
+    async _createOrderId() {
+        const snapshot = await ref.orderByKey().limitToLast(1).once('value')
+            , lastOrder = snapshot.val()
+            , oldId = Object.keys(lastOrder)[0]
+            , numString = oldId.slice(3, oldId.length)
+            , newNum = String(Number(numString) + 1);
+
+        return `PTA${'0'.repeat(numString.length - newNum.length)}${newNumber}`;
+    }
+
+    async save() {
+        const id = await this._createOrderId();
+        return ref.child(id).set(this.toJSON());
+    }
+
+    toJSON() {
+        return {
+            email: this.email,
+            date: this.date,
+            total: this.total,
+        }
+    }
+}
+
+class PurimOrder extends Order {
+    constructor(teachers) {
+        this.teachers = teachers;
+    }
+
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            teachers: this.teachers
+        }
+    }
+}

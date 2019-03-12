@@ -2,16 +2,22 @@ const Orders = require('../models/orders');
 const Groups = require('../models/groups');
 const Emailer = require('./sendgrid');
 
+// TODO: use a router to simplify the routes without including /admin and /orders in all of them
+
 module.exports = function (app) {
 
-    app.post('/orders/new/', (req, res) => {
+    /* CREATE new order */
+    // TODO: change POST route to /orders
+    app.post('/admin/orders/new/', (req, res) => {
         Orders.create(req.body).then(orderInfo => {
             Emailer.sendConfirmationEmail(orderInfo);
             res.json(orderInfo);
         });
     });
 
-    app.post('/orders/hanukkah/new', (req, res) => {
+    /* CREATE hannukkah order */
+    // TODO: Remove this route and make a general create route
+    app.post('/admin/orders/hanukkah/new', (req, res) => {
         const classes = Object.keys(req.body).map(key => {
             const newKey = key.slice(key.indexOf('/') + 1);
             if (newKey.indexOf('/') == -1 && req.body[key] == 'on') {
@@ -45,11 +51,17 @@ module.exports = function (app) {
 
     });
 
-    app.get('/admin/orderHistory/csv', (req, res) => {
+    app.get('/admin/order-history/csv', (req, res) => {
         Orders.getAsCSV().then(() => {
             const filePath = __dirname + '/../orders.csv';
             res.download(filePath);
 
+        });
+    });
+
+    app.put('/admin/orders/:orderId/', (req, res) => {
+        Orders.update(req.params.orderId, req.body).then(() => {
+            res.redirect(`/admin/orders?success=Successfully updated order #${req.params.orderId}`);
         });
     });
 

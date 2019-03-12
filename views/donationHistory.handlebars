@@ -1,45 +1,205 @@
-<h1>Order History:</h1>
-<a href="/admin/orderHistory/csv" class="btn btn-primary" target="_blank" rel="noopener">Download Orders As Spreadsheet</a>
-<div class="accordion container-fluid" id="orderAccordian">
-  {{#each orders}}
-    <div class="card">
-      <div class="card-header" id="heading-{{this.orderId}}">
-        <h5 class="mb-0">
-          <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{this.orderId}}" aria-expanded="false" aria-controls="collapse-{{this.orderId}}">
-            Order# {{this.orderId}}
-          </button>
-        </h5>
-      </div>
-      <div id="collapse-{{this.orderId}}" class="collapse" aria-labelledby="heading-{{this.orderId}}" data-parent="#orderAccordian">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md">
-              <h5 style="margin-top: 10px;">Order Details:</h5>
-              <table cellpadding="10">
-              {{#each this.orderInfo}}
-              <tr>
-                <td><strong>{{this.key}}:</strong></td>
-                <td>{{this.val}}</td>
-              </tr>
-              {{/each}}
-              </table>
+{{!-- <h1>Order History:</h1>
+
+<div class="container-fluid row">
+  <div class="col">
+    <h2>Dues:</h2>
+    
+  </div>
+  <div class="col">
+    <h2>Purim:</h2>
+    <a href="/admin/order-history/purim/csv" class="btn btn-primary" target="_blank" rel="noopener">Download Orders As
+      Spreadsheet</a>
+    <div class="accordion">
+
+    </div>
+  </div>
+</div> --}}
+
+<div class="container">
+  <div class="card card-body">
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+      <li class="nav-item">
+        <a class="nav-link" id="dues-tab" data-toggle="tab" href="#dues-donations" role="tab"
+          aria-controls="dues-donations" aria-selected="true">Hannuka</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" id="purim-tab" data-toggle="tab" href="#purim-donations" role="tab"
+          aria-controls="purim-donations" aria-selected="true">Purim</a>
+      </li>
+
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade" id="dues-donations" role="tabpanel" aria-labelledby="dues-tab">
+        <a href="/admin/orderHistory/csv" class="btn btn-primary" target="_blank" rel="noopener">Download Orders As
+          Spreadsheet</a>
+        <div class="accordion" id="duesAccordion">
+          {{#each orders.duesOrders}}
+          <div class="card">
+            <div class="card-header" id="heading-{{this.orderId}}">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                  data-target="#collapse-{{this.orderId}}" aria-expanded="false"
+                  aria-controls="collapse-{{this.orderId}}">
+                  Order# {{this.orderId}}
+                </button>
+              </h5>
             </div>
-            <div class="col-md">
-              <h5 style="margin-top: 10px;">Children:</h5>
-              <table cellpadding="10">
-              {{#each this.children}}
-                <tr>
-                  <td><strong>Name:</strong> {{this.name}}</td>
-                  {{#if this.grade}}
-                  <td><strong>Grade:</strong> {{this.grade}}</td>
-                  {{/if}}
-                </tr>
-              {{/each}}
-              </table>
+            <div id="collapse-{{this.orderId}}" class="collapse" aria-labelledby="heading-{{this.orderId}}"
+              data-parent="#duesAccordion">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md">
+                    <h5 style="margin-top: 10px;">Order Details:</h5>
+                    <table cellpadding="10">
+                      {{#each this.orderInfo}}
+                      <tr>
+                        <td><strong>{{this.key}}:</strong></td>
+                        <td>{{this.val}}</td>
+                      </tr>
+                      {{/each}}
+                    </table>
+                  </div>
+                  <div class="col-md">
+                    <h5 style="margin-top: 10px;">Children:</h5>
+                    <table cellpadding="10">
+                      {{#each this.children}}
+                      <tr>
+                        <td><strong>Name:</strong> {{this.name}}</td>
+                        {{#if this.grade}}
+                        <td><strong>Grade:</strong> {{this.grade}}</td>
+                        {{/if}}
+                      </tr>
+                      {{/each}}
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          {{/each}}
+        </div>
+      </div>
+      <div class="tab-pane fade show active" id="purim-donations" role="tabpanel" aria-labelledby="purim-tab">
+        <div class="accordion" id="purimAccordion">
+          {{#each orders.purimOrders}}
+          <div class="card">
+            <div class="card-header" id="heading-{{this.orderId}}">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                  data-target="#collapse-{{this.orderId}}" aria-expanded="false"
+                  aria-controls="collapse-{{this.orderId}}">Order # {{this.orderId}}</button>
+              </h5>
+            </div>
+            <div id="collapse-{{this.orderId}}" class="collapse" aria-labelledby="heading-{{this.orderId}}"
+              data-parent="#purimAccordion">
+              <form enctype="application/json" class="card-body d-flex justify-content-around" id="{{this.orderId}}"
+                method="POST" action="/admin/orders/{{this.orderId}}/?_method=PUT">
+                <div>
+                  <h4 class="text-center mb-4">Order Details:</h4>
+                  <table cellpadding="5">
+                    <tr>
+                      <td><strong>Email:</strong></td>
+                      <td>
+                        <input class="form-control form-control-plaintext" type="text" name="email"
+                          value="{{this.email}}" readonly>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Date:</strong></td>
+                      <td>
+                        <input class="form-control form-control-plaintext" type="text" name="date" value="{{this.date}}"
+                          readonly>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Total:</strong></td>
+                      <td>
+                        <input class="form-control form-control-plaintext" type="text" name="total"
+                          value="{{this.total}}" readonly>
+                      </td>
+                    </tr>
+                  </table>
+                  <div class="text-center mt-3">
+                    <button class="btn btn-primary editBtn" type="button">Edit</button>
+                    <button class="btn btn-danger d-none cancelBtn" type="button">Cancel</button>
+                    <button class="btn btn-success d-none" type="submit">Submit</button>
+                  </div>
+                </div>
+                <div class="px-3" style="max-height: 216px; overflow-y: scroll">
+                  <table cellpadding="5">
+                    {{#each this.teachers}}
+                    <tr>
+                      <td><strong>To:</strong></td>
+                      <td class="cell-show">
+                        <input class="form-control form-control-plaintext" type="text" value="{{this.teacherName}}"
+                          readonly>
+                      </td>
+                      <td class="cell-hide">
+                        <select name="teachers[{{@index}}][Id]">
+                          <option value="{{this.Id}}" selected>{{this.teacherName}}</option>
+                        </select>
+                      </td>
+
+                      <td><strong>From:</strong></td>
+                      <td>
+                        <input class="form-control form-control-plaintext" type="text"
+                          name="teachers[{{@index}}][gifter]" value="{{this.gifter}}" readonly>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </table>
+                </div>
+              </form>
+            </div>
+          </div>
+          {{/each}}
         </div>
       </div>
     </div>
+
+  </div>
+</div>
+
+<style>
+  .cell-hide {
+    display: none;
+  }
+</style>
+
+<script>
+  $(document).ready(function () {
+    $('.editBtn').click(makeOrderEditable);
+    $('.cancelBtn').click(makeOrderUnEditable);
+  });
+  function makeOrderEditable() {
+    const form = $(this).closest('form');
+    form.find('input').toggleClass('form-control-plaintext').prop('readonly', false);
+    form.find('.cell-hide').show();
+    form.find('.cell-show').hide();
+
+    form.find('select').each((i, el) => {
+      const val = $(el).val();
+      $(el).html($('#facultyOptions').html());
+      $(el).val(val);
+    });
+
+    form.find('button').toggleClass('d-none');
+  }
+  function makeOrderUnEditable() {
+    const form = $(this).closest('form');
+    form.find('input').toggleClass('form-control-plaintext').prop('readonly', true);
+    form.find('.cell-hide').hide();
+    form.find('.cell-show').show();
+
+    form.find('button').toggleClass('d-none');
+  }
+</script>
+
+<div class="d-hidden" id="facultyOptions">
+  {{#each facultyMembers}}
+  <option value="{{this.id}}">{{this.name}}</option>
   {{/each}}
 </div>

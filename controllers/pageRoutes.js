@@ -25,9 +25,14 @@ module.exports = function (app) {
     });
 
     app.get(['/admin/', '/admin/orders/'], (req, res) => {
-        Orders.getAll().then(orders => {
-            res.render('donationHistory', { layout: 'admin', orders: orders, history: true });
+        Promise.all([
+            Orders.getAll(), Members.getAll()
+        ]).then(vals => {
+            res.render('donationHistory', { layout: 'admin', orders: vals[0], facultyMembers: vals[1], history: true });
         });
+        // Orders.getAll().then(orders => {
+        //     res.render('donationHistory', { layout: 'admin', orders: orders, history: true });
+        // });
     });
 
     app.get('/admin/faculty/stats/', (req, res) => {

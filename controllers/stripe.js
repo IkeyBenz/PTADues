@@ -2,8 +2,7 @@ const stripe = require('stripe')(process.env.STRIPE_PRIVATE);
 
 module.exports = function (app) {
 
-    app.post('/charge/', (req, res) => {
-        console.log('Hey hey hey')
+    app.post('/admin/charge/', (req, res) => {
         if (!req.body.token) { return res.status(400).send('No token, cannot process').end() }
         stripe.charges.create({
             amount: req.body.amount,
