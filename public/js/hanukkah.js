@@ -6,7 +6,7 @@ $(document).ready(function () {
 });
 
 
-/* Shows/hides a child-name select when a teacher checkbox is checked/unchecked */
+/** Shows/hides a child-name select when a teacher checkbox is checked/unchecked. */
 function toggleChildSelector() {
     const parent = $(this).closest('.list-group-item');
     const selector = $(`#${parent.attr('id')}-childname`);
@@ -23,7 +23,7 @@ function toggleChildSelector() {
     updatePrice();
 }
 
-/* Returns the html for the child-name select that appears next to selected teachers */
+/** Returns the html for the child-name select that appears next to selected teachers. */
 function renderChildSelector(classId) {
     let name_grade = [];
     for (tag of ['input', 'select']) {
@@ -46,7 +46,7 @@ function renderChildSelector(classId) {
             </select>`;
 }
 
-/* Called when a .childSelect is clicked. Checks if the option with val "Other" is selected. */
+/** Called when a .childSelect is clicked. Checks if the option with val "Other" is selected. */
 function checkForOtherOption() {
     if ($(this).val() == "Other") {
         $(this).parent().children('input[type="text"]').remove();
@@ -57,14 +57,14 @@ function checkForOtherOption() {
     }
 }
 
-/* Calculates and returns the total cost of the current order */
+/** Calculates and returns the total cost of the current order. */
 function updatePrice() {
     const price = $('.teacherCheckbox:checked').length * 4;
     $('#orderTotal').text(price);
     return price;
 }
 
-/* Incriments or decriments the number of children-name inputs */
+/** Incriments or decriments the number of children-name inputs. */
 function updateChildrenNameInputs() {
     while ($('#namesDropdownMenu').children().length < $('#numChildren').val()) {
         const i = $('#namesDropdownMenu').children().length + 1;
@@ -97,7 +97,7 @@ function updateChildrenNameInputs() {
 
 }
 
-/* Stores an order in the database and sends a confirmation email */
+/** Stores an order in the database and sends a confirmation email. */
 function saveOrder(email) {
     const now = new Date();
     const order = {
@@ -116,7 +116,7 @@ function saveOrder(email) {
     }).catch(alert);
 }
 
-/* Returns a list of { Id, gifter } for every selected teacher */
+/** Returns a list of { Id, gifter } for every selected teacher. */
 function getSelectedTeachers() {
     let teachers = [];
     $('.teacherCheckbox:checked').each((i, el) => {
@@ -131,7 +131,7 @@ function getSelectedTeachers() {
     return teachers;
 }
 
-/* Opens the stripe payment widget with the price of the selected teachers */
+/** Opens the stripe payment widget with the price of the selected teachers */
 function openStripeHandler() {
     StripeHandler.open({
         name: 'PTA Purim Gifts',

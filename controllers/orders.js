@@ -59,6 +59,12 @@ module.exports = function (app) {
         });
     });
 
+    app.get('/admin/purim-orders/csv', (req, res) => {
+        Orders.createPurimCSV().then(() => {
+            res.download(__dirname + '/../purimOrders.csv');
+        });
+    });
+
     app.put('/admin/orders/:orderId/', (req, res) => {
         Orders.update(req.params.orderId, req.body).then(() => {
             res.redirect(`/admin/orders?success=Successfully updated order #${req.params.orderId}`);

@@ -1,5 +1,6 @@
 const firebase = require('firebase');
 const ref = firebase.database().ref('Orders');
+const facultyRef = firebase.database().ref('FacultyMembers');
 const promise = require('bluebird');
 const writeFile = promise.promisify(require('fs').writeFile);
 
@@ -153,12 +154,69 @@ module.exports = (function () {
         return ref.child(orderId).set(newData);
     }
 
+    /** Goes through every purim order and creates a spreadsheet that looks like:
+     *  TeacherName,TecherEmailAddress,Kid1,Kid2,Kid3......, named purimOrders.csv */
+    async function createPurimCSV() {
+        const orders = await getOrders().then(o => { return o.purimOrders });
+        const faculty = await facultyRef.once('value').then(s => s.val());
+        let teachers = {}
+        let maxGifterLength = 0;
+        for (let order of orders) {
+            try {
+                for (teacher of order.teachers) {
+                    if (teacher.Id in teachers) {
+                        teachers[teacher.Id].push(teacher.gifter);
+                        if (teachers[teacher.Id].length > maxGifterLength)
+                            maxGifterLength = teachers[teacher.Id].length;
+                    } else
+                        teachers[teacher.Id] = [teacher.gifter];
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        let csv = 'Name,Email,' + repeatWithIndex(maxGifterLength, 'kid') + '\n';
+        for (let teacherKey in teachers) {
+            csv += `"${faculty[teacherKey].Name}",`
+            for (kid of teachers[teacherKey]) {
+                if (kid == '')
+                    csv += '"Anonymous",';
+                else
+                    csv += `"${kid}",`;
+            }
+            csv += ','.repeat(maxGifterLength - teachers[teacherKey].length) + '\n';
+        }
+        return writeFile(__dirname + '/../purimOrders.csv', csv);
+    }
+
+    /** Repeats a string count times separated by a comma. Also adds the current index to each string. */
+    function repeatWithIndex(count, str) {
+        let repeated = '';
+        for (let i = 1; i <= count; i++) {
+            repeated += `${str}${i},`;
+        }
+        return repeated;
+    }
+
+    function getOrdersFromDate(date) {
+        return ref.orderByChild('date').equalTo(date).once('value').then(s => s.val());
+    }
+
+    async function makeOrdersCSV(orders) {
+        let csv = 'Order#,Date,Email,Total\n';
+        for (orderKey in orders) {
+            csv += `"${orderKey}","${orders[orderKey].date}","${orders[orderKey].email}","${orders[orderKey].total}"\n`;
+        }
+        return writeFile(__dirname + '/../orders.csv', csv);
+    }
+
     return {
         create: create,
         createHanukkahOrder: createHanukkahOrder,
         getAll: getOrders,
         getAsCSV: getAllAsCSV,
-        update
+        update,
+        createPurimCSV
     }
 })();
 

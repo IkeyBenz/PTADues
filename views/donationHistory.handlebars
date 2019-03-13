@@ -1,20 +1,3 @@
-{{!-- <h1>Order History:</h1>
-
-<div class="container-fluid row">
-  <div class="col">
-    <h2>Dues:</h2>
-    
-  </div>
-  <div class="col">
-    <h2>Purim:</h2>
-    <a href="/admin/order-history/purim/csv" class="btn btn-primary" target="_blank" rel="noopener">Download Orders As
-      Spreadsheet</a>
-    <div class="accordion">
-
-    </div>
-  </div>
-</div> --}}
-
 <div class="container">
   <div class="card card-body">
 
@@ -33,7 +16,7 @@
 
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade" id="dues-donations" role="tabpanel" aria-labelledby="dues-tab">
-        <a href="/admin/orderHistory/csv" class="btn btn-primary" target="_blank" rel="noopener">Download Orders As
+        <a href="/admin/order-history/csv" class="btn btn-primary" target="_blank" rel="noopener">Download Orders As
           Spreadsheet</a>
         <div class="accordion" id="duesAccordion">
           {{#each orders.duesOrders}}
@@ -84,6 +67,8 @@
       </div>
       <div class="tab-pane fade show active" id="purim-donations" role="tabpanel" aria-labelledby="purim-tab">
         <div class="accordion" id="purimAccordion">
+          <a href="/admin/purim-orders/csv" class="btn btn-primary" target="_blank" rel="noopener">Download Teacher
+            Gifts Spreadsheet</a>
           {{#each orders.purimOrders}}
           <div class="card">
             <div class="card-header" id="heading-{{this.orderId}}">
@@ -92,6 +77,7 @@
                   data-target="#collapse-{{this.orderId}}" aria-expanded="false"
                   aria-controls="collapse-{{this.orderId}}">Order # {{this.orderId}}</button>
               </h5>
+              {{this.date}} {{this.email}} {{this.total}}
             </div>
             <div id="collapse-{{this.orderId}}" class="collapse" aria-labelledby="heading-{{this.orderId}}"
               data-parent="#purimAccordion">
