@@ -112,7 +112,7 @@ function saveOrder(email) {
         body: JSON.stringify(order)
     }).then(res => res.json()).then(() => {
         alert(`Thank you!\nA confirmation email has been sent to ${email}`);
-        window.location.replace('/');
+        window.location.reload();
     }).catch(alert);
 }
 
@@ -131,7 +131,7 @@ function getSelectedTeachers() {
     return teachers;
 }
 
-/** Opens the stripe payment widget with the price of the selected teachers */
+/** Opens the stripe payment widget with the price of the selected teachers. */
 function openStripeHandler() {
     StripeHandler.open({
         name: 'PTA Purim Gifts',

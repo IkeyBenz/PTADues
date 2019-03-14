@@ -1,31 +1,45 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>MDY PTA Dues | Admin</title>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/css/global.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="https://checkout.stripe.com/checkout.js"></script>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    </head>
-    <body>
-        <header class="header">
-            <ul class="nav nav-pills">
-                <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo" src="/images/WhiteLogo.png"></a></li>
-                <li class="nav-item"><a href="/admin/orders/" class="nav-link{{#if history}} active{{/if}}">Order History</a></li>
-                <li class="nav-item"><a href="/admin/editFaculty" class="nav-link{{#if edit}} active{{/if}}">Edit Faculty</a></li>
-                <li class="nav-item"><a href="/admin/faculty/orginize" class="nav-link{{#if orginize}} active{{/if}}">Orginize Faculty</a></li>
-                <li class="nav-item"><a href="/admin/faculty/stats" class="nav-link{{#if stats}} active{{/if}}">Faculty Stats</a></li>
-                <li class="nav-item"><a href="/admin/hannukaPreview" class="nav-link{{#if hannuka}} active{{/if}}">Hanukkah</a></li>
-            </ul>
-        </header>
-        <main class="container-fluid">
-            {{{body}}}
-        </main>
-    </body>
+
+<head>
+    <title>MDY PTA Dues | Admin</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/global.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+    <header class="header">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/" class="navbar-brand nav-link"><img class="logo"
+                        src="/images/WhiteLogo.png"></a></li>
+            <li class="nav-item"><a href="/admin/orders/" class="nav-link{{#if history}} active{{/if}}">Order
+                    History</a></li>
+            <li class="nav-item"><a href="/admin/editFaculty" class="nav-link{{#if edit}} active{{/if}}">Edit
+                    Faculty</a></li>
+            <li class="nav-item"><a href="/admin/faculty/orginize"
+                    class="nav-link{{#if orginize}} active{{/if}}">Orginize Faculty</a></li>
+            <li class="nav-item"><a href="/admin/faculty/stats" class="nav-link{{#if stats}} active{{/if}}">Faculty
+                    Stats</a></li>
+            <li class="nav-item"><a href="/admin/create-purim-order"
+                    class="nav-link{{#if mockOrder}} active{{/if}}">Create Purim Order</a></li>
+        </ul>
+    </header>
+    <main class="container-fluid">
+        {{{body}}}
+    </main>
+</body>
+
 </html>

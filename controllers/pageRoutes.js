@@ -30,9 +30,6 @@ module.exports = function (app) {
         ]).then(vals => {
             res.render('donationHistory', { layout: 'admin', orders: vals[0], facultyMembers: vals[1], history: true });
         });
-        // Orders.getAll().then(orders => {
-        //     res.render('donationHistory', { layout: 'admin', orders: orders, history: true });
-        // });
     });
 
     app.get('/admin/faculty/stats/', (req, res) => {
@@ -44,6 +41,12 @@ module.exports = function (app) {
     app.get('/admin/hannukaPreview', (req, res) => {
         OrderedFaculty.getDisplayable().then(data => {
             res.render('hanukkah', { layout: 'admin', hannuka: true, ...data });
+        });
+    });
+
+    app.get('/admin/create-purim-order', (req, res) => {
+        OrderedFaculty.getDisplayable().then(data => {
+            res.render('mock-order', { layout: 'admin', mockOrder: true, ...data });
         });
     });
 
