@@ -177,17 +177,22 @@ module.exports = (function () {
         }
         let csv = 'Name,Email,' + repeatWithIndex(maxGifterLength, 'kid') + '\n';
         for (let teacherKey in teachers) {
-            csv += `"${faculty[teacherKey].Name}",`
+            csv += `"${faculty[teacherKey].Name}","",`;
+            const arr = teachers[teacherKey].filter(val => val.slice(-12) == ", and family")
+                , parentsName = (arr.length > 0) ? arr[0].slice(0, -12) : 'Anonymous';
             for (kid of teachers[teacherKey]) {
-                if (kid == '')
-                    csv += '"Anonymous",';
-                else
+                if (kid == '') {
+                    csv += `"${parentsName}",`;
+                } else {
                     csv += `"${kid}",`;
+                }
             }
             csv += ','.repeat(maxGifterLength - teachers[teacherKey].length) + '\n';
         }
         return writeFile(__dirname + '/../purimOrders.csv', csv);
     }
+
+    createPurimCSV();
 
     /** Repeats a string count times separated by a comma. Also adds the current index to each string. */
     function repeatWithIndex(count, str) {
