@@ -19,9 +19,10 @@ module.exports = function (app) {
     });
 
     app.get(['/', '/purim/'], (req, res) => {
-        OrderedFaculty.getDisplayable().then(data => {
-            res.render('purim', { purim: true, ...data });
-        });
+        // OrderedFaculty.getDisplayable().then(data => {
+        //     res.render('purim', { purim: true, ...data });
+        // });
+        res.render('comingSoon', { purim: true, pageName: 'Purim' });
     });
 
     app.get(['/admin/', '/admin/orders/'], (req, res) => {
