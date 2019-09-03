@@ -4,19 +4,19 @@ Sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = (function () {
 
-    function sendConfirmationEmail(orderInfo) {
-        hb.render('views/emails/purim.handlebars', orderInfo).then(html => {
-            Sendgrid.send({
-                to: orderInfo.email,
-                from: 'PTADues@gmail.com',
-                subject: orderInfo.Subject || 'PTA Purim Gifts - Confirmation',
-                html: html
-            });
-        });
-    }
+  function sendConfirmationEmail(orderInfo) {
+    hb.render('views/emails/email-template.handlebars', orderInfo).then(html => {
+      Sendgrid.send({
+        to: orderInfo.email,
+        from: 'PTADues@gmail.com',
+        subject: orderInfo.Subject || 'PTA Purim Gifts - Confirmation',
+        html: html
+      });
+    });
+  }
 
-    return {
-        sendConfirmationEmail: (orderInfo) => sendConfirmationEmail(orderInfo)
-    }
+  return {
+    sendConfirmationEmail: (orderInfo) => sendConfirmationEmail(orderInfo)
+  }
 
 })();
