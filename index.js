@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 const favicon = require('serve-favicon');
 const https = require('https');
 const expressAuth = require('express-basic-auth');
+const enforce = require('express-sslify');
 
 require('dotenv').config();
 
@@ -15,6 +16,7 @@ firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main', helpers: require('./hbsHelpers') }));
 app.set('view engine', 'handlebars')
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
