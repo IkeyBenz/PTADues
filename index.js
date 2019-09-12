@@ -17,7 +17,7 @@ firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
 app.engine('handlebars', exphbs({ defaultLayout: 'main', helpers: require('./hbsHelpers') }));
 app.set('view engine', 'handlebars')
 // app.use(enforce.HTTPS({ trustProtoHeader: true }));
-// app.use(express.static('public'));
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));

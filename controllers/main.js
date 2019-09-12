@@ -7,6 +7,4 @@ module.exports = function (app) {
   require('./orders')(app);
   require('./members')(app);
 
-  console.log("YOOO")
-
 }

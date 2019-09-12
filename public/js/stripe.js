@@ -1,6 +1,5 @@
 var StripeHandler = StripeCheckout.configure({
-  // Live key: pk_live_MFjSNMDErxMwrRLWAteHnZTs
-  key: 'pk_test_e7ef3YaWGp78L2kgRJ1TIvNA',
+  key: 'pk_live_MFjSNMDErxMwrRLWAteHnZTs',
   image: '/images/favicon.ico',
   locale: 'auto',
   token: function (tkn) {

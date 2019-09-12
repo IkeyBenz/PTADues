@@ -6,7 +6,6 @@ const Members = require('../models/member');
 module.exports = function (app) {
 
   app.get(['/', '/dues/'], (req, res) => {
-    console.log("GOT HERE");
     const c = ['1', '2', '3', '4', '5'];
     res.render('dues', { children: c, dues: true });
     // res.render('comingSoon', { dues: true, pageName: 'Dues' });
