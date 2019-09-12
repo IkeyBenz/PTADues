@@ -1,15 +1,20 @@
 const Sendgrid = require('@sendgrid/mail');
 const hb = require('express-handlebars').create();
+const moment = require('moment');
+
 Sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = (function () {
 
+
   function sendConfirmationEmail(orderInfo) {
-    hb.render('views/emails/email-template.handlebars', orderInfo).then(html => {
+    const d = new Date();
+    const date = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+    hb.render('views/emails/email-template.handlebars', { ...orderInfo, date }).then(html => {
       Sendgrid.send({
-        to: orderInfo.email,
+        to: orderInfo.Email,
         from: 'PTADues@gmail.com',
-        subject: orderInfo.Subject || 'PTA Purim Gifts - Confirmation',
+        subject: 'PTA Dues - Thank You!',
         html: html
       });
     });

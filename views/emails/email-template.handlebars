@@ -1,22 +1,37 @@
 <body style="margin: 0px">
 
-<header style="width=100%;height:100px;background-color:#002261">
-    <img style="display: block; height:100%; width: auto; margin: 0 auto;" src="https://www.magendavidyeshivah.org//wp-content/uploads/2015/10/MDY-Logo-Long-White-01-3.png" alt="">
-</header>
+  <header style="width=100%;height:100px;background-color:#002261">
+    <img style="display: block; height:100%; width: auto; margin: 0 auto;"
+      src="https://mdy-pta-dues.herokuapp.com/images/Logo.png">
+  </header>
 
-<main style="margin: 20px;">
-    <h1 style="text-align: center;">{{#if Subject}}{{Subject}}{{else}}Thank you for your contribution, {{Name}}!{{/if}}</h1>
+  <main style="margin: 20px;">
+    <h1 style="text-align: center;">{{#if Subject}}{{Subject}}{{else}}Thank you for your contribution, {{Name}}!{{/if}}
+    </h1>
 
-    <h2 style="color: gray; margin-top: 10px;">{{#if Text}}{{Text}}{{else}}We've recieved your donation in honor of your children{{#if child1Name}} {{child1Name}}{{/if}}{{#if child2Name}}, {{child2Name}}{{/if}}{{#if child3Name}}, {{child3Name}}{{/if}}{{#if child4Name}}, {{child4Name}}{{/if}}{{#if child5Name}}, {{child5Name}}{{/if}}.  These funds support initiatives such as introducing new technology in the classrooms and restocking classroom libraries to enhance our students' curriculum.{{/if}}</h2>
+    <h2 style="color: gray; margin-top: 10px;">{{#if Text}}{{Text}}{{else}}We've recieved your donation in honor of your
+      children{{#if child1Name}} {{child1Name}}{{/if}}{{#if child2Name}}, {{child2Name}}{{/if}}{{#if child3Name}},
+      {{child3Name}}{{/if}}{{#if child4Name}}, {{child4Name}}{{/if}}{{#if child5Name}}, {{child5Name}}{{/if}}. These
+      funds support initiatives such as introducing new technology in the classrooms and restocking classroom libraries
+      to enhance our students' curriculum.{{/if}}</h2>
     <table cellpadding="5" cellspacing="0">
-        <tr> <td>Order ID:</td> <td>{{orderId}}</td>    </tr>
-        <tr> <td>Date:</td>     <td>{{date}}</td>       </tr>
-        <tr> <td>Total:</td>    <td>${{Amount}}.00</td> </tr>
+      <tr>
+        <td>Order ID:</td>
+        <td>{{orderId}}</td>
+      </tr>
+      <tr>
+        <td>Date:</td>
+        <td>{{date}}</td>
+      </tr>
+      <tr>
+        <td>Total:</td>
+        <td>${{Amount}}.00</td>
+      </tr>
     </table>
-</main>
+  </main>
 
-<footer style="margin: 20px;">
+  <footer style="margin: 20px;">
     <h3>Regards,<br>MDY PTA</h3>
-</footer>
+  </footer>
 
 </body>

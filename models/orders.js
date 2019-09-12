@@ -10,8 +10,11 @@ module.exports = (function () {
       if (orderInfo) {
         getNewOrderId().then(async (newOrderId) => {
           ref.child(newOrderId).set(orderInfo);
-          const infoWithTeachers = await _populateTeachers(orderInfo);
-          resolve({ ...infoWithTeachers, orderId: newOrderId });
+          // Only for orders with teachers
+          // Ikey wtf is this? need to fix. Trash.
+          // const infoWithTeachers = await _populateTeachers(orderInfo);
+
+          resolve({ ...orderInfo, orderId: newOrderId });
         });
       } else {
         reject('Form not filled out.');
