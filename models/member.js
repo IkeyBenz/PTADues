@@ -1,5 +1,5 @@
 const firebase = require('firebase');
-const ref = firebase.database().ref('FacultyMembers');
+const ref = firebase.database().ref('members');
 const promise = require('bluebird');
 const writeFile = promise.promisify(require('fs').writeFile);
 
@@ -7,13 +7,13 @@ module.exports = (function () {
 
     function getAllMembers() {
         return ref.once('value').then(snapshot => {
-            return Object.keys(snapshot.val()).map(memberKey => {
+            return snapshot.val() && Object.keys(snapshot.val()).map(memberKey => {
                 return {
                     name: snapshot.val()[memberKey].Name,
                     info: snapshot.val()[memberKey].Info,
                     id: memberKey
                 }
-            }).sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+            }).sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)) || [];
         });
     }
 

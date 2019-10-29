@@ -39,8 +39,8 @@ require('./controllers/main')(app);
 
 app.listen(port, () => {
   console.log(`Running pta dues at localhost:${port}`);
-  // console.log("Running PTA Dues on " + port);
-  // setInterval(function () {
-  //   https.get('https://mdy-pta-dues.herokuapp.com')
-  // }, 1500000);
+  console.log("Running PTA Dues on " + port);
+  setInterval(function () {
+    https.get('https://mdy-pta-dues.herokuapp.com')
+  }, 1500000);
 });

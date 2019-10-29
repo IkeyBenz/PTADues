@@ -1,8 +1,8 @@
 const firebase = require('firebase');
 
-const groupsRef = firebase.database().ref('Groups');
-const orderedGroupsRef = firebase.database().ref('OrderedGroups');
-const facultyRef = firebase.database().ref('FacultyMembers');
+const groupsRef = firebase.database().ref('roles');
+const orderedGroupsRef = firebase.database().ref('arrangements');
+const facultyRef = firebase.database().ref('members');
 
 
 module.exports = (function () {
@@ -39,7 +39,7 @@ module.exports = (function () {
             }
             return true;
         } else {
-            return faculty[teachers] || false;
+            return teachers !== '' && faculty[teachers] || false;
         }
     }
     function getTeacherName(teachers, faculty) {
@@ -52,7 +52,7 @@ module.exports = (function () {
     }
 
     function formattedGroup(d, groupName) {
-        return d.orderedGroups[groupName] ? d.orderedGroups[groupName].map(key => {
+        return d.orderedGroups && d.orderedGroups[groupName] ? d.orderedGroups[groupName].map(key => {
             const teacherKey = d.groups[groupName][key].Teacher;
             const assistantKey = d.groups[groupName][key].Assistants || undefined;
             const teacherName = teacherExists(teacherKey, d.faculty) ? getTeacherName(teacherKey, d.faculty) : '';
@@ -61,14 +61,14 @@ module.exports = (function () {
         }) : {};
     }
     function formattedMisc(d) {
-        return d.orderedGroups.Administration.map(groupKey => {
+        return d.orderedGroups ? d.orderedGroups.Administration.map(groupKey => {
             const group = d.groups.Administration[groupKey];
             return {
                 Title: group.Title,
                 id: groupKey,
                 Members: group.Members ? group.Members.map((containerKey) => {
                     const memberKey = d.groups.Administration.Containers[containerKey];
-                    const member = d.faculty[memberKey];
+                    const member = memberKey !== 'Unselected' && d.faculty[memberKey];
                     return member ? {
                         name: member.Name + ((member.Info) ? ` (${member.Info})` : ''),
                         id: memberKey,
@@ -76,7 +76,7 @@ module.exports = (function () {
                     } : { name: '', id: '', container: containerKey }
                 }) : []
             }
-        });
+        }): [];
     }
     function getFaculty() {
         return downloadFaculty().then(d => {
@@ -91,7 +91,7 @@ module.exports = (function () {
     }
     function getLastOrderedIndexOf(category) {
         return orderedGroupsRef.child(category).once('value').then(snapshot => {
-            return snapshot.val().length;
+            return snapshot.val() && snapshot.val().length || 0;
         });
     }
     function updateAtPath(path, data) {
@@ -114,9 +114,7 @@ module.exports = (function () {
     function removeMiscMember(groupId, containerId) {
         return groupsRef.child(`Administration/${groupId}/Members`).once('value').then(s => {
             const members = s.val();
-            console.log(members);
             members.splice(members.indexOf(containerId), 1);
-            console.log(members);
             return groupsRef.child(`Administration/${groupId}/Members`).set(members).then(() => {
                 return groupsRef.child(`Administration/Containers/${containerId}`).remove();
             });

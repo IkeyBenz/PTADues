@@ -6,10 +6,8 @@ module.exports = function (app) {
         Promise.all([
             Members.getAll(),
             Members.getRecentlyEdited()
-        ]).then(vals => {
-            const members = vals[0];
-            const lastEdited = vals[1];
-            res.render('newEdit', { layout: 'admin', edit: true, members: members, lastEdited: lastEdited });
+        ]).then(([members, lastEdited]) => {
+            res.render('newEdit', { layout: 'admin', edit: true, members, lastEdited });
         });
     });
 
