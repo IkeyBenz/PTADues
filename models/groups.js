@@ -61,7 +61,7 @@ module.exports = (function () {
         }) : {};
     }
     function formattedMisc(d) {
-        return d.orderedGroups ? d.orderedGroups.Administration.map(groupKey => {
+        return !!d.orderedGroups.Administration ? d.orderedGroups.Administration.map(groupKey => {
             const group = d.groups.Administration[groupKey];
             return {
                 Title: group.Title,
