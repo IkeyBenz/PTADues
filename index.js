@@ -38,8 +38,8 @@ function displayUnauthorizedPage(req) {
 require('./controllers/main')(app);
 
 app.listen(port, () => {
-  console.log(`Running pta dues at localhost:${port}`);
-  console.log("Running PTA Dues on " + port);
+  console.log(`Running pta dues at http://0.0.0.0:${port}`);
+
   setInterval(function () {
     https.get('https://mdy-pta-dues.herokuapp.com')
   }, 1500000);
