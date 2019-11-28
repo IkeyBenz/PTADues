@@ -146,7 +146,7 @@ module.exports = (function () {
           });
         } catch (e) {
           console.error(e);
-          console.log(order);
+          //console.log(order);
         }
         purimOrders.push(order);
       }

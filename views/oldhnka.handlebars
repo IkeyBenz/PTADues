@@ -1,0 +1,105 @@
+<form class="form" action="/hannuka/orders" method="POST">
+	<div class="form-group">
+		<label for="parents">Parents Names:</label>
+		<input class="form-control" type="text" placeholder="Name & Name Last Name">
+	</div>
+	<div class="forn-group">
+		<label for="children">Children: <div class="btn-group">
+				<button class="btn btn-secondary btn-sm" id="add-child-btn" type="button">+</button>
+				<button class="btn btn-secondary btn-sm" id="rm-child-btn" type="button">-</button>
+			</div></label>
+		<div class="input-group" id="child-input-fields">
+
+		</div>
+	</div>
+
+	<button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+{{!-- Nursary Class Select Widget --}}
+<div id="nursary-class-select-widget" class="select-widget">
+</div>
+
+{{!-- Elementary Classes Select Widget --}}
+<div id="elementary-class-select-widget" class="select-widget">
+
+</div>
+
+{{!-- Middle School Classes Select Widget --}}
+<div id="middleschool-class-select-widget">
+
+</div>
+
+<div id="members" class="d-none">
+	{{#each members}}
+	<div id="{{this.id}}">{{this.name}}</div>
+	{{/each}}
+</div>
+<div id="roles" class="d-none">
+	<div id="nursary">
+		{{#each roles.Nursary}}
+		<div data-id="{{this.id}}" data-classname="{{this.Class}}" data-teacher="{{this.Teacher}}"></div>
+		{{/each}}
+	</div>
+</div>
+
+<script>$(document).ready(() => {
+
+		// Adding/Removing child input fields:
+		(() => {
+			const grades = ['PG', 'N', 'PK', 'K', '1', '2', '3', '4', '5', '6', '7', '8'];
+			const nusaryClassSelect = `
+				
+			`;
+			const childInputField = (i) => `
+			<div id="child-input-${i}">
+				<div class="input-group child-input">
+				<input type="text" class="form-control" placeholder="Child's Name" name="children[${i}]['name']">
+				<select id="${i}-grade" name="children[${i}]['grade']">
+					<option selected>Select Grade</option>
+					${grades.map(g => `<option value=${g}>${g}</option>`)}
+				</select>
+			</div>`;
+
+			let childFieldInd = -1;
+			function addChildField() {
+				$('#child-input-fields').append(childInputField(childFieldInd += 1));
+			}
+
+			function removeChildField() {
+				childFieldInd && $(`#child-input-${childFieldInd--}`).remove();
+			}
+
+			$('#add-child-btn').click(addChildField);
+			$('#rm-child-btn').click(removeChildField);
+			addChildField();
+		})();
+
+		// Making class select widget pop up
+		(() => {
+			function openWidgetPopup(childIndex, grade) {
+
+			}
+			$('.child-input select').change(() => {
+				
+			});
+		})();
+
+		// Teacher name auto complete:
+		(() => {
+			const teachers = {}
+			$('#members div').each((_, member) => {
+				teachers[$(member).attr('id')] = $(member).text();
+			});
+			$('#members').remove();
+
+			const nursaryClasses = {}
+			$('#nursary div').each((_, div) => {
+				const { classname, teacher } = $(div).data();
+				const grade = classname.split('-')[0];
+				console.log(classname, teacher, grade);
+			});
+		})();
+
+
+	})</script>
