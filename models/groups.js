@@ -256,6 +256,11 @@ module.exports = (function() {
       if (!grades[_class.Grade]) grades[_class.Grade] = { Classes: [] };
       grades[_class.Grade].Classes.push(_class);
     }
+    Object.values(grades).forEach(grade => {
+      grade.Classes.sort((a, b) =>
+        a.Teacher.Name > b.Teacher.Name ? 1 : b.Teacher.Name > a.Teacher.Name ? -1 : 0
+      )
+    })
     grades[Object.keys(grades)[0]].First = true;
     return grades;
   }
