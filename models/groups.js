@@ -300,9 +300,19 @@ module.exports = (function() {
         const grade = numberSuffix(numbersFrom(_class.Room));
         elemGrades[grade].Classes.push(_class);
       } else {
-        const grade = numberSuffix(numbersFrom(_class.Class));
-        if (!elemGrades[grade]) elemGrades[grade] = { Classes: [] };
-        elemGrades[grade].Classes.push(_class);
+        // If it finds more than one number in the class
+        if (numbersFrom(_class.Class).length > 1) {
+          const grades = numbersFrom(_class.Class).split('');
+          grades.forEach(grade => {
+            const g = numberSuffix(grade);
+            if (!elemGrades[g]) elemGrades[g] = { Classes: [] };
+            elemGrades[g].Classes.push(_class)
+          });
+        } else {
+          const grade = numberSuffix(numbersFrom(_class.Class));
+          if (!elemGrades[grade]) elemGrades[grade] = { Classes: [] };
+          elemGrades[grade].Classes.push(_class);
+        }
       }
     }
     elemGrades[Object.keys(elemGrades)[0]].First = true;
