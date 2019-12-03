@@ -253,6 +253,7 @@ module.exports = (function() {
     });
     const grades = {};
     for (let _class of middleSchool) {
+      _class.Grade = _class.Grade.split(' ')[0];
       if (!grades[_class.Grade]) grades[_class.Grade] = { Classes: [] };
       grades[_class.Grade].Classes.push(_class);
     }
