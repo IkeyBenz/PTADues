@@ -3,6 +3,7 @@ const firebase = require("firebase");
 const groupsRef = firebase.database().ref("roles");
 const orderedGroupsRef = firebase.database().ref("arrangements");
 const facultyRef = firebase.database().ref("members");
+const highschoolRef = firebase.database().ref('highschool');
 
 module.exports = (function() {
   function downloadFaculty() {
@@ -386,6 +387,13 @@ module.exports = (function() {
     });
 
   }
+
+  async function getHighschool() {
+    const unsorted = await highschoolRef.once('value').then(s => s.val());
+    const withIds = Object.keys(unsorted).map(key => ({ id: key, ...unsorted[key] }));
+    const sorted = withIds.sort((a, b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
+    return sorted;
+  }
   return {
     create: createClass,
     get: getFaculty,
@@ -396,6 +404,7 @@ module.exports = (function() {
     saveHanukkahOrder: saveHanukkahOrder,
     addMiscMember: addMiscMember,
     removeMiscMember,
-    roles: () => groupsRef.once("value").then(s => s.val())
+    roles: () => groupsRef.once("value").then(s => s.val()),
+    getHighschool
   };
 })();

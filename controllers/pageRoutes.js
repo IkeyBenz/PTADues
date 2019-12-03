@@ -57,4 +57,9 @@ module.exports = function(app) {
       res.render("mock-order", { layout: "admin", mockOrder: true, ...data });
     });
   });
+  app.get('/admin/highschool-preview', (req, res) => {
+    OrderedFaculty.getHighschool().then(teachers => {
+      res.render('highschool-hanukkah', { layout: "admin", highschool: true, teachers });
+    });
+  });
 };

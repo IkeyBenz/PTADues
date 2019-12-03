@@ -1,0 +1,39 @@
+<div class="container-fluid">
+	<div class="center">
+		<h3>Highschool PTA Dues | Hanukkah</h3>
+	</div>
+	<div class="row">
+		<div class="col-4 form-group">
+			<label for="">Parents Name:</label>
+			<input type="text" class="form-control" id="parentsName" placeholder="Mr. & Mrs. Last Name">
+		</div>
+		<div class="col-8">
+			<label for="">How many children do you have? <input type="number" class="form-control" id="numChildren"
+					style="max-width: 64px;" value="1"></label>
+			<div id="namesDropdownMenu">
+				<li class="d-flex">
+					<input class="form-control" type="text" id="childname1" class=".childInfo" placeholder="Full Name">
+					</select>
+				</li>
+			</div>
+		</div>
+	</div>
+
+	<div class="card my-2">
+		<div class="card-header">
+			<h3>High School Faculty</h3>
+		</div>
+		<div class="card-body">
+			<ul class="list-group">
+				{{#each teachers}}
+				<li class="list-group-item d-flex">
+					<label for="">
+						<input class="teacherCheckbox" type="checkbox" id="{{this.id}}"> {{this.name}}
+					</label>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
+	</div>
+
+</div>
