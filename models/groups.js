@@ -223,7 +223,6 @@ module.exports = (function() {
     for (let _class of nursary) {
       let grade = removeNumbers(_class.Class.split('-')[0]),
         gradeName = gradeNames[grade];
-      console.log(grade, gradeName);
       !grades[gradeName] && (grades[gradeName] = { Classes: {} });
       !grades[gradeName].Classes[_class.Class]
         ? (grades[gradeName].Classes[_class.Class] = {
@@ -271,7 +270,7 @@ module.exports = (function() {
       return {
         ...classInfo,
         Id: key,
-        Teachers: () => {
+        Teachers: (() => {
           let teachers = [];
           typeof classInfo.Teacher == "string"
             ? (classInfo.Teacher = [classInfo.Teacher])
@@ -284,14 +283,27 @@ module.exports = (function() {
           for (let teacher of classInfo.Assistants || [])
             teachers.push({ ...db.faculty[teacher], Id: teacher });
           return teachers;
-        }
+        })()
       };
     });
     let elemGrades = {};
     for (let _class of elementary) {
-      const grade = numberPostFix(numbersFrom(_class.Class));
-      if (!elemGrades[grade]) elemGrades[grade] = { Classes: [] };
-      elemGrades[grade].Classes.push(_class);
+      if (_class.Room.includes('All Grades')) {
+        Object.keys(elemGrades).forEach(grade => elemGrades[grade].Classes.push(_class));
+      } else if (_class.Room.includes('Grades')) {
+        const gradesRange = _class.Room.split(' ')[1].split('-');
+        for (let i = gradesRange[0]; i < gradesRange[1]; i++) {
+          const grade = numberSuffix(String(i));
+          elemGrades[grade].Classes.push(_class);
+        }
+      } else if (_class.Room.includes('Grade')) {
+        const grade = numberSuffix(numbersFrom(_class.Room));
+        elemGrades[grade].Classes.push(_class);
+      } else {
+        const grade = numberSuffix(numbersFrom(_class.Class));
+        if (!elemGrades[grade]) elemGrades[grade] = { Classes: [] };
+        elemGrades[grade].Classes.push(_class);
+      }
     }
     elemGrades[Object.keys(elemGrades)[0]].First = true;
 
@@ -302,7 +314,7 @@ module.exports = (function() {
     return string.slice(0, indexOfNumbers);
   }
   const numbersFrom = str => str.replace(/\D+/g, "");
-  const numberPostFix = str => {
+  const numberSuffix = str => {
     if (str === '') return 'Extra Curriculars'
     switch (str) {
       case "1":
