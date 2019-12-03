@@ -145,7 +145,6 @@ module.exports = (function () {
             return { ...teacher, teacherName: faculty[teacher.Id].Name }
           });
         } catch (e) {
-          console.error(e);
           //console.log(order);
         }
         purimOrders.push(order);
