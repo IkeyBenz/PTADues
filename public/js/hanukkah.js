@@ -3,6 +3,7 @@ $(document).ready(function () {
     $('#numChildren').on('change', updateChildrenNameInputs);
     $('.teacherCheckbox').on('click', toggleChildSelector);
     $('#checkout-button').on('click', openStripeHandler);
+    updateChildrenNameInputs();
 });
 
 
@@ -20,21 +21,20 @@ function toggleChildSelector() {
             parent.children('input[type="text"]').remove();
         }
     }
-    updatePrice();
 }
 
 /** Returns the html for the child-name select that appears next to selected teachers. */
 function renderChildSelector(classId) {
     let name_grade = [];
-    for (tag of ['input', 'select']) {
+    ['input', 'select'].forEach((tag) => {
         $('#namesDropdownMenu ' + tag).each((i, inp) => {
             const d = $(inp).val();
             name_grade[i] ? name_grade[i][1] = d : name_grade[i] = [d];
         });
-    }
-    let options = name_grade.map(pair => {
-        const selected = $(`#${classId}`).closest('.tab-pane').attr('id') == pair[1] ? ' selected' : '';
-        return `<option value="${pair[1]}"${selected}>${pair[0]}</option>`;
+    });
+    let options = name_grade.map(([name, grade]) => {
+        const selected = $(`#${classId}`).closest('.tab-pane').attr('id') == grade ? ' selected' : '';
+        return `<option value="${grade}"${selected}>${name}</option>`;
     });
     if ($('#parentsName').val() != '') {
         options.push(`<option>${$('#parentsName').val()}, and family</option>`)
@@ -59,7 +59,7 @@ function checkForOtherOption() {
 
 /** Calculates and returns the total cost of the current order. */
 function updatePrice() {
-    const price = $('.teacherCheckbox:checked').length * 4;
+    const price = $('#namesDropdownMenu').children().length * 36;
     $('#orderTotal').text(price);
     return price;
 }
@@ -95,6 +95,8 @@ function updateChildrenNameInputs() {
         $('#namesDropdownMenu').children().last().remove();
     }
 
+    // Price depends on number of children
+    updatePrice();
 }
 
 /** Stores an order in the database and sends a confirmation email. */
@@ -106,7 +108,7 @@ function saveOrder(email) {
         date: `${now.getMonth()}/${now.getDate()}/${now.getFullYear()}`,
         teachers: getSelectedTeachers()
     }
-    fetch('/orders/new/', {
+    fetch('/orders/new/?h=hanukkah', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(order)
