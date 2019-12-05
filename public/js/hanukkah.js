@@ -1,30 +1,38 @@
 $(document).ready(function () {
-    $('#continueBtn').on('click', openStripeHandler);
     $('#numChildren').on('change', updateChildrenNameInputs);
     $('.teacherCheckbox').on('click', toggleChildSelector);
-    $('#checkout-button').on('click', openStripeHandler);
+    $('#checkout-button').on('click', () => {
+        if ($('#parentsName').val() === '')
+            return alert('Parents name field cannot be empty');
+        if (!validateChildrenNames())
+            return alert('Children name inputs cannot be empty');
+        openStripeHandler();
+    });
     updateChildrenNameInputs();
 });
 
 
 /** Shows/hides a child-name select when a teacher checkbox is checked/unchecked. */
 function toggleChildSelector() {
-    const parent = $(this).closest('.list-group-item');
-    const selector = $(`#${parent.attr('id')}-childname`);
+    const grade = $(this).closest('.tab-pane').attr('id')
+        , classContainer = $(this).closest('.list-group-item')
+        , classId = classContainer.attr('id')
+        , selector = $(`#${classId}-childname-${grade}`);
+
     if ($(this).is(':checked')) {
         if (!selector.length)
-            parent.append(renderChildSelector(parent.attr('id')));
+            classContainer.append(renderChildSelector(classId, grade));
         $('.childSelect').change(checkForOtherOption);
     } else {
-        if (!$(`#${parent.attr('id')} input[type="checkbox"]:checked`).length) {
+        if (!$(`#${grade} #${classId} input[type="checkbox"]:checked`).length) {
             selector.remove();
-            parent.children('input[type="text"]').remove();
+            classContainer.children('input[type="text"]').remove();
         }
     }
 }
 
 /** Returns the html for the child-name select that appears next to selected teachers. */
-function renderChildSelector(classId) {
+function renderChildSelector(classId, inGrade) {
     let name_grade = [];
     ['input', 'select'].forEach((tag) => {
         $('#namesDropdownMenu ' + tag).each((i, inp) => {
@@ -33,14 +41,14 @@ function renderChildSelector(classId) {
         });
     });
     let options = name_grade.map(([name, grade]) => {
-        const selected = $(`#${classId}`).closest('.tab-pane').attr('id') == grade ? ' selected' : '';
+        const selected = inGrade == grade ? ' selected' : '';
         return `<option value="${grade}"${selected}>${name}</option>`;
     });
-    if ($('#parentsName').val() != '') {
+    if ($('#parentsName').val() !== '') {
         options.push(`<option>${$('#parentsName').val()}, and family</option>`)
     }
 
-    return `<select class="childSelect" id="${classId}-childname">
+    return `<select class="childSelect" id="${classId}-childname-${inGrade}">
                 ${options.join('')}
                 <option value="Other">Other</option>
             </select>`;
@@ -69,7 +77,6 @@ function updateChildrenNameInputs() {
     while ($('#namesDropdownMenu').children().length < $('#numChildren').val()) {
         const i = $('#namesDropdownMenu').children().length + 1;
         const options = [
-            ['Pre-Playgroup', 'Pre-Playgroup'],
             ['Playgroup', 'Playgroup'],
             ['Nursery', 'Nursery'],
             ['Pre-Kindergarten', 'Pre-Kindergarten'],
@@ -99,44 +106,59 @@ function updateChildrenNameInputs() {
     updatePrice();
 }
 
-/** Stores an order in the database and sends a confirmation email. */
-function saveOrder(email) {
-    const now = new Date();
-    const order = {
-        email: email,
-        total: `$${updatePrice()}.00`,
-        date: `${now.getMonth()}/${now.getDate()}/${now.getFullYear()}`,
-        teachers: getSelectedTeachers()
-    }
-    fetch('/orders/new/?h=hanukkah', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order)
-    }).then(res => res.json()).then(() => {
-        alert(`Thank you!\nA confirmation email has been sent to ${email}`);
-        window.location.reload();
-    }).catch(alert);
+/** Returns true if all child name inputs are not empty */
+function validateChildrenNames() {
+    let noEmptyFields = true;
+    $('#namesDropdownMenu li input').each((i, el) => {
+        if (!$(el).val() || $(el).val() === '')
+            noEmptyFields = false;
+    });
+    return noEmptyFields;
 }
 
-/** Returns a list of { Id, gifter } for every selected teacher. */
+/** Returns an Object of { gifter, teacherId[] } for every selected teacher. */
 function getSelectedTeachers() {
-    let teachers = [];
+    const child_teachers = {};
     $('.teacherCheckbox:checked').each((i, el) => {
         const classId = $(el).closest('.list-group-item').attr('id')
-            , childSelect = $(`#${classId} select option:selected`)
+            , grade = $(el).closest('.tab-pane').attr('id')
+            , childSelect = $(`#${grade} #${classId} select option:selected`)
             , teacherId = $(el).attr('name')
             , childName = (childSelect.text() == 'Other')
                 ? $($(el).closest('.list-group-item').children('input[type="text"]')[0]).val()
                 : childSelect.text();
-        teachers.push({ Id: teacherId, gifter: childName })
+        if (!(childName in child_teachers))
+            child_teachers[childName] = [];
+        child_teachers[childName].push(teacherId);
     });
-    return teachers;
+    return child_teachers;
 }
 
+/** Returns the relevant info for processing this order */
+function getOrderInfo(stripeToken) {
+    return {
+        source: stripeToken.id,
+        amount: updatePrice() * 100,
+        email: stripeToken.email,
+        parentsName: $('#parentsName').val(),
+        gifts: getSelectedTeachers()
+    }
+}
+function processOrder(stripeToken) {
+    fetch('/orders/hanukah', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(getOrderInfo(stripeToken))
+    }).then(res => {
+        if (!res.ok)
+            return alert("Something went wrong: " + res.statusText);
+        return alert("Thank you!\nA confirmation email has been sent to " + stripeToken.email);
+    }).catch(e => alert(e.message));
+}
 /** Opens the stripe payment widget with the price of the selected teachers. */
 function openStripeHandler() {
     StripeHandler.open({
-        name: 'PTA Purim Gifts',
+        name: 'PTA Hanukah Gifts',
         description: '',
         amount: updatePrice() * 100
     });
@@ -146,23 +168,10 @@ function openStripeHandler() {
 var StripeHandler = StripeCheckout.configure({
     // My Test Live Key: pk_test_sPgdIFsNfyEgBxVx3omCpyLX
     // Their Real Live Key: pk_live_MFjSNMDErxMwrRLWAteHnZTs
-    key: 'pk_live_MFjSNMDErxMwrRLWAteHnZTs',
+    key: 'pk_test_sPgdIFsNfyEgBxVx3omCpyLX',
     image: '/images/favicon.ico',
     locale: 'auto',
-    token: function (tkn) {
-        const amnt = updatePrice() * 100;
-        fetch('/charge/', {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: tkn.id,
-                amount: amnt,
-                email: tkn.email
-            })
-        }).then(res => {
-            saveOrder(tkn.email);
-        }).catch(alert);
-    }
+    token: processOrder
 });
 
 window.addEventListener('popstate', function () {
