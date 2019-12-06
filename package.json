@@ -26,5 +26,13 @@
     "serve-favicon": "^2.5.0",
     "sortablejs": "^1.7.0",
     "stripe": "^6.12.1"
+  },
+  "eslintConfig": {
+    "extends": "airbnb"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
   }
 }
