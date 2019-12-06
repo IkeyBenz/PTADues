@@ -1,5 +1,5 @@
 const sendgrid = require('@sendgrid/mail');
-const hb = require('express-handlebars').create();
+const renderTemplate = require('express-handlebars').create().render;
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -13,7 +13,7 @@ class ThankYouEmail {
   }
 
   async send() {
-    const template = await hb.render(this.templatePath, this._data());
+    const template = await renderTemplate(this.templatePath, this._data());
     await sendgrid.send({ 
       to: this.email, 
       from: 'PTADues@gmail.com', 
@@ -22,7 +22,7 @@ class ThankYouEmail {
     });
   }
 
-  _data() {
+  get _data() {
     const { month, day, year, time } = this.timestamp;
     return {
       parentsName: this.parentsName,
@@ -63,7 +63,7 @@ module.exports = { HanukahEmail, BotherIkeyEmail };
 //   function sendConfirmationEmail(orderInfo) {
 //     const d = new Date();
 //     const date = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
-//     hb.render('views/emails/email-template.handlebars', { ...orderInfo, date }).then(html => {
+//     renderTemplate.render('views/emails/email-template.handlebars', { ...orderInfo, date }).then(html => {
 //       Sendgrid.send({
 //         to: orderInfo.Email,
 //         from: 'PTADues@gmail.com',
