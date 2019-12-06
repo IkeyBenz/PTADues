@@ -24,10 +24,6 @@ module.exports = function pageRouter(app) {
     res.render('comingSoon', { purim: true, pageName: 'Purim' });
   });
 
-  app.get('/admin/', (req, res) => {
-
-  });
-
   app.get('/admin/orders/', (req, res) => {
     Promise.all([Orders.getAll(), Members.getAll()]).then((vals) => {
       res.render('donationHistory', {
