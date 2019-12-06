@@ -47,6 +47,7 @@ module.exports = function pageRouter(app) {
 
   app.get(['/admin/', '/admin/hannukaPreview'], (req, res) => {
     OrderedFaculty.getDisplayable().then((data) => {
+      data.admin[0].Members.forEach((m) => console.log(m));
       res.render('hanukkah', { layout: 'admin', hannuka: true, ...data });
     });
   });

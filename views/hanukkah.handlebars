@@ -73,6 +73,11 @@
                         aria-selected="{{#if grade.First}}true{{else}}false{{/if}}">{{@key}} Grade</a>
                 </li>
                 {{/each}}
+                <li class="nav-item">
+                    <a href="#learning-center" id="learning-center-tab" data-toggle="tab" role="tab"
+                        class="nav-link text-dark" aria-controls="learning-center" aria-selected="false">Learning
+                        Center</a>
+                </li>
             </ul>
             <div class="tab-content">
                 {{#each elementary as |grade|}}
@@ -94,6 +99,17 @@
                     </ul>
                 </div>
                 {{/each}}
+                <div class="tab-pane fade" id="learning-center" role="tabpanel" aria-labelledby="learning-center-tab">
+                    <ul class="list-group" id="{{admin.0.Id}}">
+                        {{#each admin.0.Members as |teacher|}}
+                        <li class="list-group-item" id="{{teacher.Id}}">
+                            <label for="{{teacher.Id}}" class="mx-2">
+                                <input type="checkbox" name="{{teacher.Id}}" class="teacherCheckbox"> {{teacher.Name}}
+                            </label>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
