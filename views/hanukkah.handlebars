@@ -148,9 +148,18 @@
         </div>
     </div>
 </div>
-<footer class="card-footer dark-bg d-flex justify-content-between">
-    <h2>Total: $<span id="orderTotal">0</span>.00</h2>
-    <button class="btn btn-primary light-btn" id="checkout-button">Continue</button>
+<footer class="card-footer bg-primary d-flex justify-content-between position-fixed">
+    <div class="px-3">
+        <div class="row">
+            <h3 class="text-light">Total: $<span id="orderTotal">0</span>.00</h3>
+        </div>
+        <div class="row">
+            <button class="btn btn-link text-light" id="pay-other-btn">Pay other amount</button>
+            <input type="hidden" id="other-amount" value="0">
+        </div>
+    </div>
+
+    <button class="btn btn-primary light-btn" id="checkout-button">Continue &rarr;</button>
 </footer>
 
 <script src="/js/hanukkah.js"></script>
@@ -170,5 +179,11 @@
         border-radius: 4px;
         background-color: rgba(0, 0, 0, .5);
         -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    }
+
+    footer {
+        margin: 0 -15px;
+        bottom: 0;
+        width: 100%;
     }
 </style>

@@ -1,5 +1,6 @@
 $(document).ready(function () {
     $('#numChildren').on('change', updateChildrenNameInputs);
+    $('#pay-other-btn').click(setOtherPrice);
     $('.teacherCheckbox').on('click', toggleChildSelector);
     $('#checkout-button').on('click', () => {
         if ($('#parentsName').val() === '')
@@ -67,9 +68,17 @@ function checkForOtherOption() {
 
 /** Calculates and returns the total cost of the current order. */
 function updatePrice() {
-    const price = $('#namesDropdownMenu').children().length * 36;
+    const price = Number($('#other-amount').val()) || $('#namesDropdownMenu').children().length * 36;
     $('#orderTotal').text(price);
     return price;
+}
+
+/** Prompts the user to enter the other amount they'd like to give */
+function setOtherPrice() {
+    let amount = prompt('Enter other amount:');
+    try { amount = Number(amount); } catch (e) { return alert(e); }
+    $('#other-amount').val(amount);
+    updatePrice();
 }
 
 /** Incriments or decriments the number of children-name inputs. */
