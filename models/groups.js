@@ -20,17 +20,11 @@ module.exports = (function() {
     });
   }
   function formattedFaculty(d) {
-    let members = [];
-    for (let memberKey in d.faculty) {
-      members.push({
-        id: memberKey,
-        name: d.faculty[memberKey].Name,
-        info: d.faculty[memberKey].Info
-      });
-    }
-    return members.sort((a, b) =>
-      a.name > b.name ? 1 : b.name > a.name ? -1 : 0
-    );
+    return Object.keys(d.faculty).map((memberKey) => ({
+      id: memberKey,
+      name: d.faculty[memberKey].Name,
+      info: d.faculty[memberKey].Info,
+    })).sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
   }
   function teacherExists(teachers, faculty) {
     if (typeof teachers == "object") {
@@ -293,7 +287,7 @@ module.exports = (function() {
         Object.keys(elemGrades).forEach(grade => elemGrades[grade].Classes.push(_class));
       } else if (_class.Room.includes('Grades')) {
         const gradesRange = _class.Room.split(' ')[1].split('-');
-        for (let i = gradesRange[0]; i < gradesRange[1]; i++) {
+        for (let i = gradesRange[0]; i <= gradesRange[1]; i++) {
           const grade = numberSuffix(String(i));
           elemGrades[grade].Classes.push(_class);
         }
