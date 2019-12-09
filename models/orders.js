@@ -79,8 +79,37 @@ class HanukahOrder extends Order {
     }
   }
 }
+
+class HSHanukahOrder extends HanukahOrder {
+  constructor (parentsName, parentsEmail, amount, child_teachers) {
+    super(parentsName, parentsEmail, amount, child_teachers);
+    this.type = 'highschool/hanukah';
+  }
+  async save() {
+    const year = this.timestamp.year;
+    const orderType = this.type || 'dues';
+    const orderId = await this._getNewOrderId();
+    await Order.baseDbRef.child(`${orderType}/${year}/${orderId}`).set(this._repr());
+    const giftsWTeachers = await this._populateTeachers(this.gifts);
+    return { timestamp: this.timestamp, orderId, giftsWTeachers };
+  }
+
+  async _populateTeachers(child_teachers) {
+    const memberRef = firebase.database().ref('highschool');
+    const nameFromId = (id) => memberRef.child(id).once('value').then(s => s.val().name);
+    const withNames = {}
+    for (let childName in child_teachers) {
+      const teacherIds = child_teachers[childName];
+      const teacherNames = await Promise.all(teacherIds.map(nameFromId));
+      withNames[childName] = teacherNames;
+    }
+    return withNames;
+  }
+}
+
 module.exports = {
-  HanukahOrder
+  HanukahOrder,
+  HSHanukahOrder
 }
 // module.exports = (function () {
 //   function create(orderInfo) {

@@ -1,7 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE);
 const firebase = require('firebase');
 
-const { HanukahOrder } = require('../models/orders');
+const { HanukahOrder, HSHanukahOrder } = require('../models/orders');
 const { HanukahEmail, BotherIkeyEmail } = require('./emails');
 
 /** Replaces all teacherIds in an object with their names
@@ -30,12 +30,25 @@ module.exports = function (app) {
       await (new HanukahEmail(email, parentsName, amount/100, orderId, timestamp, populatedGifts)).send();
       res.status(200).end();
     } catch (e) {
-      await (new BotherIkeyEmail('Hanukah Order Failed!!\n\n' + e.message)).send(); // :(
+      await (new BotherIkeyEmail('Hanukah Order Failed!!\n\n' + e.message + `\n\n${email}\n${parentsName}`)).send(); // :(
       res.statusMessage = e.message;
       res.status(500).end();
     }
   });
 
+  app.post('/orders/highschool-hanukah/', async (req, res) => {
+    try {
+      const { source, amount, email, parentsName, gifts } = req.body;
+      await stripe.charges.create({ amount, source, currency: 'usd', description: 'PTA DUES' });
+      const { timestamp, orderId, giftsWTeachers } = await (new HSHanukahOrder(parentsName, email, amount/100, gifts)).save();
+      await (new HanukahEmail(email, parentsName, amount/100, orderId, timestamp, giftsWTeachers)).send();
+      res.status(200).end();
+    } catch (e) {
+      await (new BotherIkeyEmail('HS Hanuka Order Failed!!\n\n' + `${e.message}\n\n${email}, ${parentsName}, ${gifts}`));
+      res.statusMessage = e.message;
+      res.status(500).end();
+    }
+  });
   // app.post('/orders/hanukah-highschool/', (req, res) => {
 
   // });

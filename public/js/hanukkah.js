@@ -18,10 +18,10 @@ function toggleChildSelector() {
     const grade = $(this).closest('.tab-pane').attr('id')
         , classContainer = $(this).closest('.list-group-item')
         , classId = classContainer.attr('id')
-        , selector = $(`#${classId}-childname-${grade}`);
+        , selector = classContainer.children('select')[0];
 
     if ($(this).is(':checked')) {
-        if (!selector.length)
+        if (!selector)
             classContainer.append(renderChildSelector(classId, grade));
         $('.childSelect').change(checkForOtherOption);
     } else {
@@ -34,6 +34,16 @@ function toggleChildSelector() {
 
 /** Returns the html for the child-name select that appears next to selected teachers. */
 function renderChildSelector(classId, inGrade) {
+    if (IS_HIGHSCHOOL) {
+        let names = [];
+        $('#namesDropdownMenu input').each((i, inp) => names.push($(inp).val()));
+        const select = `
+            <select class="childSelect">
+                ${names.map((n, i) => `<option ${i===0 ? 'selected' : ''} value="${n}">${n}</option>`)}
+            </select>
+        `;
+        return select;
+    }
     let name_grade = [];
     ['input', 'select'].forEach((tag) => {
         $('#namesDropdownMenu ' + tag).each((i, inp) => {
@@ -43,7 +53,8 @@ function renderChildSelector(classId, inGrade) {
     });
     let options = name_grade.map(([name, grade]) => {
         const selected = inGrade == grade ? ' selected' : '';
-        return `<option value="${grade}"${selected}>${name}</option>`;
+        // usually value is grade
+        return `<option value="${name}"${selected}>${name}</option>`;
     });
     if ($('#parentsName').val() !== '') {
         options.push(`<option>${$('#parentsName').val()}, and family</option>`)
@@ -99,12 +110,21 @@ function updateChildrenNameInputs() {
             ['M7', '7'],
             ['M8', '8'],
         ]
-        const template = `<li class="d-flex">
-    <input class="form-control" type="text" id="childname${i}" placeholder="Full Name">
-    <select name="" class="form-control" id="childgrade${i}">
-        ${options.map(o => `<option value="${o[0]}">${o[1]}</option>`).join('\n')}
-    </select>
-</li>`;
+        let template;
+        if (IS_HIGHSCHOOL) {
+            template = `
+            <li class="d-flex">
+			    <input class="form-control" type="text" id="childname${i}" placeholder="Full Name">
+		    </li>`
+        } else {
+            template = `
+            <li class="d-flex">
+                <input class="form-control" type="text" id="childname${i}" placeholder="Full Name">
+                <select name="" class="form-control" id="childgrade${i}">
+                    ${options.map(o => `<option value="${o[0]}">${o[1]}</option>`).join('\n')}
+                </select>
+            </li>`;
+        }
         $('#namesDropdownMenu').append(template);
     }
     while ($('#namesDropdownMenu').children().length > $('#numChildren').val()) {
@@ -129,13 +149,12 @@ function validateChildrenNames() {
 function getSelectedTeachers() {
     const child_teachers = {};
     $('.teacherCheckbox:checked').each((i, el) => {
-        const classId = $(el).closest('.list-group-item').attr('id')
-            , grade = $(el).closest('.tab-pane').attr('id')
-            , childSelect = $(`#${grade} #${classId} select option:selected`)
+        const li = $(el).closest('.list-group-item')
+            , childSelect = $(li.children('select')[0])
             , teacherId = $(el).attr('name')
-            , childName = (childSelect.text() == 'Other')
-                ? $($(el).closest('.list-group-item').children('input[type="text"]')[0]).val()
-                : childSelect.text();
+            , childName = (childSelect.val() == 'Other')
+                ? $(li.children('input[type="text"]')[0]).val()
+                : childSelect.val();
         if (!(childName in child_teachers))
             child_teachers[childName] = [];
         child_teachers[childName].push(teacherId);
@@ -153,8 +172,10 @@ function getOrderInfo(stripeToken) {
         gifts: getSelectedTeachers()
     }
 }
+
 function processOrder(stripeToken) {
-    fetch('/orders/hanukah', {
+    const endpoint = IS_HIGHSCHOOL ? '/orders/highschool-hanukah/' : '/orders/hanukah/';
+    fetch(endpoint, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(getOrderInfo(stripeToken))
