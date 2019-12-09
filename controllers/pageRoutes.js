@@ -9,12 +9,18 @@ module.exports = function pageRouter(app) {
     // res.render('comingSoon', { dues: true, pageName: 'Dues' });
   });
 
-  app.get('/hanukkah/', (req, res) => {
-    // OrderedFaculty.getDisplayable().then(data => {
-    //   res.render("hanukkah", { hanukkah: true, ...data });
-    // });
+  app.get('/hanukah/', (req, res) => {
+    OrderedFaculty.getDisplayable().then((data) => {
+      res.render('hanukkah', { hanukah: true, ...data });
+    });
 
-    res.render('comingSoon', { hanukkah: true, pageName: 'Hanukkah' });
+    //res.render('comingSoon', { hanukkah: true, pageName: 'Hanukkah' });
+  });
+
+  app.get('/hanukah-highschool', (req, res) => {
+    OrderedFaculty.getHighschool().then((teachers) => {
+      res.render('highschool-hanukkah', { highschool: true, teachers });
+    });
   });
 
   app.get('/purim/', (req, res) => {
