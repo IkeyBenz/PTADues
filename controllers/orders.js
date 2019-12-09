@@ -1,12 +1,23 @@
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE);
-const emailer = require('@sendgrid/mail');
-emailer.setApiKey(process.env.SENDGRID_API_KEY);
+const firebase = require('firebase');
 
 const { HanukahOrder } = require('../models/orders');
-const Groups = require('../models/groups');
 const { HanukahEmail, BotherIkeyEmail } = require('./emails');
 
-// TODO: use a router to simplify the routes without including /admin and /orders in all of them
+/** Replaces all teacherIds in an object with their names
+ * @param {Object<string, string[]>} child_teachers An object of { childName: teacherId[] }
+ */
+async function replaceTeacherIdsWithNames(child_teachers) {
+  const membersRef = firebase.database().ref('members');
+  const nameFromId = (teacherId) => membersRef.child(teacherId).once('value').then(s => s.val().Name);
+  const withNames = {}
+  for (let childName in child_teachers) {
+    const teacherIds = child_teachers[childName];
+    const teacherNames = await Promise.all(teacherIds.map(nameFromId));
+    withNames[childName] = teacherNames;
+  }
+  return withNames;
+}
 
 module.exports = function (app) {
 
@@ -14,10 +25,9 @@ module.exports = function (app) {
     try {
       const { source, amount, email, parentsName, gifts } = req.body;
       await stripe.charges.create({ amount, source, currency: 'usd', description: 'PTA DUES' });
-      const order = new HanukahOrder(parentsName, email, amount/100, gifts);
-      const orderId = await order.save();
-      const thankYouEmail = new HanukahEmail(email, parentsName, amount/100, orderId, order.timestamp, gifts);
-      await thankYouEmail.send();
+      const { timestamp, orderId } = await (new HanukahOrder(parentsName, email, amount/100, gifts)).save();
+      const populatedGifts = await replaceTeacherIdsWithNames(gifts);
+      await (new HanukahEmail(email, parentsName, amount/100, orderId, timestamp, populatedGifts)).send();
       res.status(200).end();
     } catch (e) {
       await (new BotherIkeyEmail('Hanukah Order Failed!!\n\n' + e.message)).send(); // :(

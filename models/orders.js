@@ -1,13 +1,13 @@
 const firebase = require('firebase');
-// const ref = firebase.database().ref('Orders');
-// const facultyRef = firebase.database().ref('FacultyMembers');
-// const promise = require('bluebird');
-// const writeFile = promise.promisify(require('fs').writeFile);
 const moment = require('moment-timezone');
 
 class Order {
 
   static baseDbRef = firebase.database().ref('orders');
+  static get = async function(childPath=null) {
+    const ref = childPath ? Order.baseDbRef.child(childPath) : Order.baseDbRef;
+    return ref.once('value').then(s => s.val());
+  }
 
   constructor (parentsName, parentsEmail, amount) {
     if (!parentsName || !parentsEmail || !amount)
@@ -24,7 +24,7 @@ class Order {
     const orderType = this.type || 'dues';
     const orderId = await this._getNewOrderId();
     await Order.baseDbRef.child(`${orderType}/${year}/${orderId}`).set(this._repr());
-    return orderId;
+    return { timestamp: this.timestamp, orderId };
   }
 
   _repr() {
@@ -70,7 +70,6 @@ class HanukahOrder extends Order {
       throw Error('Gifts param is required in HanukahOrder');
     super(parentsName, parentsEmail, amount);
     this.gifts = child_teachers;
-    console.log(child_teachers);
     this.type = 'hanukah'
   }
   _repr() {

@@ -1,25 +1,36 @@
-<body style="max-width:1080px;display:block;margin:0 auto;font-family:Arial,Helvetica,sans-serif;">
-	<header style="width:100%;height:100px;background-color:#01389D"></header>
-	<main style="padding:16px;background-color:#AFDEFB;min-height:calc(100% - 100px);">
+<body
+	style="max-width:1080px;display:block;margin:0 auto;font-size:x-large;font-family:Arial,Helvetica,sans-serif;background-color:#01389D;color:#AFDEFB">
+	<header style="width:100%;height:100px;">
+		<img src="https://mdy-pta-dues.herokuapp.com/images/WhiteLogo.png" alt="MDY | PTA"
+			style="display:block;margin:0 auto;height:100%;width:auto;">
+	</header>
+	<main style="padding:16px;min-height:calc(100% - 100px);">
 
 		<h1 style="text-align:center;">Thank you!</h1>
 
-		<h3 style="margin-top:16px">Dear {{parentsName}}, we've recieved your Hanukah gifts on behalf of your children {{#each gifts}}, {{@key}}{{/each}}.</h3>
+		<h3 style="margin-top:16px">Dear {{parentsName}}, we've recieved your Hanukah gifts on behalf of your
+			children{{#each gifts}}, {{@key}}{{/each}}.</h3>
 
-		<table>
-			<caption>Breakdown:</caption>
-			<tr><th>Child</th><th>Gifted</th></tr>
+		<table cellpadding="5" style="margin-top:16px">
+			<tr>
+				<th>Child</th>
+				<th>Gifted</th>
+			</tr>
 			{{#each gifts}}
-			<tr><td>{{@key}}</td><td>{{#each this}}{{this}}, {{/each}}</td></tr>
+			<tr>
+				<td>{{@key}}</td>
+				<td>{{#each this}}{{this}}, {{/each}}</td>
+			</tr>
 			{{/each}}
 		</table>
-		
-		<label for="">Parents Name: {{parentsName}}</label>
-		<label for="">amount: {{amount}}</label>
-		<label for="">orderID {{prderId}}</label>
-		<label for="">Timestamp: {{timestamp}}</label>
-		{{#each gifts}}
-		<label for="">{{@key}} gifted {{#each this}}, {{this}}{{/each}}.</label>
-		{{/each}}
+
+		<div style="position:fixed;bottom:0;left:0;display:flex;flex-direction:column;padding:16px;">
+			<b style="line-height:1.2em;">${{amount}}.00</b>
+			<b style="line-height:1.2em;">#{{orderId}}</b>
+			<b style="line-height:1.2em;">{{timestamp}}</b>
+		</div>
+
+		<div style="position:fixed;bottom:0;"></div>
+
 	</main>
 </body>

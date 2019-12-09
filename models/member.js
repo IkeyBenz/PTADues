@@ -3,6 +3,13 @@ const ref = firebase.database().ref("members");
 const promise = require("bluebird");
 const writeFile = promise.promisify(require("fs").writeFile);
 
+class Member {
+  static dbRef = firebase.database().ref('members');
+  static get = function(memberId) {
+    return Member.dbRef.child(memberId).once('value').then(s => s.val());
+  }
+}
+
 module.exports = (function() {
   function getAllMembers() {
     return ref.once("value").then(snapshot => {

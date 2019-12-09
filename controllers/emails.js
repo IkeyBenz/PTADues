@@ -1,19 +1,19 @@
 const sendgrid = require('@sendgrid/mail');
-const renderTemplate = require('express-handlebars').create().render;
+const hb = require('express-handlebars').create();
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 class ThankYouEmail {
   constructor (email, parentsName, amount, orderId, timestamp) {
     this.email = email;
-    this.parentsName = parentsName,
-    this.amount = amount,
-    this.orderId = orderId
-    this.timestamp = timestamp
+    this.parentsName = parentsName;
+    this.amount = amount;
+    this.orderId = orderId;
+    this.timestamp = timestamp;
   }
 
   async send() {
-    const template = await renderTemplate(this.templatePath, this._data());
+   const template = await hb.render(this.templatePath, this._data());
     await sendgrid.send({ 
       to: this.email, 
       from: 'PTADues@gmail.com', 
@@ -22,7 +22,7 @@ class ThankYouEmail {
     });
   }
 
-  get _data() {
+  _data() {
     const { month, day, year, time } = this.timestamp;
     return {
       parentsName: this.parentsName,
@@ -35,9 +35,15 @@ class ThankYouEmail {
 
 class HanukahEmail extends ThankYouEmail {
   constructor(email, parentsName, amount, orderId, timestamp, gifts) {
-    super(email, parentsName, amount, timestamp, orderId);
+    super(email, parentsName, amount, orderId, timestamp);
     this.gifts = gifts;
     this.templatePath = 'views/emails/hanukah-ty.handlebars'
+  }
+  _data() {
+    return {
+      ...super._data(),
+      gifts: this.gifts
+    }
   }
 }
 
