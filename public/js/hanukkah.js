@@ -40,6 +40,7 @@ function renderChildSelector(classId, inGrade) {
         const select = `
             <select class="childSelect">
                 ${names.map((n, i) => `<option ${i===0 ? 'selected' : ''} value="${n}">${n}</option>`)}
+                <option value="Other">Other</option>
             </select>
         `;
         return select;
