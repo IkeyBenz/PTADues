@@ -9,6 +9,26 @@ class Order {
     return ref.once('value').then(s => s.val());
   }
 
+  static populateTeachers = async function(order, memberPath) {
+    const withNames = {}
+    const nameFromId = (id) => Order._getMember(id, memberPath).then(m => m.Name || m.name);
+    for (let childName in order.gifts) {
+      const teacherIds = order.gifts[childName];
+      withNames[childName] = await Promise.all(teacherIds.map(nameFromId));
+    }
+    return { ...order, gifts: withNames };
+  }
+
+  static _getMember = (() => {
+    const cache = {}
+    return async (memberId, path) => {
+      !cache[path] && (cache[path] = []);
+      if (!(memberId in cache[path]))
+        cache[path][memberId] = await firebase.database().ref(path).child(memberId).once('value').then(s => s.val());
+      return cache[path][memberId];
+    }
+  })();
+
   constructor (parentsName, parentsEmail, amount) {
     if (!parentsName || !parentsEmail || !amount)
       throw Error("Missing required fields for order");
@@ -108,6 +128,7 @@ class HSHanukahOrder extends HanukahOrder {
 }
 
 module.exports = {
+  Order,
   HanukahOrder,
   HSHanukahOrder
 }

@@ -1,0 +1,65 @@
+<main class="container-fluid">
+	<div class="card">
+		<div class="card-header">
+			<h3 class="card-title">Order History</h3>
+		</div>
+		<div class="card-body">
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a href="#dues" id="dues-tab" data-toggle="tab" role="tab" aria-controls="dues" class="nav-link">Dues</a>
+				</li>
+				<li class="nav-item">
+					<a href="#hanukah" id="hanukah-tab" data-toggle="tab" role="tab" aria-controls="hanukah"
+						class="nav-link active">Hanukah</a>
+				</li>
+				<li class="nav-item">
+					<a href="#purim" id="purim-tab" data-toggle="tab" role="tab" aria-controls="purim" class="nav-link">Purim</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane fade py-5 text-center" id="dues" role="tabpanel" aria-labelledby="dues-tab">
+					No orders
+				</div>
+				<div class="tab-pane fade show active" id="hanukah" role="tabpanel" aria-labelledby="hanukah-tab">
+					<ul class="nav nav-tabs">
+						<li class="nav-item">
+							<a href="#elementary" id="elementary-tab" data-toggle="tab" role="tab" aria-controls="elementary"
+								class="nav-link active">Elementary</a>
+						</li>
+						<li class="nav-item">
+							<a href="#highschool" id="highschool-tab" data-toggle="tab" role="tab" aria-controls="highschool"
+								class="nav-link">High School</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane fade show active" id="elementary" role="tabpanel" aria-labelledby="elementary-tab">
+							<ul class="list-group">
+								{{#each hanukahOrders as |order|}}
+								{{> collapsableOrder order}}
+								{{/each}}
+							</ul>
+						</div>
+						<div class="tab-pane fade" id="highschool" role="tabpanel" aria-labelledby="highschool-tab">
+							<ul class="list-group">
+								{{#each highschoolOrders as |order|}}
+								{{> collapsableOrder order}}
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade py-5 text-center" id="purim" role="tabpanel" aria-labelledby="purim-tab">
+					No orders
+				</div>
+			</div>
+		</div>
+
+	</div>
+</main>
+
+<style>
+	.list-group {
+		max-height: 400px;
+		overflow-x: scroll;
+	}
+</style>

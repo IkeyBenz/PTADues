@@ -27,6 +27,8 @@
     "sortablejs": "^1.7.0",
     "stripe": "^6.12.1"
   },
-  "eslintIgnore": ["*"],
+  "eslintIgnore": [
+    "*"
+  ],
   "devDependencies": {}
 }

@@ -1,5 +1,5 @@
 const OrderedFaculty = require('../models/groups');
-const Orders = require('../models/orders');
+const { Order } = require('../models/orders');
 const Members = require('../models/member');
 
 module.exports = function pageRouter(app) {
@@ -30,15 +30,14 @@ module.exports = function pageRouter(app) {
     res.render('comingSoon', { purim: true, pageName: 'Purim' });
   });
 
-  app.get('/admin/orders/', (req, res) => {
-    Promise.all([Orders.getAll(), Members.getAll()]).then((vals) => {
-      res.render('donationHistory', {
-        layout: 'admin',
-        orders: vals[0],
-        facultyMembers: vals[1],
-        history: true,
-      });
-    });
+  app.get('/admin/orders/', async (req, res) => {
+    const elemOrders = await Order.get('/hanukah/2019/')
+        , elemWithKeys = Object.keys(elemOrders).map(key => ({ key, ...elemOrders[key] }))
+        , hanukahOrders = (await Promise.all(elemWithKeys.map(o => Order.populateTeachers(o, 'members')))).reverse()
+        , hsOrders = await Order.get('/highschool/hanukah/2019')
+        , hsWithKeys = Object.keys(hsOrders).map(key => ({ key, ...hsOrders[key] }))
+        , highschoolOrders = (await Promise.all(hsWithKeys.map(o => Order.populateTeachers(o, 'highschool')))).reverse();
+    res.render('order-history', { layout: 'admin', history: true, hanukahOrders, highschoolOrders });
   });
 
   app.get('/admin/faculty/stats/', (req, res) => {

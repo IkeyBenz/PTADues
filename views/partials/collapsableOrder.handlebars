@@ -1,0 +1,28 @@
+{{!-- Expects global variables:
+	parentsEmail: string
+	parentsName: string
+	amount: number
+	gifts: { childName: teacherNames[] }
+	timestamp: { day, month, year, time }
+	key: string
+ --}}
+
+<li class="list-group-item">
+	<div class="row">
+		<div class="col">
+			<button class="btn btn-link" type="button" data-toggle="collapse" aria-expanded="false"
+				data-target="#{{key}}-collapse" aria-controls="{{key}}-collapse">#{{key}}</button>
+		</div>
+		<div class="col">{{parentsEmail}}</div>
+		<div class="col">{{parentsName}}</div>
+		<div class="col">${{amount}}.00</div>
+	</div>
+	<div class="collapse" id="{{key}}-collapse">
+		<div class="my-2"></div>
+		{{#each gifts}}
+		<span><b>{{@key}}</b>
+			<p>{{#each this}}{{this}}, {{/each}}</p>
+		</span>
+		{{/each}}
+	</div>
+</li>

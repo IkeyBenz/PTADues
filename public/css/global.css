@@ -21,7 +21,7 @@ header {
     margin-right: -13px;
     width: auto;
 }
-.nav-link {
+header .nav-link {
     color: white;
     padding: 5px 10px;
     margin-bottom: 8px;
