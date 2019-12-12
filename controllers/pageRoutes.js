@@ -52,7 +52,7 @@ module.exports = function pageRouter(app) {
 
   app.get(['/admin/', '/admin/hannukaPreview'], (req, res) => {
     OrderedFaculty.getDisplayable().then((data) => {
-      res.render('hanukkah', { layout: 'admin', hannuka: true, ...data });
+      res.render('hanukkah', { layout: 'admin', hannuka: true, IS_ADMIN: true, ...data });
     });
   });
 
@@ -63,7 +63,7 @@ module.exports = function pageRouter(app) {
   });
   app.get('/admin/highschool-preview', (req, res) => {
     OrderedFaculty.getHighschool().then((teachers) => {
-      res.render('highschool-hanukkah', { layout: 'admin', highschool: true, teachers });
+      res.render('highschool-hanukkah', { layout: 'admin', IS_ADMIN: true, highschool: true, teachers });
     });
   });
 };

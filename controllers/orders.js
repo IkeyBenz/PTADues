@@ -49,9 +49,19 @@ module.exports = function (app) {
       res.status(500).end();
     }
   });
-  // app.post('/orders/hanukah-highschool/', (req, res) => {
 
-  // });
+  app.post('/admin/create-hanukah-order/', async (req, res) => {
+    try {
+      const { amount, email, parentsName, gifts, IS_HIGHSCHOOL } = req.body;
+      const orderType = IS_HIGHSCHOOL ? HSHanukahOrder : HanukahOrder;
+      const { timestamp: t, orderId } = await (new orderType(parentsName, email, amount/100, gifts)).save();
+      const time = `${t.month}/${t.day}/${t.year} ${t.time}`;
+      res.json({ time, orderId });
+    } catch (e) {
+      res.statusMessage = e.message;
+      res.status(500).end();
+    }
+  });
 
   
   /* CREATE new order */
