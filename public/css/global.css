@@ -2,7 +2,7 @@ body {
     margin: 0;
     margin-bottom: 100px;
     background-color: #AFDEFB !important;
-    width: 100vw;
+    /* width: 100vw; */
 }
 .light-btn {
     background-color: #AFDEFB !important;
