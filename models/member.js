@@ -20,6 +20,7 @@ module.exports = (function() {
               return {
                 name: snapshot.val()[memberKey].Name,
                 info: snapshot.val()[memberKey].Info,
+                gift_amount: snapshot.val()[memberKey].gift_amount,
                 id: memberKey
               };
             })

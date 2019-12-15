@@ -4,18 +4,25 @@
 <h5 class="mt-2">Last Edited: {{lastEdited}}</h5>
 <ul class="list-group mt-4">
     {{#each members}}
-    <li class="list-group-item">
-        <div class="input-group mb-3">
+    <li class="list-group-item mb-3">
+        <div class="input-group mb-1">
             <div class="input-group-prepend">
                 <span class="input-group-text">Name:</span>
             </div>
             <input type="text" class="form-control memberInput" value="{{this.name}}" id="{{this.id}}/Name">
         </div>
-        <div class="input-group mb-3">
+        <div class="input-group mb-1">
             <div class="input-group-prepend">
                 <span class="input-group-text">Info:</span>
             </div>
             <input type="text" class="form-control memberInput" value="{{this.info}}" id="{{this.id}}/Info">
+        </div>
+        <div class="input-group mb-1">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Amount:</span>
+            </div>
+            <input type="text" class="form-control memberInput" value="{{this.gift_amount}}"
+                id="{{this.id}}/gift_amount">
         </div>
         <button class="btn btn-danger" onclick="remove('{{this.id}}')">X</button>
     </li>
