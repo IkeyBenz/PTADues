@@ -58,31 +58,59 @@ module.exports = (function() {
   function create(member) {
     return ref.push(member);
   }
-  function getStats() {
-    return ref.once("value").then(snapshot => {
-      const faculty = snapshot.val();
-      return Object.keys(faculty).map(memberKey => {
-        let name = faculty[memberKey].Name;
-        if (faculty[memberKey].Info) {
-          name += ` (${faculty[memberKey].Info})`;
-        }
-        let obj = { Name: name };
-        if (faculty[memberKey].Donors) {
-          obj["Children"] = faculty[memberKey].Donors.join(", ");
-        }
-        return obj;
+  // function getStats() {
+  //   return ref.once("value").then(snapshot => {
+  //     const faculty = snapshot.val();
+  //     return Object.keys(faculty).map(memberKey => {
+  //       let name = faculty[memberKey].Name;
+  //       if (faculty[memberKey].Info) {
+  //         name += ` (${faculty[memberKey].Info})`;
+  //       }
+  //       let obj = { Name: name };
+  //       if (faculty[memberKey].Donors) {
+  //         obj["Children"] = faculty[memberKey].Donors.join(", ");
+  //       }
+  //       return obj;
+  //     });
+  //   });
+  // }
+  // function createStatsCSV() {
+  //   return getStats().then(stats => {
+  //     let csvString = `"Name","Children"\n`;
+  //     for (let member of stats) {
+  //       csvString += `"${member.Name}","${member.Children || ""}"\n`;
+  //     }
+  //     return writeFile(__dirname + "/../stats.csv", csvString);
+  //   });
+  // }
+  async function getStats() {
+    const members = {}
+    let maxChildren = 0;
+    await ref.once('value').then(s => s.val()).then(_members => {
+      return Object.keys(_members).forEach(id => {
+        const { Name: name, Info: email, gift_amount: amount } = _members[id];
+        members[id] = { name, email, amount, children: [] };
       });
     });
-  }
-  function createStatsCSV() {
-    return getStats().then(stats => {
-      let csvString = `"Name","Children"\n`;
-      for (let member of stats) {
-        csvString += `"${member.Name}","${member.Children || ""}"\n`;
-      }
-      return writeFile(__dirname + "/../stats.csv", csvString);
+    const orders = await firebase.database().ref('orders/hanukah/2019').once('value').then(s => s.val());
+    Object.values(orders).forEach(({ gifts }) => gifts && Object.keys(gifts).forEach(childName => {
+      const teacherIds = gifts[childName];
+      teacherIds.forEach(id => {
+        members[id].children.push(childName.trim() || '');
+        if (maxChildren < members[id].children.length)
+          maxChildren = members[id].children.length;
+      }); 
+    }));
+
+    return Object.values(members).map(member => {
+      while (member.children.length < maxChildren)
+        member.children.push('');
+      return member;
+    }).sort((a, b) => {
+      return a.name > b.name ? 1 : b.name < a.name ? -1 : 0;
     });
   }
+
   function remove(memberId) {
     return ref.child(memberId).remove();
   }
@@ -92,7 +120,7 @@ module.exports = (function() {
     getRecentlyEdited: getRecentlyEdited,
     update: edit,
     remove: remove,
-    getStats: getStats,
-    createStatsSpreadSheet: createStatsCSV
+    getStats,
+    // createStatsSpreadSheet: createStatsCSV
   };
 })();

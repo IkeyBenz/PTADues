@@ -1,13 +1,17 @@
 <h1>Faculty Stats</h1>
-<table cellpadding="8" style="border: 1px solid black;">
+<table class="table" cellpadding="8" style="border: 1px solid black;">
     <tr>
-        <th style="border: 1px solid black">Name</th>
-        <th style="border: 1px solid black">Children (gifters)</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Amount</th>
+        {{#each childrenTitles}}<th>{{this}}</th>{{/each}}
     </tr>
     {{#each members}}
     <tr>
-        <td style="border: 1px solid black">{{this.Name}}</td>
-        <td style="border: 1px solid black">{{this.Children}}</td>
+        <td>{{this.name}}</td>
+        <td>{{this.email}}</td>
+        <td>{{this.amount}}</td>
+        {{#each this.children}}<td>{{this}}</td>{{/each}}
     </tr>
     {{/each}}
 </table>

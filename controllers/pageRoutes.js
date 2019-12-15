@@ -42,10 +42,14 @@ module.exports = function pageRouter(app) {
 
   app.get('/admin/faculty/stats/', (req, res) => {
     Members.getStats().then((members) => {
+      const childrenTitles = []
+      for (let i = 1; i <= members[0].children.length; i++)
+        childrenTitles.push(`kid${i}`);
       res.render('facultyStats', {
         layout: 'admin',
         stats: true,
         members,
+        childrenTitles
       });
     });
   });
