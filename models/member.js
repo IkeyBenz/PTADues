@@ -96,7 +96,8 @@ module.exports = (function() {
     Object.values(orders).forEach(({ gifts }) => gifts && Object.keys(gifts).forEach(childName => {
       const teacherIds = gifts[childName];
       teacherIds.forEach(id => {
-        members[id].children.push(childName.trim() || '');
+        if (!members[id]) return; // member doesn't exist
+        members[id] && members[id].children.push(childName.trim() || '');
         if (maxChildren < members[id].children.length)
           maxChildren = members[id].children.length;
       }); 

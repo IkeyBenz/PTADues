@@ -11,11 +11,13 @@ class Order {
 
   static populateTeachers = async function(order, memberPath) {
     const withNames = {}
-    const nameFromId = (id) => Order._getMember(id, memberPath).then(m => m.Name || m.name);
-    for (let childName in order.gifts) {
-      const teacherIds = order.gifts[childName];
-      withNames[childName] = await Promise.all(teacherIds.map(nameFromId));
-    }
+    try {
+      const nameFromId = (id) => Order._getMember(id, memberPath).then(m => m ? m.Name || m.name : 'DELETED');
+      for (let childName in order.gifts) {
+        const teacherIds = order.gifts[childName];
+        withNames[childName] = await Promise.all(teacherIds.map(nameFromId));
+      }
+    } catch (e) {}
     return { ...order, gifts: withNames };
   }
 
